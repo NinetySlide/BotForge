@@ -17,7 +17,18 @@
 package com.ninetyslide.libs.feta.common;
 
 /**
- * TODO: Create a proper header for this file.
+ * Constants class. This holds all the constants needed in the Bot.
  */
 public class Constants {
+
+    public final static String PARAM_NAME_PAGE_ACCESS_TOKEN = "pageAccessToken";
+    public final static String PARAM_NAME_APP_SECRET_KEY = "appSecretKey";
+    public final static String PARAM_NAME_VERIFY_TOKEN = "verifyToken";
+    public final static String PARAM_NAME_VALIDATE_CALLBACKS = "validateCallbacks";
+
+    public final static String PARAM_MISSING_MSG_PAGE_ACCESS_TOKEN = "Page Access Token parameter is missing. Please verify your init parameters.";
+    public final static String PARAM_MISSING_MSG_APP_SECRET_KEY = "App Secret Key parameter is missing. Please verify your init parameters.";
+    public final static String PARAM_MISSING_MSG_VERIFY_TOKEN = "Verify Token parameter is missing. Please verify your init parameters.";
+    public final static String PARAM_MISSING_MSG_VALIDATE_CALLBACKS = "Validate Callbacks parameter is missing or not in the true/false form. Please verify your init parameters.";
+
 }
