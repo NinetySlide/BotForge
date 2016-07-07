@@ -16,8 +16,8 @@
 
 package com.ninetyslide.libs.feta;
 
-import com.ninetyslide.libs.feta.bean.BotContext;
 import static com.ninetyslide.libs.feta.common.Constants.*;
+import com.ninetyslide.libs.feta.bean.BotContext;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -116,8 +116,8 @@ public abstract class FbBot extends HttpServlet {
     }
 
     /**
-     * Method that can be overridden to perform some Bot-specific initialization. It is called only once when the Bot
-     * is first initialized.
+     * Method that can be overridden (not mandatory) to perform some Bot-specific initialization. It is called only
+     * once when the Bot is first initialized.
      */
     protected void botInit() {
     }
