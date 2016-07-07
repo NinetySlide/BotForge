@@ -33,19 +33,19 @@ public class BotContext {
     public BotContext(String pageAccessToken, String appSecretKey, String verifyToken, String validateCallbacksStr) {
 
         if (appSecretKey == null) {
-            throw new BotInitParameterMissingException(Constants.PARAM_MISSING_MSG_APP_SECRET_KEY);
+            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_APP_SECRET_KEY);
         } else {
             this.appSecretKey = appSecretKey;
         }
 
         if (pageAccessToken == null) {
-            throw new BotInitParameterMissingException(Constants.PARAM_MISSING_MSG_PAGE_ACCESS_TOKEN);
+            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_PAGE_ACCESS_TOKEN);
         } else {
             this.pageAccessToken = pageAccessToken;
         }
 
         if (verifyToken == null) {
-            throw new BotInitParameterMissingException(Constants.PARAM_MISSING_MSG_VERIFY_TOKEN);
+            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_VERIFY_TOKEN);
         } else {
             this.verifyToken = verifyToken;
         }
@@ -55,7 +55,7 @@ public class BotContext {
         } else if ("false".equalsIgnoreCase(validateCallbacksStr)) {
             validateCallbacks = false;
         } else {
-            throw new BotInitParameterMissingException(Constants.PARAM_MISSING_MSG_VALIDATE_CALLBACKS);
+            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_VALIDATE_CALLBACKS);
         }
 
     }

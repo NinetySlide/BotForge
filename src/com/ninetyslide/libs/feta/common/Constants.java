@@ -21,14 +21,27 @@ package com.ninetyslide.libs.feta.common;
  */
 public class Constants {
 
+    // Constants related to Servlet init parameters
     public final static String PARAM_NAME_PAGE_ACCESS_TOKEN = "pageAccessToken";
     public final static String PARAM_NAME_APP_SECRET_KEY = "appSecretKey";
     public final static String PARAM_NAME_VERIFY_TOKEN = "verifyToken";
     public final static String PARAM_NAME_VALIDATE_CALLBACKS = "validateCallbacks";
 
-    public final static String PARAM_MISSING_MSG_PAGE_ACCESS_TOKEN = "Page Access Token parameter is missing. Please verify your init parameters.";
-    public final static String PARAM_MISSING_MSG_APP_SECRET_KEY = "App Secret Key parameter is missing. Please verify your init parameters.";
-    public final static String PARAM_MISSING_MSG_VERIFY_TOKEN = "Verify Token parameter is missing. Please verify your init parameters.";
-    public final static String PARAM_MISSING_MSG_VALIDATE_CALLBACKS = "Validate Callbacks parameter is missing or not in the true/false form. Please verify your init parameters.";
+    // Constants related to BotInitParameterMissingException error messages
+    public final static String MSG_PARAM_MISSING_PAGE_ACCESS_TOKEN = "Page Access Token parameter is missing. Please verify your init parameters.";
+    public final static String MSG_PARAM_MISSING_APP_SECRET_KEY = "App Secret Key parameter is missing. Please verify your init parameters.";
+    public final static String MSG_PARAM_MISSING_VERIFY_TOKEN = "Verify Token parameter is missing. Please verify your init parameters.";
+    public final static String MSG_PARAM_MISSING_VALIDATE_CALLBACKS = "Validate Callbacks parameter is missing or not in the true/false form. Please verify your init parameters.";
+
+    // Constants related to HTTP parameters
+    public final static String CONTENT_TYPE_TEXT = "text/html";
+    public final static String CONTENT_TYPE_JSON = "application/json";
+    public final static String CHAR_ENCODING = "UTF-8";
+
+    // Constants related to Webhook Validation
+    public final static String WEBHOOK_VALIDATION_PARAM_NAME_MODE = "hub.mode";
+    public final static String WEBHOOK_VALIDATION_PARAM_NAME_VERIFY_TOKEN = "hub.verify_token";
+    public final static String WEBHOOK_VALIDATION_PARAM_NAME_CHALLENGE = "hub.challenge";
+    public final static String WEBHOOK_VALIDATION_MODE_SUBSCRIBE = "subscribe";
 
 }
