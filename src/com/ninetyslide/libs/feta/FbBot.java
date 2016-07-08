@@ -28,6 +28,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -102,8 +103,8 @@ public abstract class FbBot extends HttpServlet {
 
             // Set the HTTP Headres
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.setContentType(CONTENT_TYPE_TEXT);
-            resp.setCharacterEncoding(CHAR_ENCODING);
+            resp.setContentType(HTTP_CONTENT_TYPE_TEXT);
+            resp.setCharacterEncoding(HTTP_CHAR_ENCODING);
 
             // Write the challenge back to Facebook
             PrintWriter respWriter = resp.getWriter();
@@ -129,6 +130,25 @@ public abstract class FbBot extends HttpServlet {
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // TODO: Add actual implementation
 
+        // Get the URL of the request
+        String webhookUrl = req.getRequestURL().toString();
+
+        // Get the header signature
+        String signatureHeader = req.getHeader(HTTP_HEADER_SIGNATURE);
+
+        // Get the JSON String TODO: Extract into a method
+        String jsonPartial;
+        StringBuffer jsonRaw = new StringBuffer();
+        BufferedReader jsonReader = req.getReader();
+
+        while ((jsonPartial = jsonReader.readLine()) != null) {
+            jsonRaw.append(jsonPartial);
+        }
+        String jsonStr = jsonRaw.toString();
+
+        // Verify the signature using HMAC-SHA1
+
+        // Parse the JSON String
     }
 
     /**
@@ -181,18 +201,18 @@ public abstract class FbBot extends HttpServlet {
      */
     protected abstract BotContext onContextLoad(String pageId, String webhookUrl);
 
-    protected abstract void onMessageReceived(); // TODO Add the right parameters
+    protected void onMessageReceived() {} // TODO Add the right parameters
 
-    protected abstract void onPostbackReceived(); // TODO Add the right parameters
+    protected void onPostbackReceived() {} // TODO Add the right parameters
 
-    protected abstract void onAuthenticationReceived(); // TODO Add the right parameters
+    protected void onAuthenticationReceived() {} // TODO Add the right parameters
 
-    protected abstract void onMessageDelivered(); // TODO Add the right parameters
+    protected void onMessageDelivered() {} // TODO Add the right parameters
 
-    protected abstract void onMessageRead(); // TODO Add the right parameters
+    protected void onMessageRead() {} // TODO Add the right parameters
 
-    protected abstract void onMessageEchoReceived(); // TODO Add the right parameters
+    protected void onMessageEchoReceived() {} // TODO Add the right parameters
 
-    protected abstract void onAccountLinkingReceived(); // TODO Add the right parameters
+    protected void onAccountLinkingReceived() {} // TODO Add the right parameters
 
 }

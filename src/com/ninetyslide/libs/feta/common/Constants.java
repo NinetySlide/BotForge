@@ -38,9 +38,10 @@ public class Constants {
     public final static String MSG_INVALID_CONTEXT = "Invalid context passed as an argument";
 
     // Constants related to HTTP parameters
-    public final static String CONTENT_TYPE_TEXT = "text/html";
-    public final static String CONTENT_TYPE_JSON = "application/json";
-    public final static String CHAR_ENCODING = "UTF-8";
+    public final static String HTTP_CONTENT_TYPE_TEXT = "text/html";
+    public final static String HTTP_CONTENT_TYPE_JSON = "application/json";
+    public final static String HTTP_CHAR_ENCODING = "UTF-8";
+    public final static String HTTP_HEADER_SIGNATURE = "x-hub-signature";
 
     // Constants related to Webhook Validation
     public final static String WEBHOOK_VALIDATION_PARAM_NAME_MODE = "hub.mode";
