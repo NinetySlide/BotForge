@@ -16,48 +16,60 @@
 
 package com.ninetyslide.libs.feta.bean;
 
-import com.ninetyslide.libs.feta.common.Constants;
+import static com.ninetyslide.libs.feta.common.Constants.*;
 import com.ninetyslide.libs.feta.exception.BotInitParameterMissingException;
 
 /**
  * This represents the context of a Bot. It contains the values and the parameters that are used across all the Bot,
  * such as IDs and Keys.
  */
-public class BotContext {
+public final class BotContext {
 
+    private String pageId;
     private String pageAccessToken;
     private String appSecretKey;
     private String verifyToken;
+    private String webhookUrl;
     private boolean validateCallbacks;
 
-    public BotContext(String pageAccessToken, String appSecretKey, String verifyToken, String validateCallbacksStr) {
+    public BotContext(String pageId, String pageAccessToken, String appSecretKey, String verifyToken, String webhookUrl, boolean validateCallbacks) {
 
-        if (appSecretKey == null) {
-            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_APP_SECRET_KEY);
+        if (pageId == null || "".equals(pageId)) {
+            throw new BotInitParameterMissingException(MSG_PARAM_MISSING_PAGE_ID);
+        } else {
+            this.pageId = pageId;
+        }
+
+        if (appSecretKey == null || "".equals(appSecretKey)) {
+            throw new BotInitParameterMissingException(MSG_PARAM_MISSING_APP_SECRET_KEY);
         } else {
             this.appSecretKey = appSecretKey;
         }
 
-        if (pageAccessToken == null) {
-            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_PAGE_ACCESS_TOKEN);
+        if (pageAccessToken == null || "".equals(pageAccessToken)) {
+            throw new BotInitParameterMissingException(MSG_PARAM_MISSING_PAGE_ACCESS_TOKEN);
         } else {
             this.pageAccessToken = pageAccessToken;
         }
 
-        if (verifyToken == null) {
-            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_VERIFY_TOKEN);
+        if (verifyToken == null || "".equals(verifyToken)) {
+            throw new BotInitParameterMissingException(MSG_PARAM_MISSING_VERIFY_TOKEN);
         } else {
             this.verifyToken = verifyToken;
         }
 
-        if ("true".equalsIgnoreCase(validateCallbacksStr)) {
-            validateCallbacks = true;
-        } else if ("false".equalsIgnoreCase(validateCallbacksStr)) {
-            validateCallbacks = false;
+        if (webhookUrl == null || "".equals(webhookUrl)) {
+            throw new BotInitParameterMissingException(MSG_PARAM_MISSING_WEBHHOK_URL);
         } else {
-            throw new BotInitParameterMissingException(Constants.MSG_PARAM_MISSING_VALIDATE_CALLBACKS);
+            this.webhookUrl = webhookUrl;
         }
 
+        this.validateCallbacks = validateCallbacks;
+
+    }
+
+    public String getPageId() {
+        return pageId;
     }
 
     public String getPageAccessToken() {
@@ -70,6 +82,10 @@ public class BotContext {
 
     public String getVerifyToken() {
         return verifyToken;
+    }
+
+    public String getWebhookUrl() {
+        return webhookUrl;
     }
 
     public boolean isCallbacksValidationActive() {

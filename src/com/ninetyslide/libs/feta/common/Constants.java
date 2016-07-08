@@ -28,10 +28,14 @@ public class Constants {
     public final static String PARAM_NAME_VALIDATE_CALLBACKS = "validateCallbacks";
 
     // Constants related to BotInitParameterMissingException error messages
-    public final static String MSG_PARAM_MISSING_PAGE_ACCESS_TOKEN = "Page Access Token parameter is missing. Please verify your init parameters.";
-    public final static String MSG_PARAM_MISSING_APP_SECRET_KEY = "App Secret Key parameter is missing. Please verify your init parameters.";
-    public final static String MSG_PARAM_MISSING_VERIFY_TOKEN = "Verify Token parameter is missing. Please verify your init parameters.";
-    public final static String MSG_PARAM_MISSING_VALIDATE_CALLBACKS = "Validate Callbacks parameter is missing or not in the true/false form. Please verify your init parameters.";
+    public final static String MSG_PARAM_MISSING_PAGE_ID = "Page ID parameter is missing. Please verify your context parameters.";
+    public final static String MSG_PARAM_MISSING_PAGE_ACCESS_TOKEN = "Page Access Token parameter is missing. Please verify your context parameters.";
+    public final static String MSG_PARAM_MISSING_APP_SECRET_KEY = "App Secret Key parameter is missing. Please verify your context parameters.";
+    public final static String MSG_PARAM_MISSING_WEBHHOK_URL = "Webhook URL parameter is missing. Please verify your context parameters.";
+    public final static String MSG_PARAM_MISSING_VERIFY_TOKEN = "Verify Token parameter is missing. Please verify your context parameters.";
+
+    // Various error messages
+    public final static String MSG_INVALID_CONTEXT = "Invalid context passed as an argument";
 
     // Constants related to HTTP parameters
     public final static String CONTENT_TYPE_TEXT = "text/html";
