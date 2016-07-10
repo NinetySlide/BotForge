@@ -49,4 +49,6 @@ public class Constants {
     public final static String WEBHOOK_VALIDATION_PARAM_NAME_CHALLENGE = "hub.challenge";
     public final static String WEBHOOK_VALIDATION_MODE_SUBSCRIBE = "subscribe";
 
+    // Constants related to JSON parsing
+
 }

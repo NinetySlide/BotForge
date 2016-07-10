@@ -18,10 +18,10 @@ package com.ninetyslide.libs.feta;
 
 import static com.ninetyslide.libs.feta.common.Constants.*;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.ninetyslide.libs.feta.bean.BotContext;
 import com.ninetyslide.libs.feta.utils.BotContextManager;
+import com.ninetyslide.libs.feta.utils.SignatureVerifier;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.List;
 
 /**
@@ -127,28 +128,62 @@ public abstract class FbBot extends HttpServlet {
      * @throws IOException
      */
     @Override
-    protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO: Add actual implementation
+    protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
         // Get the URL of the request
         String webhookUrl = req.getRequestURL().toString();
 
-        // Get the header signature
+        // Retrieve the context or fail if the context is not found
+        BotContext context = retrieveContext(null, webhookUrl);
+        if (context == null) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        // Get the signature header
         String signatureHeader = req.getHeader(HTTP_HEADER_SIGNATURE);
 
-        // Get the JSON String TODO: Extract into a method
-        String jsonPartial;
-        StringBuffer jsonRaw = new StringBuffer();
-        BufferedReader jsonReader = req.getReader();
-
-        while ((jsonPartial = jsonReader.readLine()) != null) {
-            jsonRaw.append(jsonPartial);
+        // Get the JSON String
+        String jsonStr = null;
+        try {
+            jsonStr = extractJsonString(req.getReader());
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
-        String jsonStr = jsonRaw.toString();
 
-        // Verify the signature using HMAC-SHA1
+        // Verify the signature using HMAC-SHA1 and send back an error if verification fails
+        if (context.isCallbacksValidationActive() &&
+                !SignatureVerifier.verifySignature(jsonStr, signatureHeader, context.getAppSecretKey())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
 
         // Parse the JSON String
+        JsonObject receivedMessage = parser.parse(jsonStr).getAsJsonObject();
+
+        // TODO: Process every message of the batch
+        // TODO: Turn every String field name to a constant
+        JsonArray entries = receivedMessage.getAsJsonArray("entry");
+        for (JsonElement rawEntry : entries) {
+            JsonObject entry = rawEntry.getAsJsonObject();
+            JsonArray messages = entry.getAsJsonArray("messaging");
+            for (JsonElement messageRaw : messages) {
+                JsonObject message = messageRaw.getAsJsonObject();
+                /*
+                message
+                    - "is_echo":true
+                postback
+                optin
+                account_linking
+                delivery
+                read
+                */
+            }
+        }
+
+        resp.setStatus(HttpServletResponse.SC_OK);
+
+        // TODO: Add actual implementation
     }
 
     /**
@@ -177,6 +212,24 @@ public abstract class FbBot extends HttpServlet {
         } else {
             return onContextLoad(pageId, webhookUrl);
         }
+    }
+
+    /**
+     * Read the JSON String from the request body.
+     *
+     * @param jsonReader The BufferedReader from the request.
+     * @return The String representing the JSON.
+     * @throws IOException
+     */
+    private String extractJsonString(BufferedReader jsonReader) throws IOException {
+        String jsonPartial;
+        StringBuilder jsonRaw = new StringBuilder();
+
+        while ((jsonPartial = jsonReader.readLine()) != null) {
+            jsonRaw.append(jsonPartial);
+        }
+
+        return jsonRaw.toString();
     }
 
     /**
