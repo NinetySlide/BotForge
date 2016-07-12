@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.bean.incomingmessage;
+package com.ninetyslide.libs.feta.adapters;
 
 /**
- * Class representing a Read Receipt.
+ * TODO: Create a proper header for this file.
  */
-public class ReadReceipt extends IncomingMessage {
-
-    private long watermark;
-    private int seq;
-
-    public ReadReceipt() {
-    }
-
-    public long getWatermark() {
-        return watermark;
-    }
-
-    public int getSeq() {
-        return seq;
-    }
+public class ThreadSettingsAdapter {
 }

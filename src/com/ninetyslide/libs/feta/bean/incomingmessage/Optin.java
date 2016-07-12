@@ -20,4 +20,14 @@ package com.ninetyslide.libs.feta.bean.incomingmessage;
  * Class representing an Optin Message.
  */
 public class Optin extends IncomingMessage {
+
+    private String ref;
+
+    public Optin() {
+    }
+
+    public String getRef() {
+        return ref;
+    }
+
 }

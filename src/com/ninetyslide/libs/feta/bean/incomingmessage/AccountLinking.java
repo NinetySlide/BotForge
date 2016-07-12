@@ -20,4 +20,34 @@ package com.ninetyslide.libs.feta.bean.incomingmessage;
  * Class representing an Account Linking Message.
  */
 public class AccountLinking extends IncomingMessage {
+
+    private final static String STATUS_LINKED = "linked";
+    private final static String STATUS_UNLINKED = "unlinked";
+
+    private String status;
+    private String authorizationCode;
+
+    public AccountLinking() {
+    }
+
+    public Status getStatus() {
+        switch (status) {
+            case STATUS_LINKED:
+                return Status.LINKED;
+            case STATUS_UNLINKED:
+                return Status.UNLINKED;
+            default:
+                return Status.UNKNOWN;
+        }
+    }
+
+    public String getAuthorizationCode() {
+        return authorizationCode;
+    }
+
+    public enum Status {
+        LINKED,
+        UNLINKED,
+        UNKNOWN
+    }
 }

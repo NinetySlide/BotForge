@@ -17,21 +17,41 @@
 package com.ninetyslide.libs.feta.bean.incomingmessage;
 
 /**
- * Class representing a Read Receipt.
+ * Class representing a Received Text Message.
  */
-public class ReadReceipt extends IncomingMessage {
+public class TextMessage extends ReceivedMessage {
 
-    private long watermark;
-    private int seq;
+    private String text;
+    private QuickReply quickReply;
 
-    public ReadReceipt() {
+    public TextMessage() {
     }
 
-    public long getWatermark() {
-        return watermark;
+    @Override
+    public MessageType getMessageType() {
+        return MessageType.TEXT;
     }
 
-    public int getSeq() {
-        return seq;
+    public String getText() {
+        return text;
+    }
+
+    public String getQuickReply() {
+        return quickReply.getPayload();
+    }
+
+    private static class QuickReply {
+        String payload;
+
+        public QuickReply() {
+        }
+
+        QuickReply(String payload) {
+            this.payload = payload;
+        }
+
+        String getPayload() {
+            return payload;
+        }
     }
 }

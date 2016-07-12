@@ -16,10 +16,9 @@
 
 package com.ninetyslide.libs.feta;
 
-import static com.ninetyslide.libs.feta.common.Constants.*;
-
 import com.google.gson.*;
 import com.ninetyslide.libs.feta.bean.BotContext;
+import com.ninetyslide.libs.feta.bean.incomingmessage.*;
 import com.ninetyslide.libs.feta.utils.BotContextManager;
 import com.ninetyslide.libs.feta.utils.SignatureVerifier;
 
@@ -31,11 +30,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.util.List;
 
+import static com.ninetyslide.libs.feta.common.Constants.*;
+
 /**
- * Main class that handles the Bot. This class is an HttpServlet that receives GET and POST HTTP calls,
+ * Main class that handles the Bot. This class is an HttpServlet that receives GET and POST HTTP calls, extract the
+ * messages and delivers them to a series of callbacks, each one of them for a specific event.
+ *
+ * A Bot should override one or more of these callbacks to handle the events and the received messages, otherwise they
+ * will just be ignored (default behaviour).
+ *
+ * Please note that a single POST HTTP call can carry a batch of messages. When this happens, the messages will be
+ * parsed sequentially, triggering a callback invocation for each message. So, you are advised to not perform heavy
+ * load work inside the callbacks to avoid slowing down message processing. If you need to perform heavy computation
+ * for every message received, it is recommended to spawn a different thread (if your environment allows you to do so)
+ * or to use some sort of task queue.
  */
 public abstract class FbBot extends HttpServlet {
 
@@ -46,7 +56,7 @@ public abstract class FbBot extends HttpServlet {
 
     /**
      * Method that creates the BotContext object starting from parameters set in the deployment descriptor and then
-     * invoke the botinit() method to let the Bot perform its specific initialization.
+     * invoke the botInit() method to let the Bot perform its specific initialization.
      *
      * @param config The config object used to retrieve the parameters.
      * @throws ServletException
@@ -56,7 +66,9 @@ public abstract class FbBot extends HttpServlet {
         super.init(config);
 
         // Initialize all the fields
-        gson = new Gson();
+        gson = new GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .create();
         parser = new JsonParser();
         contextManager = BotContextManager.getInstance();
 
@@ -120,12 +132,13 @@ public abstract class FbBot extends HttpServlet {
     }
 
     /**
-     * TODO
+     * This method handles all the callbacks headed to the Webhook other than the Webhook Validation. It retrieves the
+     * BotContext using the request URL, verifies the signature of the request (if enabled), parses the message received
+     * via the webhook and then delivers the parsed message to the right callback, depending on the message type.
      *
-     * @param req
-     * @param resp
+     * @param req The request object.
+     * @param resp The response object.
      * @throws ServletException
-     * @throws IOException
      */
     @Override
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
@@ -144,7 +157,7 @@ public abstract class FbBot extends HttpServlet {
         String signatureHeader = req.getHeader(HTTP_HEADER_SIGNATURE);
 
         // Get the JSON String
-        String jsonStr = null;
+        String jsonStr;
         try {
             jsonStr = extractJsonString(req.getReader());
         } catch (IOException e) {
@@ -159,10 +172,10 @@ public abstract class FbBot extends HttpServlet {
         }
 
         // Parse the JSON String
-        JsonObject receivedMessage = parser.parse(jsonStr).getAsJsonObject();
+        JsonObject rawMessage = parser.parse(jsonStr).getAsJsonObject();
 
         // Process every message of the batch
-        JsonArray entries = receivedMessage.getAsJsonArray(JSON_CALLBACK_FIELD_NAME_ENTRY);
+        JsonArray entries = rawMessage.getAsJsonArray(JSON_CALLBACK_FIELD_NAME_ENTRY);
 
         for (JsonElement rawEntry : entries) {
 
@@ -172,29 +185,93 @@ public abstract class FbBot extends HttpServlet {
             for (JsonElement messageRaw : messages) {
                 JsonObject message = messageRaw.getAsJsonObject();
                 JsonObject content;
+                IncomingMessage incomingMessage;
 
                 if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_MESSAGE)) != null) {
-                    // TODO: It's a message received
-                    // TODO: Also parse the quick_reply field
-                    // TODO: Also parse message_echo ("is_echo":true)
+
+                    // It's a message received, parse it correctly based on the sub type
+                    if (content.getAsJsonObject(JSON_CALLBACK_SUB_TYPE_NAME_TEXT) != null) {
+                        incomingMessage = gson.fromJson(content, TextMessage.class);
+                    } else if (content.getAsJsonArray(JSON_CALLBACK_SUB_TYPE_NAME_ATTACHMENTS) != null) {
+                        incomingMessage = gson.fromJson(content, AttachmentMessage.class);
+                    } else {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        return;
+                    }
+
+                    // Set Sender ID, Recipient ID and Timestamp
+                    setMessageHeaders(rawMessage, incomingMessage);
+
+                    // Deliver the message to the right callback based on the type
+                    ReceivedMessage receivedMessage = (ReceivedMessage) incomingMessage;
+                    if (receivedMessage.isEcho()) {
+                        onMessageEchoReceived(context, receivedMessage);
+                    } else {
+                        onMessageReceived(context, receivedMessage);
+                    }
+
                 } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_POSTBACK)) != null) {
-                    // TODO: It's a postback
+
+                    // Parse the message as a postback message
+                    incomingMessage = gson.fromJson(content, Postback.class);
+
+                    // Set Sender ID, Recipient ID and Timestamp
+                    setMessageHeaders(rawMessage, incomingMessage);
+
+                    // Deliver the message to the postback callback
+                    onPostbackReceived(context, (Postback) incomingMessage);
+
                 } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_OPTIN)) != null) {
-                    // TODO: It's an authentication callback
+
+                    // Parse the message as an authentication callback
+                    incomingMessage = gson.fromJson(content, Optin.class);
+
+                    // Set Sender ID, Recipient ID and Timestamp
+                    setMessageHeaders(rawMessage, incomingMessage);
+
+                    // Deliver the message to the authentication callback
+                    onAuthenticationReceived(context, (Optin) incomingMessage);
+
                 } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_ACCOUNT_LINKING)) != null) {
-                    // TODO: It's an account linking callback
+
+                    // Parse the message as an account linking callback
+                    incomingMessage = gson.fromJson(content, AccountLinking.class);
+
+                    // Set Sender ID, Recipient ID and Timestamp
+                    setMessageHeaders(rawMessage, incomingMessage);
+
+                    // Deliver the message to the account linking callback
+                    onAccountLinkingReceived(context, (AccountLinking) incomingMessage);
+
                 } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_DELIVERY)) != null) {
-                    // TODO: It's a delivery receipt
+
+                    // Parse the message as a delivery receipt
+                    incomingMessage = gson.fromJson(content, DeliveryReceipt.class);
+
+                    // Set Sender ID, Recipient ID and Timestamp
+                    setMessageHeaders(rawMessage, incomingMessage);
+
+                    // Deliver the message to the message delivery callback
+                    onMessageDelivered(context, (DeliveryReceipt) incomingMessage);
+
                 } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_READ)) != null) {
-                    // TODO: It's a read receipt
+
+                    // Parse the message as a read receipt
+                    incomingMessage = gson.fromJson(content, ReadReceipt.class);
+
+                    // Set Sender ID, Recipient ID and Timestamp
+                    setMessageHeaders(rawMessage, incomingMessage);
+
+                    // Deliver the message to the message read callback
+                    onMessageRead(context, (ReadReceipt) incomingMessage);
+
                 }
             }
         }
 
-        // Answer with 202 HTTP Code if everything is ok
+        // Answer with HTTP Code 200 if there were no errors during the message processing
         resp.setStatus(HttpServletResponse.SC_OK);
 
-        // TODO: Add actual implementation
     }
 
     /**
@@ -244,6 +321,39 @@ public abstract class FbBot extends HttpServlet {
     }
 
     /**
+     * Set the Sender ID, Recipient ID and Timestamp in the incoming message.
+     *
+     * @param rawMessage The raw JSON Object received via the callback.
+     * @param message The extracted IncomingMessage.
+     * @return The IncomingMessage passed as inpput, with the values set.
+     */
+    private IncomingMessage setMessageHeaders(JsonObject rawMessage, IncomingMessage message) {
+
+        message.setSenderId(
+                rawMessage
+                        .getAsJsonObject(JSON_CALLBACK_FIELD_NAME_SENDER)
+                        .get(JSON_CALLBACK_FIELD_NAME_ID)
+                        .getAsString()
+        );
+
+        message.setRecipientId(
+                rawMessage
+                        .getAsJsonObject(JSON_CALLBACK_FIELD_NAME_RECIPIENT)
+                        .get(JSON_CALLBACK_FIELD_NAME_ID)
+                        .getAsString()
+        );
+
+        message.setTimestamp(
+                rawMessage
+                        .get(JSON_CALLBACK_FIELD_NAME_TIMESTAMP)
+                        .getAsLong()
+        );
+
+        return message;
+
+    }
+
+    /**
      * Method that can be overridden (not mandatory) to perform some Bot-specific initialization and contexts loading.
      * It is called only once when the Bot is first initialized.
      *
@@ -252,6 +362,62 @@ public abstract class FbBot extends HttpServlet {
     protected List<BotContext> botInit() {
         return null;
     }
+
+    /**
+     * TODO: Add description
+     *
+     * @param context The context of the Bot associated with this request.
+     * @param message The message received via the Webhook.
+     */
+    protected void onMessageReceived(BotContext context, ReceivedMessage message) {}
+
+    /**
+     * TODO: Add description
+     *
+     * @param context The context of the Bot associated with this request.
+     * @param message The message received via the Webhook.
+     */
+    protected void onPostbackReceived(BotContext context, Postback message) {}
+
+    /**
+     * TODO: Add description
+     *
+     * @param context The context of the Bot associated with this request.
+     * @param message The message received via the Webhook.
+     */
+    protected void onAuthenticationReceived(BotContext context, Optin message) {}
+
+    /**
+     * TODO: Add description
+     *
+     * @param context The context of the Bot associated with this request.
+     * @param message The message received via the Webhook.
+     */
+    protected void onMessageDelivered(BotContext context, DeliveryReceipt message) {}
+
+    /**
+     * TODO: Add description
+     *
+     * @param context The context of the Bot associated with this request.
+     * @param message The message received via the Webhook.
+     */
+    protected void onMessageRead(BotContext context, ReadReceipt message) {}
+
+    /**
+     * TODO: Add description
+     *
+     * @param context The context of the Bot associated with this request.
+     * @param message The message received via the Webhook.
+     */
+    protected void onMessageEchoReceived(BotContext context, ReceivedMessage message) {}
+
+    /**
+     * TODO: Add description
+     *
+     * @param context The context of the Bot associated with this request.
+     * @param message The message received via the Webhook.
+     */
+    protected void onAccountLinkingReceived(BotContext context, AccountLinking message) {}
 
     /**
      * Callback invoked when the context is not found inside the BotContextManager. This gives the chance to lazy load
@@ -264,19 +430,5 @@ public abstract class FbBot extends HttpServlet {
      * @return The context associated with the identifiers passed as arguments.
      */
     protected abstract BotContext onContextLoad(String pageId, String webhookUrl);
-
-    protected void onMessageReceived() {} // TODO Add the right parameters
-
-    protected void onPostbackReceived() {} // TODO Add the right parameters
-
-    protected void onAuthenticationReceived() {} // TODO Add the right parameters
-
-    protected void onMessageDelivered() {} // TODO Add the right parameters
-
-    protected void onMessageRead() {} // TODO Add the right parameters
-
-    protected void onMessageEchoReceived() {} // TODO Add the right parameters
-
-    protected void onAccountLinkingReceived() {} // TODO Add the right parameters
 
 }

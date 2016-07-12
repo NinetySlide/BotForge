@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.bean.incomingmessage;
+package com.ninetyslide.libs.feta.adapters;
 
 /**
- * Class representing a Received Message.
+ * TODO: Create a proper header for this file.
  */
-public class Message extends IncomingMessage {
+public class UserProfileApiAdapter {
 }

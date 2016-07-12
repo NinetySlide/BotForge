@@ -20,4 +20,24 @@ package com.ninetyslide.libs.feta.bean.incomingmessage;
  * Class representing a Delivery Receipt.
  */
 public class DeliveryReceipt extends IncomingMessage {
+
+    private String[] mids;
+    private long watermark;
+    private int seq;
+
+    public DeliveryReceipt() {
+    }
+
+    public String[] getMids() {
+        return mids;
+    }
+
+    public long getWatermark() {
+        return watermark;
+    }
+
+    public int getSeq() {
+        return seq;
+    }
+
 }

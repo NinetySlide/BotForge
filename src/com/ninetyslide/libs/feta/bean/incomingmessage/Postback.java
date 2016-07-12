@@ -20,4 +20,14 @@ package com.ninetyslide.libs.feta.bean.incomingmessage;
  * Class representing a Postback Message.
  */
 public class Postback extends IncomingMessage {
+
+    private String payload;
+
+    public Postback() {
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
 }

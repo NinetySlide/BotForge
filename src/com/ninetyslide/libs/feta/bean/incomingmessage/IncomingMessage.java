@@ -56,4 +56,6 @@ public abstract class IncomingMessage {
                 "Recipient ID: " + recipientId + "\n" +
                 "Timestamp: " + timestamp + "\n";
     }
+
+    // TODO: Add toString() methods for all its subclasses.
 }

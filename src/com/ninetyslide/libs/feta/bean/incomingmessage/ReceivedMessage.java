@@ -17,21 +17,44 @@
 package com.ninetyslide.libs.feta.bean.incomingmessage;
 
 /**
- * Class representing a Read Receipt.
+ * Superclass for TextMessage and AttachmentMessage.
  */
-public class ReadReceipt extends IncomingMessage {
+public abstract class ReceivedMessage extends IncomingMessage {
 
-    private long watermark;
+    private String mid;
     private int seq;
+    private boolean isEcho = false;
+    private String appId;
+    private String metadata;
 
-    public ReadReceipt() {
+    public ReceivedMessage() {
     }
 
-    public long getWatermark() {
-        return watermark;
+    public String getMid() {
+        return mid;
     }
 
     public int getSeq() {
         return seq;
     }
+
+    public boolean isEcho() {
+        return isEcho;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public abstract MessageType getMessageType();
+
+    public enum MessageType {
+        TEXT,
+        ATTACHMENT
+    }
+
 }

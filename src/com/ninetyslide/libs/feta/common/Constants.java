@@ -52,11 +52,17 @@ public class Constants {
     // Constants related to JSON parsing
     public final static String JSON_CALLBACK_FIELD_NAME_ENTRY = "entry";
     public final static String JSON_CALLBACK_FIELD_NAME_MESSAGING = "messaging";
+    public final static String JSON_CALLBACK_FIELD_NAME_SENDER = "sender";
+    public final static String JSON_CALLBACK_FIELD_NAME_RECIPIENT = "recipient";
+    public final static String JSON_CALLBACK_FIELD_NAME_TIMESTAMP = "timestamp";
+    public final static String JSON_CALLBACK_FIELD_NAME_ID = "id";
     public final static String JSON_CALLBACK_TYPE_NAME_MESSAGE = "message";
     public final static String JSON_CALLBACK_TYPE_NAME_POSTBACK = "postback";
     public final static String JSON_CALLBACK_TYPE_NAME_OPTIN = "optin";
     public final static String JSON_CALLBACK_TYPE_NAME_ACCOUNT_LINKING = "account_linking";
     public final static String JSON_CALLBACK_TYPE_NAME_DELIVERY = "delivery";
     public final static String JSON_CALLBACK_TYPE_NAME_READ = "read";
+    public final static String JSON_CALLBACK_SUB_TYPE_NAME_TEXT = "text";
+    public final static String JSON_CALLBACK_SUB_TYPE_NAME_ATTACHMENTS = "attachments";
 
 }
