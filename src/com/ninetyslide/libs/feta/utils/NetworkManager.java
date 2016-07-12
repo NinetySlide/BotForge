@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.adapters;
+package com.ninetyslide.libs.feta.utils;
 
 /**
- * Class that provides facilities to access Thread Settings API.
+ * Class that provides facilities to make low level HTTP requests.
  */
-public class ThreadSettingsAdapter {
+public class NetworkManager {
     // TODO: Add implementation
 }

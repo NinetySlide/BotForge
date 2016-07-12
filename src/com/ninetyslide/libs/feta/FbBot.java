@@ -134,7 +134,7 @@ public abstract class FbBot extends HttpServlet {
     /**
      * This method handles all the callbacks headed to the Webhook other than the Webhook Validation. It retrieves the
      * BotContext using the request URL, verifies the signature of the request (if enabled), parses the message received
-     * via the webhook and then delivers the parsed message to the right callback, depending on the message type.
+     * via the Webhook and then delivers the parsed message to the right callback, depending on the message type.
      *
      * @param req The request object.
      * @param resp The response object.
@@ -354,8 +354,13 @@ public abstract class FbBot extends HttpServlet {
     }
 
     /**
-     * Method that can be overridden (not mandatory) to perform some Bot-specific initialization and contexts loading.
-     * It is called only once when the Bot is first initialized.
+     * Method invoked only once, when the Bot is first initialized, to perform some custom Bot-specific initializations
+     * and to bulk load BotContext object inside the BotContextManager. The default implementation just returns null.
+     * The override of this method is optional.
+     *
+     * Initializations aside, this is the perfect place to bulk load BotContext objects without relying on the lazy
+     * loading performed when a context is first needed. This method is called only once when the Bot is first
+     * initialized.
      *
      * @return A list of BotContext objects to add to the BotContextManager.
      */
@@ -364,7 +369,10 @@ public abstract class FbBot extends HttpServlet {
     }
 
     /**
-     * TODO: Add description
+     * Callback invoked when a Text or Attachment message is received. To access all the information, the message type
+     * shall be inspected and the message passed as an argument shall be cast appropriately. The parameters contain
+     * everything is needed to perform actions in response to the event. The default implementation does just nothing.
+     * The overriding of this method is optional.
      *
      * @param context The context of the Bot associated with this request.
      * @param message The message received via the Webhook.
@@ -372,7 +380,9 @@ public abstract class FbBot extends HttpServlet {
     protected void onMessageReceived(BotContext context, ReceivedMessage message) {}
 
     /**
-     * TODO: Add description
+     * Callback invoked when a Postback message is received. The parameters contain everything is needed to perform
+     * actions in response to the event. The default implementation does just nothing. The overriding of this method
+     * is optional.
      *
      * @param context The context of the Bot associated with this request.
      * @param message The message received via the Webhook.
@@ -380,7 +390,9 @@ public abstract class FbBot extends HttpServlet {
     protected void onPostbackReceived(BotContext context, Postback message) {}
 
     /**
-     * TODO: Add description
+     * Callback invoked when an Authentication (Optin) message is received. The parameters contain everything is
+     * needed to perform actions in response to the event. The default implementation does just nothing. The overriding
+     * of this method is optional.
      *
      * @param context The context of the Bot associated with this request.
      * @param message The message received via the Webhook.
@@ -388,7 +400,9 @@ public abstract class FbBot extends HttpServlet {
     protected void onAuthenticationReceived(BotContext context, Optin message) {}
 
     /**
-     * TODO: Add description
+     * Callback invoked when a Delivery Confirmation message is received. The parameters contain everything is needed
+     * to perform actions in response to the event. The default implementation does just nothing. The overriding of
+     * this method is optional.
      *
      * @param context The context of the Bot associated with this request.
      * @param message The message received via the Webhook.
@@ -396,7 +410,9 @@ public abstract class FbBot extends HttpServlet {
     protected void onMessageDelivered(BotContext context, DeliveryReceipt message) {}
 
     /**
-     * TODO: Add description
+     * Callback invoked when a Read Confirmation message is received. The parameters contain everything is needed to
+     * perform actions in response to the event. The default implementation does just nothing. The overriding of this
+     * method is optional.
      *
      * @param context The context of the Bot associated with this request.
      * @param message The message received via the Webhook.
@@ -404,7 +420,9 @@ public abstract class FbBot extends HttpServlet {
     protected void onMessageRead(BotContext context, ReadReceipt message) {}
 
     /**
-     * TODO: Add description
+     * Callback invoked when a Message Echo is received. The parameters contain everything is needed to perform
+     * actions in response to the event. The default implementation does just nothing. The overriding of this method
+     * is optional.
      *
      * @param context The context of the Bot associated with this request.
      * @param message The message received via the Webhook.
@@ -412,7 +430,9 @@ public abstract class FbBot extends HttpServlet {
     protected void onMessageEchoReceived(BotContext context, ReceivedMessage message) {}
 
     /**
-     * TODO: Add description
+     * Callback invoked when an Account Linking message is received. The parameters contain everything is needed to
+     * perform actions in response to the event. The default implementation does just nothing. The overriding of this
+     * method is optional.
      *
      * @param context The context of the Bot associated with this request.
      * @param message The message received via the Webhook.
@@ -423,7 +443,10 @@ public abstract class FbBot extends HttpServlet {
      * Callback invoked when the context is not found inside the BotContextManager. This gives the chance to lazy load
      * the contexts. Please note that only one of the two parameters will be set at invocation time. They will never be
      * both set at the same time. The implementation must be prepared to work with either one of the parameter is set
-     * at invocation time.
+     * at invocation time. The implementation of this method is mandatory.
+     *
+     * Please note that a BotContext can be loaded, removed and modified anytime inside the BotContextManager just by
+     * using the BotContextManager instance provided as a field of this class.
      *
      * @param pageId The Page ID associated with the context.
      * @param webhookUrl The webhookUrl associated with the context.

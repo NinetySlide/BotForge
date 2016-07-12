@@ -17,8 +17,8 @@
 package com.ninetyslide.libs.feta.adapters;
 
 /**
- * Class that provides facilities to access Thread Settings API.
+ * Class that provides the facilities to access the Send API.
  */
-public class ThreadSettingsAdapter {
+public class SendMessageAdapter {
     // TODO: Add implementation
 }

@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.adapters;
+package com.ninetyslide.libs.feta.bean.outgoingmessage.response;
 
 /**
- * Class that provides facilities to access Thread Settings API.
+ * Class representing the response of the server to a message send.
  */
-public class ThreadSettingsAdapter {
-    // TODO: Add implementation
+public class SendMessageResponse {
+
+    private String recipientId;
+    private String messageId;
+
+    public SendMessageResponse() {
+    }
+
+    public String getRecipientId() {
+        return recipientId;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
 }

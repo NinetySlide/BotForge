@@ -17,7 +17,8 @@
 package com.ninetyslide.libs.feta.adapters;
 
 /**
- * TODO: Create a proper header for this file.
+ * Class that provides facilities to access User Profile API.
  */
 public class UserProfileApiAdapter {
+    // TODO: Add implementation
 }
