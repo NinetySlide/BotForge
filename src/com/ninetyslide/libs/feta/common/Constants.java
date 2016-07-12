@@ -50,5 +50,13 @@ public class Constants {
     public final static String WEBHOOK_VALIDATION_MODE_SUBSCRIBE = "subscribe";
 
     // Constants related to JSON parsing
+    public final static String JSON_CALLBACK_FIELD_NAME_ENTRY = "entry";
+    public final static String JSON_CALLBACK_FIELD_NAME_MESSAGING = "messaging";
+    public final static String JSON_CALLBACK_TYPE_NAME_MESSAGE = "message";
+    public final static String JSON_CALLBACK_TYPE_NAME_POSTBACK = "postback";
+    public final static String JSON_CALLBACK_TYPE_NAME_OPTIN = "optin";
+    public final static String JSON_CALLBACK_TYPE_NAME_ACCOUNT_LINKING = "account_linking";
+    public final static String JSON_CALLBACK_TYPE_NAME_DELIVERY = "delivery";
+    public final static String JSON_CALLBACK_TYPE_NAME_READ = "read";
 
 }

@@ -161,26 +161,37 @@ public abstract class FbBot extends HttpServlet {
         // Parse the JSON String
         JsonObject receivedMessage = parser.parse(jsonStr).getAsJsonObject();
 
-        // TODO: Process every message of the batch
-        // TODO: Turn every String field name to a constant
-        JsonArray entries = receivedMessage.getAsJsonArray("entry");
+        // Process every message of the batch
+        JsonArray entries = receivedMessage.getAsJsonArray(JSON_CALLBACK_FIELD_NAME_ENTRY);
+
         for (JsonElement rawEntry : entries) {
+
             JsonObject entry = rawEntry.getAsJsonObject();
-            JsonArray messages = entry.getAsJsonArray("messaging");
+            JsonArray messages = entry.getAsJsonArray(JSON_CALLBACK_FIELD_NAME_MESSAGING);
+
             for (JsonElement messageRaw : messages) {
                 JsonObject message = messageRaw.getAsJsonObject();
-                /*
-                message
-                    - "is_echo":true
-                postback
-                optin
-                account_linking
-                delivery
-                read
-                */
+                JsonObject content;
+
+                if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_MESSAGE)) != null) {
+                    // TODO: It's a message received
+                    // TODO: Also parse the quick_reply field
+                    // TODO: Also parse message_echo ("is_echo":true)
+                } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_POSTBACK)) != null) {
+                    // TODO: It's a postback
+                } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_OPTIN)) != null) {
+                    // TODO: It's an authentication callback
+                } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_ACCOUNT_LINKING)) != null) {
+                    // TODO: It's an account linking callback
+                } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_DELIVERY)) != null) {
+                    // TODO: It's a delivery receipt
+                } else if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_READ)) != null) {
+                    // TODO: It's a read receipt
+                }
             }
         }
 
+        // Answer with 202 HTTP Code if everything is ok
         resp.setStatus(HttpServletResponse.SC_OK);
 
         // TODO: Add actual implementation
