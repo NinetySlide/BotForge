@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.adapters;
+package com.ninetyslide.libs.feta.exception;
 
 /**
- * Class that provides the facilities to access the Send API.
+ * Class for the exception thrown when the notification type is not one of the allowed types.
  */
-public class SendMessageAdapter {
-    // TODO: Add implementation
-    // Parse the response
-    // Check for errors
+public class InvalidNotificationTypeException extends Exception {
+    public InvalidNotificationTypeException() {
+        super("Notification type can only be one of: regular, silent push and no push.");
+    }
 }

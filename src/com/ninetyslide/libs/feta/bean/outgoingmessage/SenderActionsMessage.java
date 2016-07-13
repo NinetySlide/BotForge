@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.adapters;
+package com.ninetyslide.libs.feta.bean.outgoingmessage;
 
 /**
- * Class that provides the facilities to access the Send API.
+ * TODO: Create a proper header for this file.
  */
-public class SendMessageAdapter {
-    // TODO: Add implementation
-    // Parse the response
-    // Check for errors
+public class SenderActionsMessage extends OutgoingMessage {
 }

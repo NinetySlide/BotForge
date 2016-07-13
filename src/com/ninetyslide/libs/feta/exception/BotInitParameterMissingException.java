@@ -17,8 +17,8 @@
 package com.ninetyslide.libs.feta.exception;
 
 /**
- * Exception class thrown when an init parameter for the bot is missing from the deploy descriptor of the Servlet.
- * This is an unchecked exception.
+ * Class for the exception thrown when an init parameter for the bot is missing from the deploy descriptor of the
+ * Servlet. This is an unchecked exception.
  */
 public class BotInitParameterMissingException extends RuntimeException {
 
