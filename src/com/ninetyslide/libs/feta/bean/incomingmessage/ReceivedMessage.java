@@ -50,9 +50,9 @@ public abstract class ReceivedMessage extends IncomingMessage {
         return metadata;
     }
 
-    public abstract MessageType getMessageType();
+    public abstract IncomingMessageType getIncomingMessageType();
 
-    public enum MessageType {
+    public enum IncomingMessageType {
         TEXT,
         ATTACHMENT
     }

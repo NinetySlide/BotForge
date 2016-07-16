@@ -19,10 +19,11 @@ package com.ninetyslide.libs.feta.exception;
 import com.ninetyslide.libs.feta.common.Constants;
 
 /**
- * Class for the exception thrown when the notification type is not one of the allowed types.
+ * Class for the exception thrown when the choosen message type does not support the operation that has been performed.
+ * This is an unchecked exception.
  */
-public class InvalidNotificationTypeException extends Exception {
-    public InvalidNotificationTypeException() {
-        super(Constants.MSG_NOTIFICATION_TYPE_INVALID);
+public class InvalidMessageOperationException extends RuntimeException {
+    public InvalidMessageOperationException() {
+        super(Constants.MSG_MESSAGE_OPERATION_INVALID);
     }
 }

@@ -34,6 +34,12 @@ public class Constants {
     public final static String MSG_PARAM_MISSING_WEBHHOK_URL = "Webhook URL parameter is missing. Please verify your context parameters.";
     public final static String MSG_PARAM_MISSING_VERIFY_TOKEN = "Verify Token parameter is missing. Please verify your context parameters.";
 
+    // Constants related to various exceptions
+    public final static String MSG_NOTIFICATION_TYPE_INVALID = "Notification type can only be one of: regular, silent push and no push.";
+    public final static String MSG_RECIPIENT_INVALID = "Exactly one of phone number or ID must be set as a recipient.";
+    public final static String MSG_MESSAGE_OPERATION_INVALID = "The message type does not support this operation.";
+    public final static String MSG_TEXT_LENGTH_EXCEEDED = "The text exceed the allowed character limit.";
+
     // Various error messages
     public final static String MSG_INVALID_CONTEXT = "Invalid context passed as an argument";
 
@@ -64,5 +70,8 @@ public class Constants {
     public final static String JSON_CALLBACK_TYPE_NAME_READ = "read";
     public final static String JSON_CALLBACK_SUB_TYPE_NAME_TEXT = "text";
     public final static String JSON_CALLBACK_SUB_TYPE_NAME_ATTACHMENTS = "attachments";
+
+    // Constants related to limits
+    public final static int LIMIT_TEXT_LENGTH = 320;
 
 }

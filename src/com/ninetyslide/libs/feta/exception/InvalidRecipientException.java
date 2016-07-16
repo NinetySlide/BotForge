@@ -19,10 +19,11 @@ package com.ninetyslide.libs.feta.exception;
 import com.ninetyslide.libs.feta.common.Constants;
 
 /**
- * Class for the exception thrown when the notification type is not one of the allowed types.
+ * Class for the exception thrown when both phone number and ID are set as the recipient of the mesage or when both
+ * are null. This is an unchecked exception.
  */
-public class InvalidNotificationTypeException extends Exception {
-    public InvalidNotificationTypeException() {
-        super(Constants.MSG_NOTIFICATION_TYPE_INVALID);
+public class InvalidRecipientException extends RuntimeException {
+    public InvalidRecipientException() {
+        super(Constants.MSG_RECIPIENT_INVALID);
     }
 }

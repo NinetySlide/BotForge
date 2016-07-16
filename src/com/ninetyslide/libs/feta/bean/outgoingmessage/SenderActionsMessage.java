@@ -17,7 +17,51 @@
 package com.ninetyslide.libs.feta.bean.outgoingmessage;
 
 /**
- * TODO: Create a proper header for this file.
+ * Class representing a Sender Action message.
  */
 public class SenderActionsMessage extends OutgoingMessage {
+
+    private final static String ACTION_MARK_SEEN = "mark_seen";
+    private final static String ACTION_TYPING_ON = "typing_on";
+    private final static String ACTION_TYPING_OFF = "typing_off";
+
+    private String senderAction;
+
+    @Override
+    public OutgoingMessageType getOutgoingMessageType() {
+        return OutgoingMessageType.SENDER_ACTION;
+    }
+
+    public SenderAction getSenderAction() {
+        switch (senderAction) {
+            case ACTION_MARK_SEEN:
+                return SenderAction.MARK_SEEN;
+            case ACTION_TYPING_ON:
+                return SenderAction.TYPING_ON;
+            case ACTION_TYPING_OFF:
+                return SenderAction.TYPING_OFF;
+            default:
+                return null;
+        }
+    }
+
+    public void setSenderAction(SenderAction senderAction) {
+        switch (senderAction) {
+            case MARK_SEEN:
+                this.senderAction = ACTION_MARK_SEEN;
+                break;
+            case TYPING_ON:
+                this.senderAction = ACTION_TYPING_ON;
+                break;
+            case TYPING_OFF:
+                this.senderAction = ACTION_TYPING_OFF;
+                break;
+        }
+    }
+
+    public enum SenderAction {
+        MARK_SEEN,
+        TYPING_ON,
+        TYPING_OFF
+    }
 }

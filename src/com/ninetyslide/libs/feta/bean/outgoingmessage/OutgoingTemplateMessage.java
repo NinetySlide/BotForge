@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.exception;
-
-import com.ninetyslide.libs.feta.common.Constants;
+package com.ninetyslide.libs.feta.bean.outgoingmessage;
 
 /**
- * Class for the exception thrown when the notification type is not one of the allowed types.
+ * TODO: Create a proper header for this file.
  */
-public class InvalidNotificationTypeException extends Exception {
-    public InvalidNotificationTypeException() {
-        super(Constants.MSG_NOTIFICATION_TYPE_INVALID);
+public class OutgoingTemplateMessage extends OutgoingMessage {
+    @Override
+    public OutgoingMessageType getOutgoingMessageType() {
+        return null;
     }
 }

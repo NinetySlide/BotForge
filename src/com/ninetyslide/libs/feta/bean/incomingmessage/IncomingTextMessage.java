@@ -19,17 +19,17 @@ package com.ninetyslide.libs.feta.bean.incomingmessage;
 /**
  * Class representing a Received Text Message.
  */
-public class TextMessage extends ReceivedMessage {
+public class IncomingTextMessage extends ReceivedMessage {
 
     private String text;
     private QuickReply quickReply;
 
-    public TextMessage() {
+    public IncomingTextMessage() {
     }
 
     @Override
-    public MessageType getMessageType() {
-        return MessageType.TEXT;
+    public IncomingMessageType getIncomingMessageType() {
+        return IncomingMessageType.TEXT;
     }
 
     public String getText() {

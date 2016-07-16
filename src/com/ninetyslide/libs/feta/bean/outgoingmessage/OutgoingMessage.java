@@ -17,6 +17,7 @@
 package com.ninetyslide.libs.feta.bean.outgoingmessage;
 
 import com.ninetyslide.libs.feta.exception.InvalidNotificationTypeException;
+import com.ninetyslide.libs.feta.exception.InvalidRecipientException;
 
 /**
  * Abstract class for all the outgoing messages.
@@ -31,11 +32,11 @@ public abstract class OutgoingMessage {
     private String notificationType;
 
     public OutgoingMessage() {
-    }
-
-    public OutgoingMessage(OutgoingRecipient recipient, String notificationType) throws InvalidNotificationTypeException {
-        this.recipient = recipient;
-        setNotificationType(notificationType);
+        try {
+            setNotificationType(NOTIFICATION_TYPE_REGULAR);
+        } catch (InvalidNotificationTypeException e) {
+            // Just do nothing, since the exception can never be thrown.
+        }
     }
 
     public OutgoingRecipient getRecipient() {
@@ -66,6 +67,8 @@ public abstract class OutgoingMessage {
         }
     }
 
+    public abstract OutgoingMessageType getOutgoingMessageType();
+
     public static class OutgoingRecipient {
         private String phoneNumber;
         private String id;
@@ -74,8 +77,12 @@ public abstract class OutgoingMessage {
         }
 
         public OutgoingRecipient(String phoneNumber, String id) {
-            this.phoneNumber = phoneNumber;
-            this.id = id;
+            if (phoneNumber == null ^ id == null) {
+                this.phoneNumber = phoneNumber;
+                this.id = id;
+            } else {
+                throw new InvalidRecipientException();
+            }
         }
 
         public String getPhoneNumber() {
@@ -84,6 +91,19 @@ public abstract class OutgoingMessage {
 
         public String getId() {
             return id;
+        }
+    }
+
+    public static class Builder {
+        private OutgoingMessageType messageType;
+
+        public Builder(OutgoingMessageType messageType) {
+            this.messageType = messageType;
+        }
+
+        public OutgoingMessage build() {
+            // TODO: Add implementation
+            return null;
         }
     }
 

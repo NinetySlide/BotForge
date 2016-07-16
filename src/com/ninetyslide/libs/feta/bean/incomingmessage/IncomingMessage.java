@@ -50,12 +50,4 @@ public abstract class IncomingMessage {
         this.timestamp = timestamp;
     }
 
-    @Override
-    public String toString() {
-        return "Sender ID: " + senderId + "\n" +
-                "Recipient ID: " + recipientId + "\n" +
-                "Timestamp: " + timestamp + "\n";
-    }
-
-    // TODO: Add toString() methods for all its subclasses.
 }

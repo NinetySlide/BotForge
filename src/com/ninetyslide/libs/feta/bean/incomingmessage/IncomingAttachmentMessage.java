@@ -21,7 +21,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Class representing a Received Message with Attachments.
  */
-public class AttachmentMessage extends ReceivedMessage {
+public class IncomingAttachmentMessage extends ReceivedMessage {
 
     private final static String TYPE_IMAGE = "image";
     private final static String TYPE_AUDIO = "audio";
@@ -29,21 +29,21 @@ public class AttachmentMessage extends ReceivedMessage {
     private final static String TYPE_FILE = "file";
     private final static String TYPE_LOCATION = "location";
 
-    private Attachment[] attachments;
+    private IncomingAttachment[] attachments;
 
-    public AttachmentMessage() {
+    public IncomingAttachmentMessage() {
     }
 
     @Override
-    public MessageType getMessageType() {
-        return MessageType.ATTACHMENT;
+    public IncomingMessageType getIncomingMessageType() {
+        return IncomingMessageType.ATTACHMENT;
     }
 
-    public Attachment[] getAttachments() {
+    public IncomingAttachment[] getAttachments() {
         return attachments;
     }
 
-    public Attachment getAttachment(int pos) {
+    public IncomingAttachment getAttachment(int pos) {
         return attachments[pos];
     }
 
@@ -55,31 +55,31 @@ public class AttachmentMessage extends ReceivedMessage {
      * Class representing the attachment of the message. It has a type and a payload that might contain different
      * values based on its type.
      */
-    private static class Attachment {
+    private static class IncomingAttachment {
         private String type;
-        private AttachmentPayload payload;
+        private IncomingAttachmentPayload payload;
 
-        public Attachment() {
+        public IncomingAttachment() {
         }
 
-        public AttachmentType getAttachmentType() {
+        public IncomingAttachmentType getAttachmentType() {
             switch (type) {
                 case TYPE_IMAGE:
-                    return AttachmentType.IMAGE;
+                    return IncomingAttachmentType.IMAGE;
                 case TYPE_AUDIO:
-                    return AttachmentType.AUDIO;
+                    return IncomingAttachmentType.AUDIO;
                 case TYPE_VIDEO:
-                    return AttachmentType.VIDEO;
+                    return IncomingAttachmentType.VIDEO;
                 case TYPE_FILE:
-                    return AttachmentType.FILE;
+                    return IncomingAttachmentType.FILE;
                 case TYPE_LOCATION:
-                    return AttachmentType.LOCATION;
+                    return IncomingAttachmentType.LOCATION;
                 default:
-                    return AttachmentType.UNKNOWN;
+                    return IncomingAttachmentType.UNKNOWN;
             }
         }
 
-        public AttachmentPayload getPayload() {
+        public IncomingAttachmentPayload getPayload() {
             return payload;
         }
     }
@@ -88,11 +88,11 @@ public class AttachmentMessage extends ReceivedMessage {
      * Class representing an attachment payload. Based on the type of the attachment, either url field or coordinates
      * field is set, not both.
      */
-    private static class AttachmentPayload {
+    private static class IncomingAttachmentPayload {
         private String url;
         private Coordinates coordinates;
 
-        public AttachmentPayload() {
+        public IncomingAttachmentPayload() {
         }
 
         public String getUrl() {
@@ -126,7 +126,7 @@ public class AttachmentMessage extends ReceivedMessage {
     /**
      * Enum used to describe the attachment type.
      */
-    public enum AttachmentType {
+    public enum IncomingAttachmentType {
         IMAGE,
         AUDIO,
         VIDEO,

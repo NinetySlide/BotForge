@@ -191,9 +191,9 @@ public abstract class FbBot extends HttpServlet {
 
                     // It's a message received, parse it correctly based on the sub type
                     if (content.getAsJsonObject(JSON_CALLBACK_SUB_TYPE_NAME_TEXT) != null) {
-                        incomingMessage = gson.fromJson(content, TextMessage.class);
+                        incomingMessage = gson.fromJson(content, IncomingTextMessage.class);
                     } else if (content.getAsJsonArray(JSON_CALLBACK_SUB_TYPE_NAME_ATTACHMENTS) != null) {
-                        incomingMessage = gson.fromJson(content, AttachmentMessage.class);
+                        incomingMessage = gson.fromJson(content, IncomingAttachmentMessage.class);
                     } else {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                         return;
