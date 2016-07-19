@@ -16,12 +16,109 @@
 
 package com.ninetyslide.libs.feta.bean.outgoingmessage;
 
+import com.ninetyslide.libs.feta.bean.outgoingmessage.feature.QuickRepliesCarrier;
+import com.ninetyslide.libs.feta.bean.outgoingmessage.feature.QuickRepliesSetter;
+import com.ninetyslide.libs.feta.bean.outgoingmessage.widget.Bubble;
+import com.ninetyslide.libs.feta.bean.outgoingmessage.widget.Button;
+import com.ninetyslide.libs.feta.common.Constants;
+import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * TODO: Create a proper header for this file.
+ * Class representing a Template outgoing message. The supported templates are "generic" and "button".
  */
-public class OutgoingTemplateMessage extends OutgoingMessage {
+public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRepliesSetter {
+
+    private final static String TYPE_GENERIC = "generic";
+    private final static String TYPE_BUTTON = "button";
+
+    private transient OutgoingMessageType messageType;
+    private TemplateMessage message;
+
+    public OutgoingTemplateMessage(OutgoingMessageType messageType) {
+        super();
+
+        switch (messageType) {
+            case TEMPLATE_GENERIC:
+                this.messageType = messageType;
+                // TODO: Handle this situation
+                break;
+            case TEMPLATE_BUTTON:
+                this.messageType = messageType;
+                // TODO: Handle this situation
+                break;
+            default:
+                throw new IllegalArgumentException(Constants.MSG_INVALID_TEMPLATE_TYPE);
+        }
+    }
+
     @Override
     public OutgoingMessageType getOutgoingMessageType() {
-        return null;
+        return messageType;
+    }
+
+    @Override
+    public void addQuickReply(QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+        message.addQuickReply(quickReply, force);
+    }
+
+    public void setText(String text) {
+        // Only for button template
+        // button text is limited to 320 char
+        // TODO: Add implementation
+    }
+
+    public void addButton(Button button) {
+        // Only for button template
+        // buttons are limited to 3
+        // TODO: Add implementation
+    }
+
+    public void addBubble(Bubble bubble) {
+        // only for generic template
+        // bubble is limited to 10
+        // TODO: Add implementation
+    }
+
+    private static class TemplateMessage extends QuickRepliesCarrier {
+        TemplateAttachment attachment;
+    }
+
+    private static class TemplateAttachment {
+        String type;
+        Template payload;
+    }
+
+    /**
+     * Superclass for the templates.
+     */
+    private abstract static class Template {
+        String templateType;
+
+    }
+
+    /**
+     * Class representing the Generic template, which contains an array of Bubbles.
+     */
+    private static class GenericTemplate extends Template {
+        List<Bubble> elements = new ArrayList<>();
+
+        public GenericTemplate() {
+            templateType = TYPE_GENERIC;
+        }
+    }
+
+    /**
+     * Class representing the Button template, which contains an array of Buttons.
+     */
+    private static class ButtonTemplate extends Template {
+        String text;
+        List<Button> buttons = new ArrayList<>();
+
+        public ButtonTemplate() {
+            templateType = TYPE_BUTTON;
+        }
     }
 }

@@ -16,19 +16,32 @@
 
 package com.ninetyslide.libs.feta.bean.outgoingmessage;
 
+import com.ninetyslide.libs.feta.bean.outgoingmessage.feature.QuickRepliesCarrier;
+import com.ninetyslide.libs.feta.bean.outgoingmessage.feature.QuickRepliesSetter;
 import com.ninetyslide.libs.feta.common.Constants;
+import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
 import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 
 /**
  * Class representing an outgoing text message.
  */
-public class OutgoingTextMessage extends OutgoingMessage {
+public class OutgoingTextMessage extends OutgoingMessage implements QuickRepliesSetter {
 
     private Text message;
+
+    public OutgoingTextMessage() {
+        super();
+        message = new Text();
+    }
 
     @Override
     public OutgoingMessageType getOutgoingMessageType() {
         return OutgoingMessageType.TEXT;
+    }
+
+    @Override
+    public void addQuickReply(QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+        message.addQuickReply(quickReply, force);
     }
 
     /**
@@ -43,7 +56,7 @@ public class OutgoingTextMessage extends OutgoingMessage {
     /**
      * Set the text for the ongoing message. Please note that at the time of this version, the length of the text is
      * limited to 320 characters. If you exceed this limit, an exception will be thrown. However, if you know what you
-     * are doing, you can set to true the parameter force so that the limit will not be enforced.
+     * are doing, you can set the parameter force to true so that the limit will not be enforced.
      *
      * @param text The text that will be assigned to the message.
      * @param force Wheteher or not the character limit must be enforced.
@@ -51,13 +64,15 @@ public class OutgoingTextMessage extends OutgoingMessage {
      * to false.
      */
     public void setText(String text, boolean force) throws TextLengthExceededException {
-        if (!force && text != null && text.length() > Constants.LIMIT_TEXT_LENGTH) {
-            throw new TextLengthExceededException();
+        if (text != null) {
+            if (!force && text.length() > Constants.LIMIT_TEXT_LENGTH) {
+                throw new TextLengthExceededException();
+            }
+            this.message.text = text;
         }
-        this.message.text = text;
     }
 
-    private static class Text {
+    private static class Text extends QuickRepliesCarrier {
         String text;
     }
 }

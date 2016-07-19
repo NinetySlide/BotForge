@@ -14,33 +14,14 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.bean.incomingmessage;
+package com.ninetyslide.libs.feta.bean.outgoingmessage.feature;
+
+import com.ninetyslide.libs.feta.bean.outgoingmessage.OutgoingMessage;
+import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
 
 /**
- * Class representing a Received Text Message.
+ * Interface used to expose the method to add a Quick Reply to a message.
  */
-public class IncomingTextMessage extends ReceivedMessage {
-
-    private String text;
-    private QuickReply quickReply;
-
-    public IncomingTextMessage() {
-    }
-
-    @Override
-    public IncomingMessageType getIncomingMessageType() {
-        return IncomingMessageType.TEXT;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getQuickReply() {
-        return quickReply.payload;
-    }
-
-    private static class QuickReply {
-        String payload;
-    }
+public interface QuickRepliesSetter {
+    void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException;
 }

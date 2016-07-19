@@ -19,7 +19,7 @@ package com.ninetyslide.libs.feta.exception;
 import com.ninetyslide.libs.feta.common.Constants;
 
 /**
- * TODO: Create a proper header for this file.
+ * Class for the exception thrown when the allowed text length in a message is exceeded.
  */
 public class TextLengthExceededException extends Exception {
     public TextLengthExceededException() {

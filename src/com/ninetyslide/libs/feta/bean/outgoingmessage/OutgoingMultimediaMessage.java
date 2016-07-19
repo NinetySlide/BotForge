@@ -16,10 +16,14 @@
 
 package com.ninetyslide.libs.feta.bean.outgoingmessage;
 
+import com.ninetyslide.libs.feta.bean.outgoingmessage.feature.QuickRepliesCarrier;
+import com.ninetyslide.libs.feta.bean.outgoingmessage.feature.QuickRepliesSetter;
+import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+
 /**
  * Class representing an outgoing message with multimedia attachments.
  */
-public class OutgoingMultimediaMessage extends OutgoingMessage {
+public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickRepliesSetter {
 
     private final static String TYPE_AUDIO = "audio";
     private final static String TYPE_IMAGE = "image";
@@ -62,6 +66,11 @@ public class OutgoingMultimediaMessage extends OutgoingMessage {
         return messageType;
     }
 
+    @Override
+    public void addQuickReply(QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+        message.addQuickReply(quickReply, force);
+    }
+
     public void setUrl(String url) {
         message.attachment.payload.url = url;
     }
@@ -71,7 +80,7 @@ public class OutgoingMultimediaMessage extends OutgoingMessage {
 
     }
 
-    private static class Media {
+    private static class Media extends QuickRepliesCarrier {
         MediaAttachment attachment;
     }
 
