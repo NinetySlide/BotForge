@@ -20,7 +20,7 @@ import static com.ninetyslide.libs.feta.common.Constants.*;
 import com.ninetyslide.libs.feta.exception.BotInitParameterMissingException;
 
 /**
- * This represents the context of a Bot. It contains the values and the parameters that are used across all the Bot,
+ * Class representing the context of a Bot. Contains the values and the parameters that are used across all the Bot,
  * such as IDs and Keys.
  */
 public final class BotContext {

@@ -16,6 +16,7 @@
 
 package com.ninetyslide.libs.feta.core.message.outgoing;
 
+import com.ninetyslide.libs.feta.common.Constants;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesCarrier;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesSetter;
 import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
@@ -31,7 +32,7 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
     private final static String TYPE_FILE = "file";
 
     private transient OutgoingMessageType messageType;
-    private MediaRoot message;
+    private MediaRoot message = null;
 
     public OutgoingMultimediaMessage(OutgoingMessageType messageType) {
         super();
@@ -39,26 +40,31 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
         // Set the message type
         this.messageType = messageType;
 
+        // Assign the String type
+        String type = null;
+
+        switch (messageType) {
+            case AUDIO:
+                type = TYPE_AUDIO;
+                break;
+            case IMAGE:
+                type = TYPE_IMAGE;
+                break;
+            case VIDEO:
+                type = TYPE_VIDEO;
+                break;
+            case FILE:
+                type = TYPE_FILE;
+                break;
+            default:
+                throw new IllegalArgumentException(Constants.MSG_MESSAGE_TYPE_INVALID);
+        }
+
         // Create the class internal structure
         message = new MediaRoot();
         message.attachment = new MediaAttachment();
+        message.attachment.type = type;
         message.attachment.payload = new MediaPayload();
-
-        // Assign the String type
-        switch (messageType) {
-            case AUDIO:
-                message.attachment.type = TYPE_AUDIO;
-                break;
-            case IMAGE:
-                message.attachment.type = TYPE_IMAGE;
-                break;
-            case VIDEO:
-                message.attachment.type = TYPE_VIDEO;
-                break;
-            case FILE:
-                message.attachment.type = TYPE_FILE;
-                break;
-        }
     }
 
     @Override
@@ -85,16 +91,32 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
         message.attachment.payload.url = url;
     }
 
+    /**
+     * Check whether the message is valid.
+     *
+     * @return True if the message is valid, false otherwise.
+     */
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                message != null &&
+                message.isValid() &&
+                message.attachment != null &&
+                message.attachment.type != null &&
+                message.attachment.payload != null &&
+                message.attachment.payload.url != null;
+    }
+
     private static class MediaRoot extends QuickRepliesCarrier {
-        MediaAttachment attachment;
+        MediaAttachment attachment = null;
     }
 
     private static class MediaAttachment {
-        String type;
-        MediaPayload payload;
+        String type = null;
+        MediaPayload payload = null;
     }
 
     private static class MediaPayload {
-        String url;
+        String url = null;
     }
 }

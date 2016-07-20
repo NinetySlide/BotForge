@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Class that provides the basic infrastructure to add quick replies support to a normal message.
  */
-public abstract class QuickRepliesCarrier {
+public abstract class QuickRepliesCarrier implements ValidityChecker {
     private List<OutgoingMessage.QuickReply> quickReplies = null;
 
     /**
@@ -48,5 +48,20 @@ public abstract class QuickRepliesCarrier {
 
             quickReplies.add(quickReply);
         }
+    }
+
+    /**
+     * Check whether the message is valid.
+     *
+     * @return True if the message is valid, false otherwise.
+     */
+    @Override
+    public boolean isValid() {
+        for (OutgoingMessage.QuickReply quickReply : quickReplies) {
+            if (!quickReply.isValid()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

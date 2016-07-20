@@ -22,7 +22,7 @@ import com.ninetyslide.libs.feta.common.Constants;
  * Class for the exception thrown when the allowed text length in a message is exceeded.
  */
 public class TextLengthExceededException extends Exception {
-    public TextLengthExceededException() {
-        super(Constants.MSG_TEXT_LENGTH_EXCEEDED);
+    public TextLengthExceededException(String message) {
+        super(message);
     }
 }

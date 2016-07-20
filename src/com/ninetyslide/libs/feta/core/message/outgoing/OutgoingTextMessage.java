@@ -16,9 +16,9 @@
 
 package com.ninetyslide.libs.feta.core.message.outgoing;
 
+import com.ninetyslide.libs.feta.common.Constants;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesCarrier;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesSetter;
-import com.ninetyslide.libs.feta.common.Constants;
 import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
 import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 
@@ -27,7 +27,7 @@ import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
  */
 public class OutgoingTextMessage extends OutgoingMessage implements QuickRepliesSetter {
 
-    private TextRoot message;
+    private TextRoot message = null;
 
     public OutgoingTextMessage() {
         super();
@@ -71,13 +71,26 @@ public class OutgoingTextMessage extends OutgoingMessage implements QuickReplies
     public void setText(String text, boolean force) throws TextLengthExceededException {
         if (text != null) {
             if (!force && text.length() > Constants.LIMIT_TEXT_LENGTH) {
-                throw new TextLengthExceededException();
+                throw new TextLengthExceededException(Constants.MSG_TEXT_LENGTH_EXCEEDED);
             }
             this.message.text = text;
         }
     }
 
+    /**
+     * Check whether the message is valid.
+     *
+     * @return True if the message is valid, false otherwise.
+     */
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                message != null &&
+                message.isValid() &&
+                message.text != null;
+    }
+
     private static class TextRoot extends QuickRepliesCarrier {
-        String text;
+        String text = null;
     }
 }

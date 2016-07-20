@@ -17,13 +17,14 @@
 package com.ninetyslide.libs.feta.core.message.outgoing;
 
 import com.ninetyslide.libs.feta.common.Constants;
+import com.ninetyslide.libs.feta.core.message.outgoing.feature.ValidityChecker;
 import com.ninetyslide.libs.feta.exception.InvalidNotificationTypeException;
 import com.ninetyslide.libs.feta.exception.InvalidRecipientException;
 
 /**
  * Abstract class for all the outgoing messages.
  */
-public abstract class OutgoingMessage {
+public abstract class OutgoingMessage implements ValidityChecker {
 
     public final static String NOTIFICATION_TYPE_REGULAR = "REGULAR";
     public final static String NOTIFICATION_TYPE_SILENT = "SILENT_PUSH";
@@ -32,7 +33,7 @@ public abstract class OutgoingMessage {
     public final static String QUICK_REPLY_CONTENT_TYPE = "text";
 
     private OutgoingRecipient recipient;
-    private String notificationType;
+    private String notificationType = null;
 
     public OutgoingMessage() {
         try {
@@ -92,6 +93,16 @@ public abstract class OutgoingMessage {
         throw new UnsupportedOperationException(Constants.MSG_OPERATION_NOT_SUPPORTED_BY_MESSAGE_TYPE);
     }
 
+    /**
+     * Check whether the message is valid.
+     *
+     * @return True if the message is valid, false otherwise.
+     */
+    @Override
+    public boolean isValid() {
+        return recipient != null;
+    }
+
     public abstract OutgoingMessageType getOutgoingMessageType();
 
     public static class OutgoingRecipient {
@@ -108,14 +119,6 @@ public abstract class OutgoingMessage {
             } else {
                 throw new InvalidRecipientException();
             }
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public String getId() {
-            return id;
         }
     }
 
@@ -136,30 +139,33 @@ public abstract class OutgoingMessage {
      * Class representing a quick reply. An array of quick replies can be added to every text, multimedia and
      * template message.
      */
-    public static class QuickReply {
+    public static class QuickReply implements ValidityChecker {
         private String contentType = QUICK_REPLY_CONTENT_TYPE;
-        private String title;
-        private String payload;
+        private String title = null;
+        private String payload = null;
 
         public QuickReply(String title, String payload) {
             this.title = title;
             this.payload = payload;
         }
 
-        public String getTitle() {
-            return title;
-        }
-
         public void setTitle(String title) {
             this.title = title;
         }
 
-        public String getPayload() {
-            return payload;
-        }
-
         public void setPayload(String payload) {
             this.payload = payload;
+        }
+
+        /**
+         * Check whether the message is valid.
+         *
+         * @return True if the message is valid, false otherwise.
+         */
+        @Override
+        public boolean isValid() {
+            return title != null &&
+                    payload != null;
         }
     }
 

@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.bean.outgoingmessage.feature;
-
-import com.ninetyslide.libs.feta.bean.outgoingmessage.OutgoingMessage;
-import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+package com.ninetyslide.libs.feta.core.message.outgoing.feature;
 
 /**
- * Interface used to expose the method to add a Quick Reply to a message.
+ * Interface used to expose the method used to check if the message is valid.
  */
-public interface QuickRepliesSetter {
-    void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException;
+public interface ValidityChecker {
+    boolean isValid();
 }

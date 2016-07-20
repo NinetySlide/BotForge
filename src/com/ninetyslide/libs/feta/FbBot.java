@@ -143,6 +143,7 @@ public abstract class FbBot extends HttpServlet {
     @Override
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
+        // TODO: Handle the reception of the like button
         // Get the URL of the request
         String webhookUrl = req.getRequestURL().toString();
 

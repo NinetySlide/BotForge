@@ -21,12 +21,6 @@ package com.ninetyslide.libs.feta.common;
  */
 public class Constants {
 
-    // Constants related to Servlet init parameters
-    public final static String PARAM_NAME_PAGE_ACCESS_TOKEN = "pageAccessToken";
-    public final static String PARAM_NAME_APP_SECRET_KEY = "appSecretKey";
-    public final static String PARAM_NAME_VERIFY_TOKEN = "verifyToken";
-    public final static String PARAM_NAME_VALIDATE_CALLBACKS = "validateCallbacks";
-
     // Constants related to BotInitParameterMissingException error messages
     public final static String MSG_PARAM_MISSING_PAGE_ID = "Page ID parameter is missing. Please verify your context parameters.";
     public final static String MSG_PARAM_MISSING_PAGE_ACCESS_TOKEN = "Page Access Token parameter is missing. Please verify your context parameters.";
@@ -37,13 +31,19 @@ public class Constants {
     // Constants related to various exceptions
     public final static String MSG_NOTIFICATION_TYPE_INVALID = "Notification type can only be one of: regular, silent push and no push.";
     public final static String MSG_RECIPIENT_INVALID = "Exactly one of phone number or ID must be set as a recipient.";
+    public final static String MSG_MESSAGE_TYPE_INVALID = "The message type is not valid for this operation.";
     public final static String MSG_MESSAGE_OPERATION_INVALID = "The message type does not support this operation.";
-    public final static String MSG_TEXT_LENGTH_EXCEEDED = "The text exceed the allowed character limit.";
+    public final static String MSG_TEXT_LENGTH_EXCEEDED = "The text exceed the maximum allowed character limit.";
+    public final static String MSG_TITLE_LENGTH_EXCEEDED = "The title exceeded the maximum allowed character limit.";
+    public final static String MSG_SUBTITLE_LENGTH_EXCEEDED = "The subtitle exceeded the maximum allowed character limit.";
+    public final static String MSG_PAYLOAD_LENGTH_EXCEEDED = "The payload exceeded the maximum allowed character limit.";
     public final static String MSG_BUBBLES_NUMBER_EXCEEDED = "The maximum number of allowed bubbles in the template has been exceeded.";
     public final static String MSG_BUTTONS_NUMBER_EXCEEDED = "The maximum number of allowed buttons in the template has been exceeded.";
     public final static String MSG_QUICK_REPLIES_EXCEEDED = "The maximum number of allowed quick replies has been exceeded.";
-    public static final String MSG_INVALID_TEMPLATE_TYPE = "The specified template type is invalid or unsopported.";
+    public static final String MSG_TEMPLATE_INVALID_TYPE = "The specified template type is invalid or unsopported.";
     public final static String MSG_OPERATION_NOT_SUPPORTED_BY_MESSAGE_TYPE = "The performed operation is not supported by the message type.";
+    public final static String MSG_BUTTON_OPERATION_NOT_SUPPORTED = "The performed operation is not supported by the button type.";
+    public final static String MSG_BUTTON_INVALID_TYPE = "The provided button type is not valid.";
 
     // Various error messages
     public final static String MSG_INVALID_CONTEXT = "Invalid context passed as an argument";
@@ -81,5 +81,9 @@ public class Constants {
     public final static int LIMIT_QUICK_REPLIES = 10;
     public final static int LIMIT_BUTTONS = 3;
     public final static int LIMIT_BUBBLES = 10;
+    public final static int LIMIT_PAYLOAD = 1000;
+    public final static int LIMIT_TITLE_LENGTH = 20;
+    public final static int LIMIT_BUBBLE_TITLE = 80;
+    public final static int LIMIT_BUBBLE_SUBTITLE = 80;
 
 }

@@ -25,7 +25,7 @@ public class SenderActionsMessage extends OutgoingMessage {
     private final static String ACTION_TYPING_ON = "typing_on";
     private final static String ACTION_TYPING_OFF = "typing_off";
 
-    private String senderAction;
+    private String senderAction = null;
 
     @Override
     public OutgoingMessageType getOutgoingMessageType() {
@@ -57,6 +57,17 @@ public class SenderActionsMessage extends OutgoingMessage {
                 this.senderAction = ACTION_TYPING_OFF;
                 break;
         }
+    }
+
+    /**
+     * Check whether the message is valid.
+     *
+     * @return True if the message is valid, false otherwise.
+     */
+    @Override
+    public boolean isValid() {
+        return super.isValid() &&
+                senderAction != null;
     }
 
     public enum SenderAction {

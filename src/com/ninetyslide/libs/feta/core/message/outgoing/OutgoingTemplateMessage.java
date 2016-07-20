@@ -16,11 +16,11 @@
 
 package com.ninetyslide.libs.feta.core.message.outgoing;
 
+import com.ninetyslide.libs.feta.common.Constants;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesCarrier;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesSetter;
 import com.ninetyslide.libs.feta.core.message.outgoing.widget.Bubble;
 import com.ninetyslide.libs.feta.core.message.outgoing.widget.Button;
-import com.ninetyslide.libs.feta.common.Constants;
 import com.ninetyslide.libs.feta.exception.BubblesNumberExceededException;
 import com.ninetyslide.libs.feta.exception.ButtonsNumberExceededException;
 import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
@@ -39,27 +39,29 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     private final static String TYPE_BUTTON = "button";
 
     private transient OutgoingMessageType messageType;
-    private TemplateRoot message;
+    private TemplateRoot message = null;
 
     public OutgoingTemplateMessage(OutgoingMessageType messageType) {
         super();
 
-        // Initialize the template message
+        // Initialize the template message based on the template type
+        Template payload = null;
+
+        switch (this.messageType) {
+            case TEMPLATE_GENERIC:
+                payload = new GenericTemplate();
+                break;
+            case TEMPLATE_BUTTON:
+                payload = new ButtonTemplate();
+                break;
+            default:
+                throw new IllegalArgumentException(Constants.MSG_TEMPLATE_INVALID_TYPE);
+        }
+
         this.messageType = messageType;
         this.message = new TemplateRoot();
         this.message.attachment = new TemplateAttachment();
-
-        // Complete initialization based on the template type
-        switch (this.messageType) {
-            case TEMPLATE_GENERIC:
-                this.message.attachment.payload = new GenericTemplate();
-                break;
-            case TEMPLATE_BUTTON:
-                this.message.attachment.payload = new ButtonTemplate();
-                break;
-            default:
-                throw new IllegalArgumentException(Constants.MSG_INVALID_TEMPLATE_TYPE);
-        }
+        this.message.attachment.payload = payload;
     }
 
     @Override
@@ -77,6 +79,8 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
         message.addQuickReply(quickReply, force);
     }
 
+    // TODO: Remove all overloaded methods that does not include the force parameter. They will be put inside the builder class.
+    // TODO: Check for null collection objects in for loops.
     /**
      * Set the text for the button template. Same as setText(text, false).
      *
@@ -103,7 +107,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
         // Button text is limited to 320 characters
         if (text != null) {
             if (!force && text.length() > Constants.LIMIT_TEXT_LENGTH) {
-                throw new TextLengthExceededException();
+                throw new TextLengthExceededException(Constants.MSG_TEXT_LENGTH_EXCEEDED);
             }
             ((ButtonTemplate) this.message.attachment.payload).text = text;
         }
@@ -181,8 +185,60 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
         }
     }
 
+    /**
+     * Check whether the message is valid.
+     *
+     * @return True if the message is valid, false otherwise.
+     */
+    @Override
+    public boolean isValid() {
+        // Check that every basic attribute of a template message is valid
+        if (message == null ||
+                message.attachment == null ||
+                message.attachment.type == null ||
+                !message.attachment.type.equals(SUPERTYPE_TEMPLATE) ||
+                message.attachment.payload == null ||
+                message.attachment.payload.templateType == null) {
+            return false;
+        }
+
+        // Check that every component of a generic template is valid
+        if (messageType == OutgoingMessageType.TEMPLATE_GENERIC) {
+            GenericTemplate genericTemplate = (GenericTemplate) message.attachment.payload;
+            if (!genericTemplate.templateType.equals(TYPE_GENERIC) ||
+                    genericTemplate.elements == null ||
+                    genericTemplate.elements.size() < 1) {
+                return false;
+            }
+            for (Bubble bubble : genericTemplate.elements) {
+                if (!bubble.isValid()) {
+                    return false;
+                }
+            }
+        }
+
+        // Check that every component of a button template is valid
+        if (messageType == OutgoingMessageType.TEMPLATE_BUTTON) {
+            ButtonTemplate buttonTemplate = (ButtonTemplate) message.attachment.payload;
+            if (!buttonTemplate.templateType.equals(TYPE_BUTTON) ||
+                    buttonTemplate.text == null ||
+                    buttonTemplate.buttons == null ||
+                    buttonTemplate.buttons.size() < 1) {
+                return false;
+            }
+            for (Button button : buttonTemplate.buttons) {
+                if (!button.isValid()) {
+                    return false;
+                }
+            }
+        }
+
+        // Check that superclass and message are valid
+        return super.isValid() && message.isValid();
+    }
+
     private static class TemplateRoot extends QuickRepliesCarrier {
-        TemplateAttachment attachment;
+        TemplateAttachment attachment = null;
     }
 
     private static class TemplateAttachment {
@@ -190,15 +246,15 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
             type = SUPERTYPE_TEMPLATE;
         }
 
-        String type;
-        Template payload;
+        String type = null;
+        Template payload = null;
     }
 
     /**
      * Superclass for the templates.
      */
     private abstract static class Template {
-        String templateType;
+        String templateType = null;
     }
 
     /**
@@ -216,7 +272,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
      * Class representing the Button template, which contains an array of Buttons.
      */
     private static class ButtonTemplate extends Template {
-        String text;
+        String text = null;
         List<Button> buttons = new ArrayList<>();
 
         public ButtonTemplate() {
