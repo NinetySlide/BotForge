@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.utils;
+package com.ninetyslide.libs.feta.core.message.outgoing.feature;
+
+import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
+import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
 
 /**
- * Class that provides facilities to make low level HTTP requests.
+ * Interface used to expose the method to add a Quick Reply to a message.
  */
-public class NetworkManager {
-    // TODO: Add implementation
+public interface QuickRepliesSetter {
+    void addQuickReply(OutgoingMessage.QuickReply quickReply) throws QuickRepliesNumberExceededException;
+    void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException;
 }

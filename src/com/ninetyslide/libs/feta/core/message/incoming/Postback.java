@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.utils;
+package com.ninetyslide.libs.feta.core.message.incoming;
 
 /**
- * Class holding static methods related to the verification of the signature in the callbacks.
+ * Class representing a Postback Message.
  */
-public class SignatureVerifier {
+public class Postback extends IncomingMessage {
 
-    public static boolean verifySignature(String payload, String signature, String appSecretKey) {
-        return payload.equals(""); // TODO: Add implementation
+    private String payload;
+
+    public Postback() {
+    }
+
+    public String getPayload() {
+        return payload;
     }
 
 }

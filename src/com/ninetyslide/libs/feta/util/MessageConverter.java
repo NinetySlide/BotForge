@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.utils;
+package com.ninetyslide.libs.feta.util;
 
-import com.ninetyslide.libs.feta.bean.incomingmessage.IncomingMessage;
-import com.ninetyslide.libs.feta.bean.outgoingmessage.OutgoingMessage;
+import com.ninetyslide.libs.feta.core.message.incoming.IncomingMessage;
+import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
 
 /**
  * Class that exposes the facilities to seamlessly convert an incoming message in an outgoing message, so that it's

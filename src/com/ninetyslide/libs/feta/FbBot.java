@@ -17,10 +17,10 @@
 package com.ninetyslide.libs.feta;
 
 import com.google.gson.*;
-import com.ninetyslide.libs.feta.bean.BotContext;
-import com.ninetyslide.libs.feta.bean.incomingmessage.*;
-import com.ninetyslide.libs.feta.utils.BotContextManager;
-import com.ninetyslide.libs.feta.utils.SignatureVerifier;
+import com.ninetyslide.libs.feta.core.BotContext;
+import com.ninetyslide.libs.feta.core.message.incoming.*;
+import com.ninetyslide.libs.feta.util.BotContextManager;
+import com.ninetyslide.libs.feta.util.SignatureVerifier;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

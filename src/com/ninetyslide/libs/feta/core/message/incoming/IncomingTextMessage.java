@@ -14,11 +14,33 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.adapters;
+package com.ninetyslide.libs.feta.core.message.incoming;
 
 /**
- * Class that provides facilities to access Thread Settings API.
+ * Class representing a Received Text Message.
  */
-public class ThreadSettingsAdapter {
-    // TODO: Add implementation
+public class IncomingTextMessage extends ReceivedMessage {
+
+    private String text;
+    private QuickReply quickReply;
+
+    public IncomingTextMessage() {
+    }
+
+    @Override
+    public IncomingMessageType getIncomingMessageType() {
+        return IncomingMessageType.TEXT;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getQuickReply() {
+        return quickReply.payload;
+    }
+
+    private static class QuickReply {
+        String payload;
+    }
 }

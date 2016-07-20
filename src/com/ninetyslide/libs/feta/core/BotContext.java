@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.bean;
+package com.ninetyslide.libs.feta.core;
 
 import static com.ninetyslide.libs.feta.common.Constants.*;
 import com.ninetyslide.libs.feta.exception.BotInitParameterMissingException;

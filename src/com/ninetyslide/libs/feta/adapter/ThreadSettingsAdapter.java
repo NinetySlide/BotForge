@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.adapters;
+package com.ninetyslide.libs.feta.adapter;
 
 /**
- * Class that provides the facilities to access the Send API.
+ * Class that provides facilities to access Thread Settings API.
  */
-public class SendMessageAdapter {
+public class ThreadSettingsAdapter {
     // TODO: Add implementation
-    // Parse the response
-    // Check for errors
 }

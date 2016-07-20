@@ -39,8 +39,11 @@ public class Constants {
     public final static String MSG_RECIPIENT_INVALID = "Exactly one of phone number or ID must be set as a recipient.";
     public final static String MSG_MESSAGE_OPERATION_INVALID = "The message type does not support this operation.";
     public final static String MSG_TEXT_LENGTH_EXCEEDED = "The text exceed the allowed character limit.";
+    public final static String MSG_BUBBLES_NUMBER_EXCEEDED = "The maximum number of allowed bubbles in the template has been exceeded.";
+    public final static String MSG_BUTTONS_NUMBER_EXCEEDED = "The maximum number of allowed buttons in the template has been exceeded.";
     public final static String MSG_QUICK_REPLIES_EXCEEDED = "The maximum number of allowed quick replies has been exceeded.";
     public static final String MSG_INVALID_TEMPLATE_TYPE = "The specified template type is invalid or unsopported.";
+    public final static String MSG_OPERATION_NOT_SUPPORTED_BY_MESSAGE_TYPE = "The performed operation is not supported by the message type.";
 
     // Various error messages
     public final static String MSG_INVALID_CONTEXT = "Invalid context passed as an argument";
@@ -76,5 +79,7 @@ public class Constants {
     // Constants related to limits
     public final static int LIMIT_TEXT_LENGTH = 320;
     public final static int LIMIT_QUICK_REPLIES = 10;
+    public final static int LIMIT_BUTTONS = 3;
+    public final static int LIMIT_BUBBLES = 10;
 
 }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.utils;
+package com.ninetyslide.libs.feta.util;
 
-import com.ninetyslide.libs.feta.bean.BotContext;
+import com.ninetyslide.libs.feta.core.BotContext;
 import com.ninetyslide.libs.feta.common.Constants;
 
 import java.util.Map;

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.adapters;
+package com.ninetyslide.libs.feta.core.message.outgoing.widget;
 
 /**
- * Class that provides facilities to access User Profile API.
+ * TODO: Create a proper header for this file.
  */
-public class UserProfileApiAdapter {
-    // TODO: Add implementation
+public class Button {
 }
