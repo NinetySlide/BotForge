@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.core.message.outgoing.feature;
+package com.ninetyslide.libs.feta.exception;
 
-import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
-import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+import com.ninetyslide.libs.feta.common.Constants;
 
 /**
- * Interface used to expose the method to add a Quick Reply to a message.
+ * Class for the exception thrown when an attempt is made to build a message that is still incomplete or invalid.
  */
-public interface QuickRepliesSetter {
-    void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException;
+public class InvalidMessageException extends RuntimeException {
+    public InvalidMessageException() {
+        super(Constants.MSG_MESSAGE_INVALID);
+    }
 }

@@ -29,7 +29,7 @@ public class OutgoingTextMessage extends OutgoingMessage implements QuickReplies
 
     private TextRoot message = null;
 
-    public OutgoingTextMessage() {
+    OutgoingTextMessage() {
         super();
         message = new TextRoot();
     }
@@ -37,11 +37,6 @@ public class OutgoingTextMessage extends OutgoingMessage implements QuickReplies
     @Override
     public OutgoingMessageType getOutgoingMessageType() {
         return OutgoingMessageType.TEXT;
-    }
-
-    @Override
-    public void addQuickReply(QuickReply quickReply) throws QuickRepliesNumberExceededException {
-        addQuickReply(quickReply, false);
     }
 
     @Override

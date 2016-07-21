@@ -17,54 +17,56 @@
 package com.ninetyslide.libs.feta.core.message.outgoing;
 
 import com.ninetyslide.libs.feta.common.Constants;
+import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesSetter;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.ValidityChecker;
-import com.ninetyslide.libs.feta.exception.InvalidNotificationTypeException;
-import com.ninetyslide.libs.feta.exception.InvalidRecipientException;
-import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
+import com.ninetyslide.libs.feta.core.message.outgoing.widget.Bubble;
+import com.ninetyslide.libs.feta.core.message.outgoing.widget.Button;
+import com.ninetyslide.libs.feta.exception.*;
 
 /**
- * Abstract class for all the outgoing messages.
+ * Abstract class that is superclass for all the outgoing messages.
  */
 public abstract class OutgoingMessage implements ValidityChecker {
 
-    public final static String NOTIFICATION_TYPE_REGULAR = "REGULAR";
-    public final static String NOTIFICATION_TYPE_SILENT = "SILENT_PUSH";
-    public final static String NOTIFICATION_TYPE_NO_PUSH = "NO_PUSH";
-
-    public final static String QUICK_REPLY_CONTENT_TYPE = "text";
+    private final static String NOTIFICATION_TYPE_REGULAR = "REGULAR";
+    private final static String NOTIFICATION_TYPE_SILENT = "SILENT_PUSH";
+    private final static String NOTIFICATION_TYPE_NO_PUSH = "NO_PUSH";
 
     private OutgoingRecipient recipient;
     private String notificationType = null;
 
-    public OutgoingMessage() {
+    OutgoingMessage() {
         try {
-            setNotificationType(NOTIFICATION_TYPE_REGULAR);
+            setNotificationType(NotificationType.REGULAR);
         } catch (InvalidNotificationTypeException e) {
             // Just do nothing, since the exception can never be thrown.
         }
     }
 
-    public OutgoingRecipient getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(OutgoingRecipient recipient) {
+    /**
+     * Set the recipient for this message.
+     *
+     * @param recipient The recipient for this message.
+     */
+    private void setRecipient(OutgoingRecipient recipient) {
         this.recipient = recipient;
     }
 
-    public String getNotificationType() {
-        return notificationType;
-    }
-
-    public void setNotificationType(String notificationType) throws InvalidNotificationTypeException {
-        switch (notificationType) {
-            case NOTIFICATION_TYPE_REGULAR:
+    /**
+     * Set the notification type for this message. Notifications can be: regular, silent and no push.
+     *
+     * @param type The notification type.
+     * @throws InvalidNotificationTypeException When the type parameter contains an invalid value.
+     */
+    private void setNotificationType(NotificationType type) throws InvalidNotificationTypeException {
+        switch (type) {
+            case REGULAR:
                 this.notificationType = NOTIFICATION_TYPE_REGULAR;
                 break;
-            case NOTIFICATION_TYPE_SILENT:
+            case SILENT:
                 this.notificationType = NOTIFICATION_TYPE_SILENT;
                 break;
-            case NOTIFICATION_TYPE_NO_PUSH:
+            case NO_PUSH:
                 this.notificationType = NOTIFICATION_TYPE_NO_PUSH;
                 break;
             default:
@@ -107,11 +109,8 @@ public abstract class OutgoingMessage implements ValidityChecker {
     public abstract OutgoingMessageType getOutgoingMessageType();
 
     public static class OutgoingRecipient {
-        private String phoneNumber;
-        private String id;
-
-        public OutgoingRecipient() {
-        }
+        private String phoneNumber = null;
+        private String id = null;
 
         public OutgoingRecipient(String phoneNumber, String id) {
             if (phoneNumber == null ^ id == null) {
@@ -123,22 +122,71 @@ public abstract class OutgoingMessage implements ValidityChecker {
         }
     }
 
+    /**
+     * This class is used to build a legal instance of a message. It is the only way to create a message. Create a new
+     * instance of the Builder passing the desired Message Type, then use all the exposed methods to compose your
+     * message and finally call build() to get the message.
+     */
     public static class Builder {
+
         private OutgoingMessageType messageType = null;
         OutgoingMessage message = null;
 
+        /**
+         * This constructor creates a new builder for the type of message passed as an argument.
+         *
+         * @param messageType The type of the desired message.
+         */
         public Builder(OutgoingMessageType messageType) {
             this.messageType = messageType;
-            // TODO: Add Complete implementation
-        }
 
-        public OutgoingMessage build() {
-            // TODO: Add implementation
-            return null;
+            // Create the right kind of message based on the message type passed as argument
+            switch (messageType) {
+                case SENDER_ACTION:
+                    message = new SenderActionsMessage();
+                    break;
+                case TEXT:
+                    message = new OutgoingTextMessage();
+                    break;
+                case IMAGE:
+                    message = new OutgoingMultimediaMessage(OutgoingMessageType.IMAGE);
+                    break;
+                case AUDIO:
+                    message = new OutgoingMultimediaMessage(OutgoingMessageType.AUDIO);
+                    break;
+                case VIDEO:
+                    message = new OutgoingMultimediaMessage(OutgoingMessageType.VIDEO);
+                    break;
+                case FILE:
+                    message = new OutgoingMultimediaMessage(OutgoingMessageType.FILE);
+                    break;
+                case TEMPLATE_GENERIC:
+                    message = new OutgoingTemplateMessage(OutgoingMessageType.TEMPLATE_GENERIC);
+                    break;
+                case TEMPLATE_BUTTON:
+                    message = new OutgoingTemplateMessage(OutgoingMessageType.TEMPLATE_BUTTON);
+                    break;
+                default:
+                    throw new IllegalArgumentException(Constants.MSG_MESSAGE_TYPE_INVALID);
+            }
         }
 
         /**
-         * Set a Sender Action for this message.
+         * This method returns the message that has been build so far. If the mesage is still incomplete or is invalid,
+         * an exception will be thrown.
+         *
+         * @return The message object resulting from  building.
+         */
+        public OutgoingMessage build() {
+            if (message.isValid()) {
+                return message;
+            } else {
+                throw new InvalidMessageException();
+            }
+        }
+
+        /**
+         * Set a Sender Action for this message. This method is only available for SenderActionMessage.
          *
          * @param senderAction The Sender Action to set for this message.
          * @return The builder instance used to invoke this method.
@@ -165,10 +213,11 @@ public abstract class OutgoingMessage implements ValidityChecker {
         }
 
         /**
-         * Set the text for the outgoing message or for the button template. Please note that at the time of this
-         * version, the length of the text is limited to 320 characters. If you exceed this limit, an exception will
-         * be thrown. However, if you know what you are doing, you can set the parameter force to true so that the
-         * limit will not be enforced.
+         * Set the text for the outgoing message or for the button template. This method is only available for
+         * OutgoingTextMessage and Button Template Message. Please note that at the time of this version, the length
+         * of the text is limited to 320 characters. If you exceed this limit, an exception will be thrown. However,
+         * if you know what you are doing, you can set the parameter force to true so that the limit will not be
+         * enforced.
          *
          * @param text The text that will be assigned to the message or to the button template.
          * @param force Whether the character limit must be enforced.
@@ -195,7 +244,8 @@ public abstract class OutgoingMessage implements ValidityChecker {
         }
 
         /**
-         * Set the URL for the media attached to this message.
+         * Set the URL for the media attached to this message. This method is only available for
+         * OutgoingMultimediaMessage.
          *
          * @param url The URL to attach to the message.
          * @return The builder instance used to invoke this method.
@@ -210,10 +260,141 @@ public abstract class OutgoingMessage implements ValidityChecker {
             return this;
         }
 
-        // TODO: Implement addButton method, remove overloaded method with default parameter from OutgoingTemplateMessage class, implement it here and make the original method package-private
-        // TODO: Implement addbubble method, remove overloaded method with default parameter from OutgoingTemplateMessage class, implement it here and make the original method package-private
-        // TODO: Implement addQuickReply method and remove overloaded method with default parameter from abstract class
+        /**
+         * Add a new button to the template. Same as addButton(button, false).
+         *
+         * @param button The Button to add to the template.
+         * @return The builder instance used to invoke this method.
+         * @throws ButtonsNumberExceededException When the buttons limit is exceeded.
+         */
+        public Builder addButton(Button button) throws ButtonsNumberExceededException {
+            return addButton(button, false);
+        }
+
+        /**
+         * Add a new button to the template. This method is only available for Button Template message. Please note
+         * that at the time of this version, the number of buttons is limited to 3. If you exceed this limit, an
+         * exception will be thrown. However, if you know what you are doing, you can set the parameter force to true
+         * so that the limit will not be enforced.
+         *
+         * @param button The Button to add to the template.
+         * @param force Whether the buttons limit must be enforced.
+         * @return The builder instance used to invoke this method.
+         * @throws ButtonsNumberExceededException When the buttons limit is exceeded and the force parameter is set to
+         * false.
+         */
+        public Builder addButton(Button button, boolean force) throws ButtonsNumberExceededException {
+            // This method is only available for Button Template message
+            checkMessageTypeCompatibility(message, OutgoingMessageType.TEMPLATE_BUTTON);
+
+            // Add a Button to the template
+            ((OutgoingTemplateMessage) message).addButton(button, force);
+
+            return this;
+        }
+
+        /**
+         * Add a new bubble to the template. Same as addBubble(bubble, false).
+         *
+         * @param bubble The Bubble to add to the template.
+         * @return The builder instance used to invoke this method.
+         * @throws BubblesNumberExceededException When the bubbles limit is exceeded.
+         */
+        public Builder addBubble(Bubble bubble) throws BubblesNumberExceededException {
+            return addBubble(bubble, false);
+        }
+
+        /**
+         * Add a new bubble to the template. This method is only available for Generic Template Message. Please note
+         * that at the time of this version, the number of bubbles is limited to 10. If you exceed this limit, an
+         * exception will be thrown. However, if you know what you are doing, you can set the parameter force to true
+         * so that the limit will not be enforced.
+         *
+         * @param bubble The Bubble to add to the template.
+         * @param force Whether the bubbles limit must be enforced.
+         * @return The builder instance used to invoke this method.
+         * @throws BubblesNumberExceededException When the bubbles limit is exceeded and the force arameter is set to
+         * false.
+         */
+        public Builder addBubble(Bubble bubble, boolean force) throws BubblesNumberExceededException {
+            // This method is only available for Generic Template Message
+            checkMessageTypeCompatibility(message, OutgoingMessageType.TEMPLATE_GENERIC);
+
+            // Add a Bubble to the template
+            ((OutgoingTemplateMessage) message).addBubble(bubble, force);
+
+            return this;
+        }
+
+        /**
+         * Set the notification type for this message. Notifications can be: regular, silent and no push.
+         *
+         * @param type The notification type.
+         * @return The builder instance used to invoke this method.
+         * @throws InvalidNotificationTypeException When the type parameter contains an invalid value.
+         */
+        public Builder setNotificationType(NotificationType type) throws InvalidNotificationTypeException {
+            // Set the notification type
+            message.setNotificationType(type);
+
+            return this;
+        }
+
+        /**
+         * Set the recipient for this message.
+         *
+         * @param recipient The recipient for this message.
+         * @return The builder instance used to invoke this method.
+         */
+        public Builder setRecipient(OutgoingRecipient recipient) {
+            // Set the recipient for this message
+            message.setRecipient(recipient);
+
+            return this;
+        }
+
+        /**
+         * Add a QuickReply to the message. Same as addQuickReply(quickReply, false).
+         *
+         * @param quickReply The QuickReply to add to the message.
+         * @return The builder instance used to invoke this method.
+         * @throws QuickRepliesNumberExceededException When the quick replies limit is exceeded.
+         */
+        public Builder addQuickReply(QuickReply quickReply) throws QuickRepliesNumberExceededException {
+            return addQuickReply(quickReply, false);
+        }
+
+        /**
+         * Add a QuickReply to the message. This method is only available for OutgoingTextMessage,
+         * OutgoingMultimediaMessage and OutgoingTemplateMessage. Please note that at the time of this version, the
+         * number of quick replies is limited to 10. If you exceed this limit, an exception will be thrown. However,
+         * if you know what you are doing, you can set the parameter force to true so that the limit will not be
+         * enforced.
+         *
+         * @param quickReply The QuickReply to add to the message.
+         * @param force Whether the quick replies limit must be enforced.
+         * @return The builder instance used to invoke this method.
+         * @throws QuickRepliesNumberExceededException When the quick replies limit is exceeded and the force parameter
+         * is set to false.
+         */
+        public Builder addQuickReply(QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+            // This method is only available for OutgoingTextMessage, OutgoingMultimediaMessage and OutgoingTemplateMessage
+            checkMessageTypeCompatibility(message,
+                    OutgoingMessageType.TEXT,
+                    OutgoingMessageType.IMAGE,
+                    OutgoingMessageType.AUDIO,
+                    OutgoingMessageType.VIDEO,
+                    OutgoingMessageType.FILE,
+                    OutgoingMessageType.TEMPLATE_BUTTON,
+                    OutgoingMessageType.TEMPLATE_GENERIC);
+
+            // Add the quickReply
+            ((QuickRepliesSetter) message).addQuickReply(quickReply, force);
+
+            return this;
+        }
         // TODO: Check for null collection objects in for loops.
+        // TODO: Check all switches for default cases
 
     }
 
@@ -222,6 +403,8 @@ public abstract class OutgoingMessage implements ValidityChecker {
      * template message.
      */
     public static class QuickReply implements ValidityChecker {
+        private final static String QUICK_REPLY_CONTENT_TYPE = "text";
+
         private String contentType = QUICK_REPLY_CONTENT_TYPE;
         private String title = null;
         private String payload = null;
@@ -260,5 +443,11 @@ public abstract class OutgoingMessage implements ValidityChecker {
         FILE,
         TEMPLATE_GENERIC,
         TEMPLATE_BUTTON
+    }
+
+    public enum NotificationType {
+        REGULAR,
+        SILENT,
+        NO_PUSH
     }
 }

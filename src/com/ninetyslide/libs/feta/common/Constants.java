@@ -33,6 +33,7 @@ public class Constants {
     public final static String MSG_RECIPIENT_INVALID = "Exactly one of phone number or ID must be set as a recipient.";
     public final static String MSG_MESSAGE_TYPE_INVALID = "The message type is not valid for this operation.";
     public final static String MSG_MESSAGE_OPERATION_INVALID = "The message type does not support this operation.";
+    public final static String MSG_MESSAGE_INVALID = "The message is incomplete or invalid.";
     public final static String MSG_TEXT_LENGTH_EXCEEDED = "The text exceed the maximum allowed character limit.";
     public final static String MSG_TITLE_LENGTH_EXCEEDED = "The title exceeded the maximum allowed character limit.";
     public final static String MSG_SUBTITLE_LENGTH_EXCEEDED = "The subtitle exceeded the maximum allowed character limit.";
@@ -75,6 +76,7 @@ public class Constants {
     public final static String JSON_CALLBACK_TYPE_NAME_READ = "read";
     public final static String JSON_CALLBACK_SUB_TYPE_NAME_TEXT = "text";
     public final static String JSON_CALLBACK_SUB_TYPE_NAME_ATTACHMENTS = "attachments";
+    public final static String JSON_SEND_RESPONSE_FIELD_NAME_ERROR = "error";
 
     // Constants related to limits
     public final static int LIMIT_TEXT_LENGTH = 320;

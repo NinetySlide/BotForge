@@ -19,7 +19,7 @@ package com.ninetyslide.libs.feta.core.message.outgoing.response;
 /**
  * Class containing the error information returned by the server when an error occurs while sending a message.
  */
-public class SendMessageError {
+public class SendMessageError implements SendMessageResponse {
 
     public final static int INTERNAL_ERROR = 2;
     public final static int RATE_LIMITED_ERROR = 4;
@@ -29,10 +29,16 @@ public class SendMessageError {
     public final static int USER_BLOCK_ERROR = 551;
     public final static int ACCOUNT_LINKING_ERROR = 10303;
 
-    private String message;
-    private String type;
+    // This is not part of the FB specification, it is just there to signal a network error
+    public final static int NETWORK_ERROR_CODE = -1;
+    public final static String NETWORK_ERROR_TYPE = "Network Error";
+    public final static String NETWORK_ERROR_MESSAGE = "An error has occurred during the network request";
+    public final static String NETWORK_ERROR_FBTRACE = "0";
+
+    private String message = null;
+    private String type = null;
     private int code;
-    private String fbtraceId;
+    private String fbtraceId = null;
 
     public SendMessageError() {
     }
@@ -41,16 +47,36 @@ public class SendMessageError {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getCode() {
         return code;
     }
 
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     public String getFbtraceId() {
         return fbtraceId;
     }
 
+    public void setFbtraceId(String fbtraceId) {
+        this.fbtraceId = fbtraceId;
+    }
+
+    @Override
+    public boolean hasErrors() {
+        return true;
+    }
 }

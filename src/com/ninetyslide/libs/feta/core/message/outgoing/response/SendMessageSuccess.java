@@ -17,8 +17,34 @@
 package com.ninetyslide.libs.feta.core.message.outgoing.response;
 
 /**
- * Class representing the common type for a Send Message response. The response can be success or error.
+ * Class representing the response of the server to a message send.
  */
-public interface SendMessageResponse {
-    boolean hasErrors();
+public class SendMessageSuccess implements SendMessageResponse {
+
+    private String recipientId = null;
+    private String messageId = null;
+
+    public SendMessageSuccess() {
+    }
+
+    public String getRecipientId() {
+        return recipientId;
+    }
+
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    @Override
+    public boolean hasErrors() {
+        return false;
+    }
 }

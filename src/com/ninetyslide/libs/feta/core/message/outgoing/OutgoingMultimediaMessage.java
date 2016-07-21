@@ -34,7 +34,7 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
     private transient OutgoingMessageType messageType;
     private MediaRoot message = null;
 
-    public OutgoingMultimediaMessage(OutgoingMessageType messageType) {
+    OutgoingMultimediaMessage(OutgoingMessageType messageType) {
         super();
 
         // Set the message type
@@ -70,11 +70,6 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
     @Override
     public OutgoingMessageType getOutgoingMessageType() {
         return messageType;
-    }
-
-    @Override
-    public void addQuickReply(QuickReply quickReply) throws QuickRepliesNumberExceededException {
-        addQuickReply(quickReply, false);
     }
 
     @Override

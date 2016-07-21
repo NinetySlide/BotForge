@@ -41,7 +41,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     private transient OutgoingMessageType messageType;
     private TemplateRoot message = null;
 
-    public OutgoingTemplateMessage(OutgoingMessageType messageType) {
+    OutgoingTemplateMessage(OutgoingMessageType messageType) {
         super();
 
         // Initialize the template message based on the template type
@@ -67,11 +67,6 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     @Override
     public OutgoingMessageType getOutgoingMessageType() {
         return messageType;
-    }
-
-    @Override
-    public void addQuickReply(QuickReply quickReply) throws QuickRepliesNumberExceededException {
-        addQuickReply(quickReply, false);
     }
 
     @Override
@@ -102,16 +97,6 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     }
 
     /**
-     * Set a new button for the template. Same as addButton(button, false).
-     *
-     * @param button The Button to add to the template.
-     * @throws ButtonsNumberExceededException When the buttons limit is exceeded.
-     */
-    public void addButton(Button button) throws ButtonsNumberExceededException {
-        addButton(button, false);
-    }
-
-    /**
      * Add a new button to the template. Please note that at the time of this version, the number of buttons is limited
      * to 3. If you exceed this limit, an exception will be thrown. However, if you know what you are doing, you can set
      * the parameter force to true so that the limit will not be enforced.
@@ -120,7 +105,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
      * @param force Whether the buttons limit must be enforced.
      * @throws ButtonsNumberExceededException When the buttons limit is exceeded and the force parameter is set to false.
      */
-    public void addButton(Button button, boolean force) throws ButtonsNumberExceededException {
+    void addButton(Button button, boolean force) throws ButtonsNumberExceededException {
         // Only for Button Template
         checkMessageTypeCompatibility(this, OutgoingMessageType.TEMPLATE_BUTTON);
 
@@ -138,16 +123,6 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     }
 
     /**
-     * Add a new bubble to the template. Same as addBubble(bubble, false).
-     *
-     * @param bubble The Bubble to add to the template.
-     * @throws BubblesNumberExceededException When the bubbles limit is exceeded.
-     */
-    public void addBubble(Bubble bubble) throws BubblesNumberExceededException {
-        addBubble(bubble, false);
-    }
-
-    /**
      * Add a new bubble to the template. Please note that at the time of this version, the number of bubbles is limited
      * to 10. If you exceed this limit, an exception will be thrown. However, if you know what you are doing, you can
      * set the parameter force to true so that the limit will not be enforced.
@@ -156,7 +131,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
      * @param force Whether the bubbles limit must be enforced.
      * @throws BubblesNumberExceededException When the bubbles limit is exceeded and the force arameter is set to false.
      */
-    public void addBubble(Bubble bubble, boolean force) throws BubblesNumberExceededException {
+    void addBubble(Bubble bubble, boolean force) throws BubblesNumberExceededException {
         // Only for Generic Template
         checkMessageTypeCompatibility(this, OutgoingMessageType.TEMPLATE_GENERIC);
 

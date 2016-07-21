@@ -27,6 +27,10 @@ public class SenderActionsMessage extends OutgoingMessage {
 
     private String senderAction = null;
 
+    SenderActionsMessage() {
+        super();
+    }
+
     @Override
     public OutgoingMessageType getOutgoingMessageType() {
         return OutgoingMessageType.SENDER_ACTION;

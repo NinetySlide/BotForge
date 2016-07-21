@@ -59,7 +59,7 @@ public abstract class FbBot extends HttpServlet {
      * invoke the botInit() method to let the Bot perform its specific initialization.
      *
      * @param config The config object used to retrieve the parameters.
-     * @throws ServletException
+     * @throws ServletException When there is a Servlet related error.
      */
     @Override
     public final void init(ServletConfig config) throws ServletException {
@@ -90,8 +90,8 @@ public abstract class FbBot extends HttpServlet {
      *
      * @param req The request object.
      * @param resp The response object.
-     * @throws ServletException
-     * @throws IOException
+     * @throws ServletException When there is a Servlet related error.
+     * @throws IOException When there is an I/O error.
      */
     @Override
     protected final void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -138,12 +138,13 @@ public abstract class FbBot extends HttpServlet {
      *
      * @param req The request object.
      * @param resp The response object.
-     * @throws ServletException
+     * @throws ServletException When there is a Servlet related error.
      */
     @Override
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
         // TODO: Handle the reception of the like button
+        // TODO: Handle the sending of location message (if possible)
         // Get the URL of the request
         String webhookUrl = req.getRequestURL().toString();
 
@@ -308,7 +309,7 @@ public abstract class FbBot extends HttpServlet {
      *
      * @param jsonReader The BufferedReader from the request.
      * @return The String representing the JSON.
-     * @throws IOException
+     * @throws IOException When there is an I/O error.
      */
     private String extractJsonString(BufferedReader jsonReader) throws IOException {
         String jsonPartial;
@@ -326,7 +327,7 @@ public abstract class FbBot extends HttpServlet {
      *
      * @param rawMessage The raw JSON Object received via the callback.
      * @param message The extracted IncomingMessage.
-     * @return The IncomingMessage passed as inpput, with the values set.
+     * @return The IncomingMessage passed as input, with the values set.
      */
     private IncomingMessage setMessageHeaders(JsonObject rawMessage, IncomingMessage message) {
 
