@@ -87,7 +87,7 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
      *
      * @param url The URL to attach to the message.
      */
-    public void setUrl(String url) {
+    void setMediaUrl(String url) {
         message.attachment.payload.url = url;
     }
 

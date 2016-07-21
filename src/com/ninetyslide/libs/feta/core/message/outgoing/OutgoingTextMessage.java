@@ -50,17 +50,7 @@ public class OutgoingTextMessage extends OutgoingMessage implements QuickReplies
     }
 
     /**
-     * Set the text for the ongoing message. Same as setText(text, false).
-     *
-     * @param text The text that will be assigned to the message.
-     * @throws TextLengthExceededException When the character limit is exceeded.
-     */
-    public void setText(String text) throws TextLengthExceededException {
-        setText(text, false);
-    }
-
-    /**
-     * Set the text for the ongoing message. Please note that at the time of this version, the length of the text is
+     * Set the text for the outgoing message. Please note that at the time of this version, the length of the text is
      * limited to 320 characters. If you exceed this limit, an exception will be thrown. However, if you know what you
      * are doing, you can set the parameter force to true so that the limit will not be enforced.
      *
@@ -68,7 +58,7 @@ public class OutgoingTextMessage extends OutgoingMessage implements QuickReplies
      * @param force Whether the character limit must be enforced.
      * @throws TextLengthExceededException When the character limit is exceeded and the force parameter is set to false.
      */
-    public void setText(String text, boolean force) throws TextLengthExceededException {
+    void setText(String text, boolean force) throws TextLengthExceededException {
         if (text != null) {
             if (!force && text.length() > Constants.LIMIT_TEXT_LENGTH) {
                 throw new TextLengthExceededException(Constants.MSG_TEXT_LENGTH_EXCEEDED);

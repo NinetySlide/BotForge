@@ -79,18 +79,6 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
         message.addQuickReply(quickReply, force);
     }
 
-    // TODO: Remove all overloaded methods that does not include the force parameter. They will be put inside the builder class.
-    // TODO: Check for null collection objects in for loops.
-    /**
-     * Set the text for the button template. Same as setText(text, false).
-     *
-     * @param text The text to set for the template.
-     * @throws TextLengthExceededException When the character limit is exceeded.
-     */
-    public void setText(String text) throws TextLengthExceededException {
-        setText(text, false);
-    }
-
     /**
      * Set the text for the button template. Please note that at the time of this version, the length of the text is
      * limited to 320 characters. If you exceed this limit, an exception will be thrown. However, if you know what you
@@ -98,9 +86,9 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
      *
      * @param text The text to set for the template.
      * @param force Whether the character limit must be enforced.
-     * @throws TextLengthExceededException When the character limit is exceeded.
+     * @throws TextLengthExceededException When the character limit is exceeded and the force parameter is set to false.
      */
-    public void setText(String text, boolean force) throws TextLengthExceededException {
+    void setText(String text, boolean force) throws TextLengthExceededException {
         // Only for Button Template
         checkMessageTypeCompatibility(this, OutgoingMessageType.TEMPLATE_BUTTON);
 

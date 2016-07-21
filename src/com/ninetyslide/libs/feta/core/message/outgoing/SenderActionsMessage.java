@@ -32,20 +32,12 @@ public class SenderActionsMessage extends OutgoingMessage {
         return OutgoingMessageType.SENDER_ACTION;
     }
 
-    public SenderAction getSenderAction() {
-        switch (senderAction) {
-            case ACTION_MARK_SEEN:
-                return SenderAction.MARK_SEEN;
-            case ACTION_TYPING_ON:
-                return SenderAction.TYPING_ON;
-            case ACTION_TYPING_OFF:
-                return SenderAction.TYPING_OFF;
-            default:
-                return null;
-        }
-    }
-
-    public void setSenderAction(SenderAction senderAction) {
+    /**
+     * Set a Sender Action for this message.
+     *
+     * @param senderAction The Sender Action to set for this message.
+     */
+    void setSenderAction(SenderAction senderAction) {
         switch (senderAction) {
             case MARK_SEEN:
                 this.senderAction = ACTION_MARK_SEEN;
