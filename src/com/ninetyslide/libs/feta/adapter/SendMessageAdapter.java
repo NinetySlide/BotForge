@@ -29,21 +29,39 @@ import com.ninetyslide.libs.feta.util.NetworkManager;
 /**
  * Class that provides the facilities to access the Send API.
  */
-public class SendMessageAdapter {
+public final class SendMessageAdapter {
 
     private final static String SEND_MESSAGE_BASE_URL = "https://graph.facebook.com/v2.6/me/messages?access_token=";
 
     private static Gson gson = GsonManager.getGsonInstance();
     private static JsonParser jsonParser = GsonManager.getJsonParserInstance();
 
+    private SendMessageAdapter() {
+    }
+
     /**
      * Method used to send a message from a certain bot.
      *
      * @param context The bot context to use for message send.
      * @param message The message to send.
+     * @param recipient The recipient for the message.
      * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong.
      */
-    public static SendMessageResponse sendMessage(BotContext context, OutgoingMessage message) {
+    public static SendMessageResponse sendMessage(BotContext context, OutgoingMessage message, OutgoingMessage.OutgoingRecipient recipient) {
+        // Check that all the parameters are ok
+        if (context == null) {
+            throw new IllegalArgumentException(Constants.MSG_CONTEXT_INVALID);
+        }
+        if (message == null) {
+            throw new IllegalArgumentException(Constants.MSG_MESSAGE_INVALID);
+        }
+        if (recipient == null) {
+            throw new IllegalArgumentException(Constants.MSG_RECIPIENT_INVALID);
+        }
+
+        // Set the recipient for the message
+        message.setRecipient(recipient);
+
         // Perform the request
         String response = NetworkManager.performPostRequest(
                 SEND_MESSAGE_BASE_URL + context.getPageAccessToken(),
@@ -67,16 +85,50 @@ public class SendMessageAdapter {
             }
 
         } else {
-            // Create and return an error in case of network problem
-            SendMessageError error = new SendMessageError();
-
-            error.setCode(SendMessageError.NETWORK_ERROR_CODE);
-            error.setType(SendMessageError.NETWORK_ERROR_TYPE);
-            error.setMessage(SendMessageError.NETWORK_ERROR_MESSAGE);
-            error.setFbtraceId(SendMessageError.NETWORK_ERROR_FBTRACE);
-
-            return error;
+            // Return a generated network error if something wrong happened during the network request
+            return generateNetworkError();
         }
     }
-    // TODO: Allow multiple recipient for a message by creating a new method here and by marking the message as multiple recipient capable in the message builder class
+
+    /**
+     * Message used to send a message from a certain bot in bulk to a number of recipients.
+     *
+     * @param context The bot context to use for message send.
+     * @param message The message to send.
+     * @param recipients The recipients for the message.
+     * @return The array of responses, one for each recipient. Please note that the response in the n-th position is
+     * related to the recipient in the n-th position.
+     */
+    public static SendMessageResponse[] sendMessage(BotContext context, OutgoingMessage message, OutgoingMessage.OutgoingRecipient[] recipients) {
+        // Check that all the parameters are ok
+        if (recipients == null) {
+            throw new IllegalArgumentException(Constants.MSG_RECIPIENT_INVALID);
+        }
+
+        // Create the array of responses
+        SendMessageResponse[] responses = new SendMessageResponse[recipients.length];
+
+        // Perform the requests, one for each recipient
+        for (int i = 0; i < recipients.length; i++) {
+            responses[i] = sendMessage(context, message, recipients[i]);
+        }
+
+        // Return the responses array
+        return responses;
+    }
+
+    /**
+     * Create and return an error in case of a network issue.
+     *
+     * @return An error representing a network error.
+     */
+    private static SendMessageError generateNetworkError() {
+        SendMessageError error = new SendMessageError();
+        error.setCode(SendMessageError.NETWORK_ERROR_CODE);
+        error.setType(SendMessageError.NETWORK_ERROR_TYPE);
+        error.setMessage(SendMessageError.NETWORK_ERROR_MESSAGE);
+        error.setFbtraceId(SendMessageError.NETWORK_ERROR_FBTRACE);
+        return error;
+    }
+
 }
