@@ -20,6 +20,7 @@ import com.google.gson.*;
 import com.ninetyslide.libs.feta.core.BotContext;
 import com.ninetyslide.libs.feta.core.message.incoming.*;
 import com.ninetyslide.libs.feta.util.BotContextManager;
+import com.ninetyslide.libs.feta.util.GsonManager;
 import com.ninetyslide.libs.feta.util.SignatureVerifier;
 
 import javax.servlet.ServletConfig;
@@ -49,8 +50,8 @@ import static com.ninetyslide.libs.feta.common.Constants.*;
  */
 public abstract class FbBot extends HttpServlet {
 
-    private Gson gson;
-    private JsonParser parser;
+    private Gson gson = null;
+    private JsonParser parser = null;
 
     protected BotContextManager contextManager;
 
@@ -66,10 +67,8 @@ public abstract class FbBot extends HttpServlet {
         super.init(config);
 
         // Initialize all the fields
-        gson = new GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .create();
-        parser = new JsonParser();
+        gson = GsonManager.getGsonInstance();
+        parser = GsonManager.getJsonParserInstance();
         contextManager = BotContextManager.getInstance();
 
         // Call the method for Bot-specific initialization
@@ -144,7 +143,6 @@ public abstract class FbBot extends HttpServlet {
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
         // TODO: Handle the reception of the like button
-        // TODO: Handle the sending of location message (if possible)
         // Get the URL of the request
         String webhookUrl = req.getRequestURL().toString();
 
@@ -179,10 +177,21 @@ public abstract class FbBot extends HttpServlet {
         // Process every message of the batch
         JsonArray entries = rawMessage.getAsJsonArray(JSON_CALLBACK_FIELD_NAME_ENTRY);
 
+        // If there are no entries, send back an error and just return
+        if (entries == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
         for (JsonElement rawEntry : entries) {
 
             JsonObject entry = rawEntry.getAsJsonObject();
             JsonArray messages = entry.getAsJsonArray(JSON_CALLBACK_FIELD_NAME_MESSAGING);
+
+            // If there are no messages, go on with the next entry
+            if (messages == null) {
+                continue;
+            }
 
             for (JsonElement messageRaw : messages) {
                 JsonObject message = messageRaw.getAsJsonObject();

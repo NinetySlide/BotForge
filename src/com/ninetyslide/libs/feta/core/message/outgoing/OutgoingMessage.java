@@ -36,11 +36,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
     private String notificationType = null;
 
     OutgoingMessage() {
-        try {
-            setNotificationType(NotificationType.REGULAR);
-        } catch (InvalidNotificationTypeException e) {
-            // Just do nothing, since the exception can never be thrown.
-        }
+        setNotificationType(NotificationType.REGULAR);
     }
 
     /**
@@ -56,9 +52,8 @@ public abstract class OutgoingMessage implements ValidityChecker {
      * Set the notification type for this message. Notifications can be: regular, silent and no push.
      *
      * @param type The notification type.
-     * @throws InvalidNotificationTypeException When the type parameter contains an invalid value.
      */
-    private void setNotificationType(NotificationType type) throws InvalidNotificationTypeException {
+    private void setNotificationType(NotificationType type) {
         switch (type) {
             case REGULAR:
                 this.notificationType = NOTIFICATION_TYPE_REGULAR;
@@ -70,7 +65,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
                 this.notificationType = NOTIFICATION_TYPE_NO_PUSH;
                 break;
             default:
-                throw new InvalidNotificationTypeException();
+                throw new IllegalArgumentException(Constants.MSG_NOTIFICATION_TYPE_INVALID);
         }
     }
 
@@ -96,14 +91,16 @@ public abstract class OutgoingMessage implements ValidityChecker {
         OutgoingMessageType messageType = messageToCheck.getOutgoingMessageType();
 
         // Check if it matches with one of the supported types
-        for (OutgoingMessageType supportedType : supportedTypes) {
-            if (messageType == supportedType) {
-                return;
+        if (supportedTypes != null) {
+            for (OutgoingMessageType supportedType : supportedTypes) {
+                if (messageType == supportedType) {
+                    return;
+                }
             }
         }
 
         // Throw an exception if a match is not found
-        throw new UnsupportedOperationException(Constants.MSG_OPERATION_NOT_SUPPORTED_BY_MESSAGE_TYPE);
+        throw new UnsupportedOperationException(Constants.MSG_MESSAGE_OPERATION_INVALID);
     }
 
     public abstract OutgoingMessageType getOutgoingMessageType();
@@ -117,7 +114,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
                 this.phoneNumber = phoneNumber;
                 this.id = id;
             } else {
-                throw new InvalidRecipientException();
+                throw new IllegalArgumentException(Constants.MSG_RECIPIENT_INVALID);
             }
         }
     }
@@ -128,6 +125,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
      * message and finally call build() to get the message.
      */
     public static class Builder {
+        // TODO: Handle the sending of location message (if possible)
 
         private OutgoingMessageType messageType = null;
         OutgoingMessage message = null;
@@ -181,7 +179,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
             if (message.isValid()) {
                 return message;
             } else {
-                throw new InvalidMessageException();
+                throw new IllegalArgumentException(Constants.MSG_MESSAGE_INVALID);
             }
         }
 
@@ -252,7 +250,11 @@ public abstract class OutgoingMessage implements ValidityChecker {
          */
         public Builder setMediaUrl(String url) {
             // This method is only available for OutgoingMultimediaMessage
-            checkMessageTypeCompatibility(message, OutgoingMessageType.AUDIO, OutgoingMessageType.FILE, OutgoingMessageType.IMAGE, OutgoingMessageType.VIDEO);
+            checkMessageTypeCompatibility(message,
+                    OutgoingMessageType.AUDIO,
+                    OutgoingMessageType.FILE,
+                    OutgoingMessageType.IMAGE,
+                    OutgoingMessageType.VIDEO);
 
             // Set the URL for OutgoingMultimediaMessage
             ((OutgoingMultimediaMessage) message).setMediaUrl(url);
@@ -265,9 +267,9 @@ public abstract class OutgoingMessage implements ValidityChecker {
          *
          * @param button The Button to add to the template.
          * @return The builder instance used to invoke this method.
-         * @throws ButtonsNumberExceededException When the buttons limit is exceeded.
+         * @throws ElementsNumberExceededException When the buttons limit is exceeded.
          */
-        public Builder addButton(Button button) throws ButtonsNumberExceededException {
+        public Builder addButton(Button button) throws ElementsNumberExceededException {
             return addButton(button, false);
         }
 
@@ -280,10 +282,10 @@ public abstract class OutgoingMessage implements ValidityChecker {
          * @param button The Button to add to the template.
          * @param force Whether the buttons limit must be enforced.
          * @return The builder instance used to invoke this method.
-         * @throws ButtonsNumberExceededException When the buttons limit is exceeded and the force parameter is set to
+         * @throws ElementsNumberExceededException When the buttons limit is exceeded and the force parameter is set to
          * false.
          */
-        public Builder addButton(Button button, boolean force) throws ButtonsNumberExceededException {
+        public Builder addButton(Button button, boolean force) throws ElementsNumberExceededException {
             // This method is only available for Button Template message
             checkMessageTypeCompatibility(message, OutgoingMessageType.TEMPLATE_BUTTON);
 
@@ -298,9 +300,9 @@ public abstract class OutgoingMessage implements ValidityChecker {
          *
          * @param bubble The Bubble to add to the template.
          * @return The builder instance used to invoke this method.
-         * @throws BubblesNumberExceededException When the bubbles limit is exceeded.
+         * @throws ElementsNumberExceededException When the bubbles limit is exceeded.
          */
-        public Builder addBubble(Bubble bubble) throws BubblesNumberExceededException {
+        public Builder addBubble(Bubble bubble) throws ElementsNumberExceededException {
             return addBubble(bubble, false);
         }
 
@@ -313,10 +315,10 @@ public abstract class OutgoingMessage implements ValidityChecker {
          * @param bubble The Bubble to add to the template.
          * @param force Whether the bubbles limit must be enforced.
          * @return The builder instance used to invoke this method.
-         * @throws BubblesNumberExceededException When the bubbles limit is exceeded and the force arameter is set to
+         * @throws ElementsNumberExceededException When the bubbles limit is exceeded and the force arameter is set to
          * false.
          */
-        public Builder addBubble(Bubble bubble, boolean force) throws BubblesNumberExceededException {
+        public Builder addBubble(Bubble bubble, boolean force) throws ElementsNumberExceededException {
             // This method is only available for Generic Template Message
             checkMessageTypeCompatibility(message, OutgoingMessageType.TEMPLATE_GENERIC);
 
@@ -331,9 +333,8 @@ public abstract class OutgoingMessage implements ValidityChecker {
          *
          * @param type The notification type.
          * @return The builder instance used to invoke this method.
-         * @throws InvalidNotificationTypeException When the type parameter contains an invalid value.
          */
-        public Builder setNotificationType(NotificationType type) throws InvalidNotificationTypeException {
+        public Builder setNotificationType(NotificationType type) {
             // Set the notification type
             message.setNotificationType(type);
 
@@ -358,9 +359,9 @@ public abstract class OutgoingMessage implements ValidityChecker {
          *
          * @param quickReply The QuickReply to add to the message.
          * @return The builder instance used to invoke this method.
-         * @throws QuickRepliesNumberExceededException When the quick replies limit is exceeded.
+         * @throws ElementsNumberExceededException When the quick replies limit is exceeded.
          */
-        public Builder addQuickReply(QuickReply quickReply) throws QuickRepliesNumberExceededException {
+        public Builder addQuickReply(QuickReply quickReply) throws ElementsNumberExceededException {
             return addQuickReply(quickReply, false);
         }
 
@@ -374,10 +375,10 @@ public abstract class OutgoingMessage implements ValidityChecker {
          * @param quickReply The QuickReply to add to the message.
          * @param force Whether the quick replies limit must be enforced.
          * @return The builder instance used to invoke this method.
-         * @throws QuickRepliesNumberExceededException When the quick replies limit is exceeded and the force parameter
+         * @throws ElementsNumberExceededException When the quick replies limit is exceeded and the force parameter
          * is set to false.
          */
-        public Builder addQuickReply(QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+        public Builder addQuickReply(QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
             // This method is only available for OutgoingTextMessage, OutgoingMultimediaMessage and OutgoingTemplateMessage
             checkMessageTypeCompatibility(message,
                     OutgoingMessageType.TEXT,
@@ -393,8 +394,6 @@ public abstract class OutgoingMessage implements ValidityChecker {
 
             return this;
         }
-        // TODO: Check for null collection objects in for loops.
-        // TODO: Check all switches for default cases
 
     }
 

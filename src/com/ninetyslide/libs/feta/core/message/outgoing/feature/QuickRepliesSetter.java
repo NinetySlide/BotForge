@@ -17,11 +17,11 @@
 package com.ninetyslide.libs.feta.core.message.outgoing.feature;
 
 import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
-import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+import com.ninetyslide.libs.feta.exception.ElementsNumberExceededException;
 
 /**
  * Interface used to expose the method to add a Quick Reply to a message.
  */
 public interface QuickRepliesSetter {
-    void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException;
+    void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws ElementsNumberExceededException;
 }

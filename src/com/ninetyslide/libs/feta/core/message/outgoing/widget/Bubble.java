@@ -18,7 +18,7 @@ package com.ninetyslide.libs.feta.core.message.outgoing.widget;
 
 import com.ninetyslide.libs.feta.common.Constants;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.ValidityChecker;
-import com.ninetyslide.libs.feta.exception.ButtonsNumberExceededException;
+import com.ninetyslide.libs.feta.exception.ElementsNumberExceededException;
 import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 
 import java.util.ArrayList;
@@ -115,9 +115,9 @@ public class Bubble implements ValidityChecker {
      * Add a Button to the Bubble. Same as addButton(button, false).
      *
      * @param button The button to add to the bubble.
-     * @throws ButtonsNumberExceededException When the number of buttons is exceeded.
+     * @throws ElementsNumberExceededException When the number of buttons is exceeded.
      */
-    public void addButton(Button button) throws ButtonsNumberExceededException {
+    public void addButton(Button button) throws ElementsNumberExceededException {
         addButton(button, false);
     }
 
@@ -128,10 +128,10 @@ public class Bubble implements ValidityChecker {
      *
      * @param button The button to add to the bubble.
      * @param force Whether the buttons limit must be enforced.
-     * @throws ButtonsNumberExceededException When the number of buttons is exceeded and the force parameter is set to
+     * @throws ElementsNumberExceededException When the number of buttons is exceeded and the force parameter is set to
      * false.
      */
-    public void addButton(Button button, boolean force) throws ButtonsNumberExceededException {
+    public void addButton(Button button, boolean force) throws ElementsNumberExceededException {
         if (button != null) {
             // Create the List only if needed
             if (this.buttons == null) {
@@ -140,7 +140,7 @@ public class Bubble implements ValidityChecker {
 
             // Buttons are limited to 3
             if (!force && this.buttons.size() > Constants.LIMIT_BUTTONS) {
-                throw new ButtonsNumberExceededException();
+                throw new ElementsNumberExceededException(Constants.MSG_BUTTONS_NUMBER_EXCEEDED);
             }
 
             // Add the button

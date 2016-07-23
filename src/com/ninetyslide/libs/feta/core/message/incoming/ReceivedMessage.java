@@ -17,7 +17,7 @@
 package com.ninetyslide.libs.feta.core.message.incoming;
 
 /**
- * Superclass for TextMessage and AttachmentMessage.
+ * Superclass for IncomingTextMessage and IncomingAttachmentMessage.
  */
 public abstract class ReceivedMessage extends IncomingMessage {
 

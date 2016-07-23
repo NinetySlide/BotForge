@@ -29,7 +29,7 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
     private final static String TYPE_FILE = "file";
     private final static String TYPE_LOCATION = "location";
 
-    private IncomingAttachment[] attachments;
+    private IncomingAttachment[] attachments = null;
 
     public IncomingAttachmentMessage() {
     }
@@ -56,8 +56,8 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
      * values based on its type.
      */
     private static class IncomingAttachment {
-        private String type;
-        private IncomingAttachmentPayload payload;
+        private String type = null;
+        private IncomingAttachmentPayload payload = null;
 
         public IncomingAttachment() {
         }
@@ -89,8 +89,8 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
      * field is set, not both.
      */
     private static class IncomingAttachmentPayload {
-        private String url;
-        private Coordinates coordinates;
+        private String url = null;
+        private Coordinates coordinates = null;
 
         public IncomingAttachmentPayload() {
         }

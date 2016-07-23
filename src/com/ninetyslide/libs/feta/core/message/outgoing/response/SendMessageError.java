@@ -32,7 +32,7 @@ public class SendMessageError implements SendMessageResponse {
     // This is not part of the FB specification, it is just there to signal a network error
     public final static int NETWORK_ERROR_CODE = -1;
     public final static String NETWORK_ERROR_TYPE = "Network Error";
-    public final static String NETWORK_ERROR_MESSAGE = "An error has occurred during the network request";
+    public final static String NETWORK_ERROR_MESSAGE = "An error has occurred during the network request.";
     public final static String NETWORK_ERROR_FBTRACE = "0";
 
     private String message = null;

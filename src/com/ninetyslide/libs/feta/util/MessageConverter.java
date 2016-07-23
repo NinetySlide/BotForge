@@ -16,8 +16,11 @@
 
 package com.ninetyslide.libs.feta.util;
 
-import com.ninetyslide.libs.feta.core.message.incoming.IncomingMessage;
+import com.ninetyslide.libs.feta.common.Constants;
+import com.ninetyslide.libs.feta.core.message.incoming.IncomingTextMessage;
+import com.ninetyslide.libs.feta.core.message.incoming.ReceivedMessage;
 import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
+import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 
 /**
  * Class that exposes the facilities to seamlessly convert an incoming message in an outgoing message, so that it's
@@ -28,12 +31,37 @@ public class MessageConverter {
     /**
      * This method takes an IncomingMessage and converts it to an OutgoingMessage.
      *
-     * @param incomingMessage The received message that must be converted.
+     * @param receivedMessage The received message that must be converted.
      * @return The newly generated OutgoingMessage.
      */
-    public static OutgoingMessage getOutgoingMessage(IncomingMessage incomingMessage) {
-        // TODO: Add implementation.
-        return null;
+    public static OutgoingMessage getOutgoingMessage(ReceivedMessage receivedMessage) {
+        switch (receivedMessage.getIncomingMessageType()) {
+            case TEXT:
+                // Retrieve text from message
+                String text = ((IncomingTextMessage) receivedMessage)
+                        .getText()
+                        .substring(0, Constants.LIMIT_TEXT_LENGTH);
+                OutgoingMessage outgoingMessage = null;
+
+                // Build an OutgoingMessage
+                try {
+                    outgoingMessage = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.TEXT)
+                            .setText(text)
+                            .build();
+                } catch (TextLengthExceededException e) {
+                    // Just do nothing because the substring is never beyond the limits
+                }
+
+                // Return the message
+                return outgoingMessage;
+
+            case ATTACHMENT:
+                // TODO: Implement support for attachment messages
+                throw new UnsupportedOperationException(Constants.MSG_OPERATION_NOT_YET_IMPLEMENTED);
+
+            default:
+                throw new IllegalArgumentException(Constants.MSG_MESSAGE_INVALID);
+        }
     }
 
 }

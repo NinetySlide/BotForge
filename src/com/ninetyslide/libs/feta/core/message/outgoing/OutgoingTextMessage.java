@@ -19,7 +19,7 @@ package com.ninetyslide.libs.feta.core.message.outgoing;
 import com.ninetyslide.libs.feta.common.Constants;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesCarrier;
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesSetter;
-import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+import com.ninetyslide.libs.feta.exception.ElementsNumberExceededException;
 import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 
 /**
@@ -40,7 +40,7 @@ public class OutgoingTextMessage extends OutgoingMessage implements QuickReplies
     }
 
     @Override
-    public void addQuickReply(QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+    public void addQuickReply(QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
         message.addQuickReply(quickReply, force);
     }
 

@@ -30,21 +30,22 @@ public class Constants {
 
     // Constants related to various exceptions
     public final static String MSG_NOTIFICATION_TYPE_INVALID = "Notification type can only be one of: regular, silent push and no push.";
-    public final static String MSG_RECIPIENT_INVALID = "Exactly one of phone number or ID must be set as a recipient.";
+    public static final String MSG_TEMPLATE_TYPE_INVALID = "The specified template type is invalid or unsupported.";
     public final static String MSG_MESSAGE_TYPE_INVALID = "The message type is not valid for this operation.";
-    public final static String MSG_MESSAGE_OPERATION_INVALID = "The message type does not support this operation.";
+    public final static String MSG_BUTTON_TYPE_INVALID = "The specified button type is invalid or unsupported.";
     public final static String MSG_MESSAGE_INVALID = "The message is incomplete or invalid.";
+    public final static String MSG_SENDER_ACTION_INVALID = "The specified Sender Action is invalid or unsupported.";
+    public final static String MSG_RECIPIENT_INVALID = "Exactly one of phone number or ID must be set as a recipient.";
+    public final static String MSG_MESSAGE_OPERATION_INVALID = "The message type does not support the performed operation.";
     public final static String MSG_TEXT_LENGTH_EXCEEDED = "The text exceed the maximum allowed character limit.";
     public final static String MSG_TITLE_LENGTH_EXCEEDED = "The title exceeded the maximum allowed character limit.";
     public final static String MSG_SUBTITLE_LENGTH_EXCEEDED = "The subtitle exceeded the maximum allowed character limit.";
     public final static String MSG_PAYLOAD_LENGTH_EXCEEDED = "The payload exceeded the maximum allowed character limit.";
     public final static String MSG_BUBBLES_NUMBER_EXCEEDED = "The maximum number of allowed bubbles in the template has been exceeded.";
     public final static String MSG_BUTTONS_NUMBER_EXCEEDED = "The maximum number of allowed buttons in the template has been exceeded.";
-    public final static String MSG_QUICK_REPLIES_EXCEEDED = "The maximum number of allowed quick replies has been exceeded.";
-    public static final String MSG_TEMPLATE_INVALID_TYPE = "The specified template type is invalid or unsopported.";
-    public final static String MSG_OPERATION_NOT_SUPPORTED_BY_MESSAGE_TYPE = "The performed operation is not supported by the message type.";
+    public final static String MSG_QUICK_REPLIES_NUMBER_EXCEEDED = "The maximum number of allowed quick replies has been exceeded.";
     public final static String MSG_BUTTON_OPERATION_NOT_SUPPORTED = "The performed operation is not supported by the button type.";
-    public final static String MSG_BUTTON_INVALID_TYPE = "The provided button type is not valid.";
+    public final static String MSG_OPERATION_NOT_YET_IMPLEMENTED = "This functionality has not been implemented yet.";
 
     // Various error messages
     public final static String MSG_INVALID_CONTEXT = "Invalid context passed as an argument";

@@ -19,11 +19,10 @@ package com.ninetyslide.libs.feta.exception;
 import com.ninetyslide.libs.feta.common.Constants;
 
 /**
- * Class for the exception thrown when the choosen message type does not support the operation that has been performed.
- * This is an unchecked exception.
+ * Class for the exception thrown when the maximum allowed number of quick replies for a message is exceeded.
  */
-public class InvalidMessageOperationException extends RuntimeException {
-    public InvalidMessageOperationException() {
-        super(Constants.MSG_MESSAGE_OPERATION_INVALID);
+public class ElementsNumberExceededException extends Exception {
+    public ElementsNumberExceededException(String message) {
+        super(message);
     }
 }

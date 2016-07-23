@@ -16,6 +16,8 @@
 
 package com.ninetyslide.libs.feta.core.message.outgoing;
 
+import com.ninetyslide.libs.feta.common.Constants;
+
 /**
  * Class representing a Sender Action message.
  */
@@ -52,6 +54,8 @@ public class SenderActionsMessage extends OutgoingMessage {
             case TYPING_OFF:
                 this.senderAction = ACTION_TYPING_OFF;
                 break;
+            default:
+                throw new IllegalArgumentException(Constants.MSG_SENDER_ACTION_INVALID);
         }
     }
 

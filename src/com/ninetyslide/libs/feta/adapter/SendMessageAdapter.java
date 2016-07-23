@@ -23,6 +23,7 @@ import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
 import com.ninetyslide.libs.feta.core.message.outgoing.response.SendMessageError;
 import com.ninetyslide.libs.feta.core.message.outgoing.response.SendMessageResponse;
 import com.ninetyslide.libs.feta.core.message.outgoing.response.SendMessageSuccess;
+import com.ninetyslide.libs.feta.util.GsonManager;
 import com.ninetyslide.libs.feta.util.NetworkManager;
 
 /**
@@ -32,10 +33,8 @@ public class SendMessageAdapter {
 
     private final static String SEND_MESSAGE_BASE_URL = "https://graph.facebook.com/v2.6/me/messages?access_token=";
 
-    private static JsonParser jsonParser = new JsonParser();
-    private static Gson gson = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create();
+    private static Gson gson = GsonManager.getGsonInstance();
+    private static JsonParser jsonParser = GsonManager.getJsonParserInstance();
 
     /**
      * Method used to send a message from a certain bot.
@@ -79,5 +78,5 @@ public class SendMessageAdapter {
             return error;
         }
     }
-
+    // TODO: Allow multiple recipient for a message by creating a new method here and by marking the message as multiple recipient capable in the message builder class
 }

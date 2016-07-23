@@ -18,7 +18,7 @@ package com.ninetyslide.libs.feta.core.message.outgoing.feature;
 
 import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
 import com.ninetyslide.libs.feta.common.Constants;
-import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+import com.ninetyslide.libs.feta.exception.ElementsNumberExceededException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +36,10 @@ public abstract class QuickRepliesCarrier implements ValidityChecker {
      *
      * @param quickReply The quick reply to add to the list.
      */
-    public void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+    public void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
         if (quickReply != null) {
             if (!force && quickReplies.size() > Constants.LIMIT_QUICK_REPLIES) {
-                throw new QuickRepliesNumberExceededException();
+                throw new ElementsNumberExceededException(Constants.MSG_QUICK_REPLIES_NUMBER_EXCEEDED);
             }
 
             if (quickReplies == null) {
@@ -57,9 +57,11 @@ public abstract class QuickRepliesCarrier implements ValidityChecker {
      */
     @Override
     public boolean isValid() {
-        for (OutgoingMessage.QuickReply quickReply : quickReplies) {
-            if (!quickReply.isValid()) {
-                return false;
+        if (quickReplies != null) {
+            for (OutgoingMessage.QuickReply quickReply : quickReplies) {
+                if (!quickReply.isValid()) {
+                    return false;
+                }
             }
         }
         return true;

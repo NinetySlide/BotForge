@@ -50,7 +50,7 @@ public class Button implements ValidityChecker {
                 type = TYPE_PHONE_NUMBER;
                 break;
             default:
-                throw new IllegalArgumentException(Constants.MSG_BUTTON_INVALID_TYPE);
+                throw new IllegalArgumentException(Constants.MSG_BUTTON_TYPE_INVALID);
         }
     }
 

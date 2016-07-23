@@ -21,9 +21,7 @@ import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesCarri
 import com.ninetyslide.libs.feta.core.message.outgoing.feature.QuickRepliesSetter;
 import com.ninetyslide.libs.feta.core.message.outgoing.widget.Bubble;
 import com.ninetyslide.libs.feta.core.message.outgoing.widget.Button;
-import com.ninetyslide.libs.feta.exception.BubblesNumberExceededException;
-import com.ninetyslide.libs.feta.exception.ButtonsNumberExceededException;
-import com.ninetyslide.libs.feta.exception.QuickRepliesNumberExceededException;
+import com.ninetyslide.libs.feta.exception.ElementsNumberExceededException;
 import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 
 import java.util.ArrayList;
@@ -55,7 +53,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
                 payload = new ButtonTemplate();
                 break;
             default:
-                throw new IllegalArgumentException(Constants.MSG_TEMPLATE_INVALID_TYPE);
+                throw new IllegalArgumentException(Constants.MSG_TEMPLATE_TYPE_INVALID);
         }
 
         this.messageType = messageType;
@@ -70,22 +68,21 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     }
 
     @Override
-    public void addQuickReply(QuickReply quickReply, boolean force) throws QuickRepliesNumberExceededException {
+    public void addQuickReply(QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
         message.addQuickReply(quickReply, force);
     }
 
     /**
-     * Set the text for the button template. Please note that at the time of this version, the length of the text is
-     * limited to 320 characters. If you exceed this limit, an exception will be thrown. However, if you know what you
-     * are doing, you can set the parameter force to true so that the limit will not be enforced.
+     * Set the text for the button template. This method is only available for Button Template Messages. Please note
+     * that at the time of this version, the length of the text is limited to 320 characters. If you exceed this
+     * limit, an exception will be thrown. However, if you know what you are doing, you can set the parameter force to
+     * true so that the limit will not be enforced.
      *
      * @param text The text to set for the template.
      * @param force Whether the character limit must be enforced.
      * @throws TextLengthExceededException When the character limit is exceeded and the force parameter is set to false.
      */
     void setText(String text, boolean force) throws TextLengthExceededException {
-        // Only for Button Template
-        checkMessageTypeCompatibility(this, OutgoingMessageType.TEMPLATE_BUTTON);
 
         // Button text is limited to 320 characters
         if (text != null) {
@@ -97,17 +94,16 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     }
 
     /**
-     * Add a new button to the template. Please note that at the time of this version, the number of buttons is limited
-     * to 3. If you exceed this limit, an exception will be thrown. However, if you know what you are doing, you can set
-     * the parameter force to true so that the limit will not be enforced.
+     * Add a new button to the template. This method is only available for Button Template Messages. Please note that
+     * at the time of this version, the number of buttons is limited to 3. If you exceed this limit, an exception will
+     * be thrown. However, if you know what you are doing, you can set the parameter force to true so that the limit
+     * will not be enforced.
      *
      * @param button The Button to add to the template.
      * @param force Whether the buttons limit must be enforced.
-     * @throws ButtonsNumberExceededException When the buttons limit is exceeded and the force parameter is set to false.
+     * @throws ElementsNumberExceededException When the buttons limit is exceeded and the force parameter is set to false.
      */
-    void addButton(Button button, boolean force) throws ButtonsNumberExceededException {
-        // Only for Button Template
-        checkMessageTypeCompatibility(this, OutgoingMessageType.TEMPLATE_BUTTON);
+    void addButton(Button button, boolean force) throws ElementsNumberExceededException {
 
         // Add the button to the template
         if (button != null) {
@@ -115,7 +111,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
 
             // Buttons are limited to 3
             if (!force && buttonTemplate.buttons.size() > Constants.LIMIT_BUTTONS) {
-                throw new ButtonsNumberExceededException();
+                throw new ElementsNumberExceededException(Constants.MSG_BUTTONS_NUMBER_EXCEEDED);
             }
 
             buttonTemplate.buttons.add(button);
@@ -123,17 +119,16 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     }
 
     /**
-     * Add a new bubble to the template. Please note that at the time of this version, the number of bubbles is limited
-     * to 10. If you exceed this limit, an exception will be thrown. However, if you know what you are doing, you can
-     * set the parameter force to true so that the limit will not be enforced.
+     * Add a new bubble to the template. This method is only available for Generic Template Messages. Please note that
+     * at the time of this version, the number of bubbles is limited to 10. If you exceed this limit, an exception
+     * will be thrown. However, if you know what you are doing, you can set the parameter force to true so that the
+     * limit will not be enforced.
      *
      * @param bubble The Bubble to add to the template.
      * @param force Whether the bubbles limit must be enforced.
-     * @throws BubblesNumberExceededException When the bubbles limit is exceeded and the force arameter is set to false.
+     * @throws ElementsNumberExceededException When the bubbles limit is exceeded and the force arameter is set to false.
      */
-    void addBubble(Bubble bubble, boolean force) throws BubblesNumberExceededException {
-        // Only for Generic Template
-        checkMessageTypeCompatibility(this, OutgoingMessageType.TEMPLATE_GENERIC);
+    void addBubble(Bubble bubble, boolean force) throws ElementsNumberExceededException {
 
         // Add the bubble to the template
         if (bubble != null) {
@@ -141,7 +136,7 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
 
             // Bubbles are limited to 10
             if (!force && genericTemplate.elements.size() > Constants.LIMIT_BUBBLES) {
-                throw new BubblesNumberExceededException();
+                throw new ElementsNumberExceededException(Constants.MSG_BUBBLES_NUMBER_EXCEEDED);
             }
 
             genericTemplate.elements.add(bubble);
