@@ -25,13 +25,16 @@ import com.google.gson.JsonParser;
  * Class holding the instances of Gson and JsonParser for the entire project. It's designed as a singleton with two
  * static methods, each one providing lazy initialization of the singleton and the instance they are responsible for.
  */
-public class GsonManager {
+public final class GsonManager {
 
     private final static Object gsonLock = new Object();
     private final static Object jsonParserLock = new Object();
 
     private volatile static Gson gsonInstance = null;
     private volatile static JsonParser jsonParserInstance = null;
+
+    private GsonManager() {
+    }
 
     /**
      * Return an unique instance of Gson, performing a lazy initialization if no instance exists yet.

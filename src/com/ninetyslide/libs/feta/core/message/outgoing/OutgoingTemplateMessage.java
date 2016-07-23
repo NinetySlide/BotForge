@@ -30,14 +30,17 @@ import java.util.List;
 /**
  * Class representing a Template outgoing message. The supported templates are "generic" and "button".
  */
-public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRepliesSetter {
+final class OutgoingTemplateMessage extends OutgoingMessage implements QuickRepliesSetter {
 
     private final static String SUPERTYPE_TEMPLATE = "template";
     private final static String TYPE_GENERIC = "generic";
     private final static String TYPE_BUTTON = "button";
 
-    private transient OutgoingMessageType messageType;
+    private transient OutgoingMessageType messageType = null;
     private TemplateRoot message = null;
+
+    private OutgoingTemplateMessage() {
+    }
 
     OutgoingTemplateMessage(OutgoingMessageType messageType) {
         super();
@@ -195,17 +198,20 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
         return super.isValid() && message.isValid();
     }
 
-    private static class TemplateRoot extends QuickRepliesCarrier {
+    private final static class TemplateRoot extends QuickRepliesCarrier {
         TemplateAttachment attachment = null;
+
+        TemplateRoot() {
+        }
     }
 
-    private static class TemplateAttachment {
-        public TemplateAttachment() {
-            type = SUPERTYPE_TEMPLATE;
-        }
-
+    private final static class TemplateAttachment {
         String type = null;
         Template payload = null;
+
+        TemplateAttachment() {
+            type = SUPERTYPE_TEMPLATE;
+        }
     }
 
     /**
@@ -213,15 +219,18 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
      */
     private abstract static class Template {
         String templateType = null;
+
+        Template() {
+        }
     }
 
     /**
      * Class representing the Generic template, which contains an array of Bubbles.
      */
-    private static class GenericTemplate extends Template {
+    private final static class GenericTemplate extends Template {
         List<Bubble> elements = new ArrayList<>();
 
-        public GenericTemplate() {
+        GenericTemplate() {
             templateType = TYPE_GENERIC;
         }
     }
@@ -229,11 +238,11 @@ public class OutgoingTemplateMessage extends OutgoingMessage implements QuickRep
     /**
      * Class representing the Button template, which contains an array of Buttons.
      */
-    private static class ButtonTemplate extends Template {
+    private final static class ButtonTemplate extends Template {
         String text = null;
         List<Button> buttons = new ArrayList<>();
 
-        public ButtonTemplate() {
+        ButtonTemplate() {
             templateType = TYPE_BUTTON;
         }
     }

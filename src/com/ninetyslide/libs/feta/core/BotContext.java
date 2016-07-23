@@ -25,13 +25,38 @@ import com.ninetyslide.libs.feta.exception.BotInitParameterMissingException;
  */
 public final class BotContext {
 
-    private String pageId;
-    private String pageAccessToken;
-    private String appSecretKey;
-    private String verifyToken;
-    private String webhookUrl;
-    private boolean validateCallbacks;
+    private String pageId = null;
+    private String pageAccessToken = null;
+    private String appSecretKey = null;
+    private String verifyToken = null;
+    private String webhookUrl = null;
+    private boolean validateCallbacks = true;
 
+    /**
+     * Build a new Bot Context setting all the passed values as fields of the class. Please note that callback
+     * validation is enabled by default.
+     *
+     * @param pageId The Page ID.
+     * @param pageAccessToken The Page Access Token for the Bot.
+     * @param appSecretKey The bot's App Secret Key.
+     * @param verifyToken The Verify Token used to authenticate the webhook.
+     * @param webhookUrl The URL of the webhook.
+     */
+    public BotContext(String pageId, String pageAccessToken, String appSecretKey, String verifyToken, String webhookUrl) {
+        this(pageId, pageAccessToken, appSecretKey, verifyToken, webhookUrl, true);
+    }
+
+    /**
+     * Build a new Bot Context setting all the passed values as fields of the class.
+     *
+     * @param pageId The Page ID.
+     * @param pageAccessToken The Page Access Token for the Bot.
+     * @param appSecretKey The bot's App Secret Key.
+     * @param verifyToken The Verify Token used to authenticate the webhook.
+     * @param webhookUrl The URL of the webhook.
+     * @param validateCallbacks Whether the callbacks to the webhook must be validated. This should be always set to
+     *                          true (the default value) unless you have an extremely valid reason not to do so.
+     */
     public BotContext(String pageId, String pageAccessToken, String appSecretKey, String verifyToken, String webhookUrl, boolean validateCallbacks) {
 
         if (pageId == null || "".equals(pageId)) {

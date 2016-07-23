@@ -19,11 +19,11 @@ package com.ninetyslide.libs.feta.core.message.incoming;
 /**
  * Class representing a Postback Message.
  */
-public class Postback extends IncomingMessage {
+public final class Postback extends IncomingMessage {
 
-    private String payload;
+    private String payload = null;
 
-    public Postback() {
+    private Postback() {
     }
 
     public String getPayload() {

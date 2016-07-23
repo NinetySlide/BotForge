@@ -27,13 +27,16 @@ import java.util.List;
 /**
  * Class representing the Bubble widget that can be added to the Generic template.
  */
-public class Bubble implements ValidityChecker {
+public final class Bubble implements ValidityChecker {
 
     private String title = null;
     private String subtitle = null;
     private String imageUrl = null;
     private String itemUrl = null;
     private List<Button> buttons = null;
+
+    public Bubble() {
+    }
 
     /**
      * Set the title for the Bubble. Same as setTitle(title, false).

@@ -19,7 +19,7 @@ package com.ninetyslide.libs.feta.core.message.outgoing.response;
 /**
  * Class representing the response of the server to a message send.
  */
-public class SendMessageSuccess implements SendMessageResponse {
+public final class SendMessageSuccess implements SendMessageResponse {
 
     private String recipientId = null;
     private String messageId = null;

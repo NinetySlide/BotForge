@@ -21,7 +21,7 @@ import com.ninetyslide.libs.feta.common.Constants;
 /**
  * Class representing a Sender Action message.
  */
-public class SenderActionsMessage extends OutgoingMessage {
+final class SenderActionsMessage extends OutgoingMessage {
 
     private final static String ACTION_MARK_SEEN = "mark_seen";
     private final static String ACTION_TYPING_ON = "typing_on";

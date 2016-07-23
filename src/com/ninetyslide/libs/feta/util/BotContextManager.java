@@ -58,7 +58,7 @@ public final class BotContextManager {
         if (newContext != null) {
             botContextByPageId.put(newContext.getPageId(), newContext);
             botContextByWebhookUrl.put(newContext.getWebhookUrl(), newContext);
-        } else throw new IllegalArgumentException(Constants.MSG_INVALID_CONTEXT);
+        } else throw new IllegalArgumentException(Constants.MSG_CONTEXT_INVALID);
     }
 
     /**

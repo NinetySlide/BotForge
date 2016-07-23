@@ -19,7 +19,7 @@ package com.ninetyslide.libs.feta.core.message.outgoing.response;
 /**
  * Class containing the error information returned by the server when an error occurs while sending a message.
  */
-public class SendMessageError implements SendMessageResponse {
+public final class SendMessageError implements SendMessageResponse {
 
     public final static int INTERNAL_ERROR = 2;
     public final static int RATE_LIMITED_ERROR = 4;

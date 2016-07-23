@@ -21,13 +21,13 @@ package com.ninetyslide.libs.feta.core.message.incoming;
  */
 public abstract class ReceivedMessage extends IncomingMessage {
 
-    private String mid;
+    private String mid = null;
     private int seq;
     private boolean isEcho = false;
-    private String appId;
-    private String metadata;
+    private String appId = null;
+    private String metadata = null;
 
-    public ReceivedMessage() {
+    ReceivedMessage() {
     }
 
     public String getMid() {

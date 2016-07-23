@@ -22,9 +22,11 @@ package com.ninetyslide.libs.feta.core.message.incoming;
  */
 public abstract class IncomingMessage {
 
-    private String senderId;
-    private String recipientId;
+    private String senderId = null;
+    private String recipientId = null;
     private long timestamp;
+
+    IncomingMessage() {}
 
     public String getSenderId() {
         return senderId;

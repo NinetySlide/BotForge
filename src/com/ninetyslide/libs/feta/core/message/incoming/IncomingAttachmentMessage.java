@@ -21,7 +21,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Class representing a Received Message with Attachments.
  */
-public class IncomingAttachmentMessage extends ReceivedMessage {
+public final class IncomingAttachmentMessage extends ReceivedMessage {
 
     private final static String TYPE_IMAGE = "image";
     private final static String TYPE_AUDIO = "audio";
@@ -31,22 +31,40 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
 
     private IncomingAttachment[] attachments = null;
 
-    public IncomingAttachmentMessage() {
+    private IncomingAttachmentMessage() {
     }
 
+    /**
+     * Return the type of the message, in this case it is an attachment message.
+     *
+     * @return The type of the message.
+     */
     @Override
     public IncomingMessageType getIncomingMessageType() {
         return IncomingMessageType.ATTACHMENT;
     }
 
+    /**
+     *
+     * @return
+     */
     public IncomingAttachment[] getAttachments() {
         return attachments;
     }
 
+    /**
+     *
+     * @param pos
+     * @return
+     */
     public IncomingAttachment getAttachment(int pos) {
         return attachments[pos];
     }
 
+    /**
+     *
+     * @return
+     */
     public int getAttachmentsNumber() {
         return attachments.length;
     }
@@ -55,13 +73,18 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
      * Class representing the attachment of the message. It has a type and a payload that might contain different
      * values based on its type.
      */
-    private static class IncomingAttachment {
+    public final static class IncomingAttachment {
         private String type = null;
         private IncomingAttachmentPayload payload = null;
 
-        public IncomingAttachment() {
+        private IncomingAttachment() {
         }
 
+        /**
+         * Return the type of the resource contained inside the attachment.
+         *
+         * @return The type of the resource.
+         */
         public IncomingAttachmentType getAttachmentType() {
             switch (type) {
                 case TYPE_IMAGE:
@@ -79,8 +102,22 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
             }
         }
 
-        public IncomingAttachmentPayload getPayload() {
-            return payload;
+        /**
+         * Return the URL of the attached resource.
+         *
+         * @return The URL of the attached resource.
+         */
+        public String getUrl() {
+            return payload.getUrl();
+        }
+
+        /**
+         * Return the coordinates contained inside the attachment.
+         *
+         * @return The coordinates contained in the attachment.
+         */
+        public Coordinates getCoordinates() {
+            return payload.getCoordinates();
         }
     }
 
@@ -88,18 +125,18 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
      * Class representing an attachment payload. Based on the type of the attachment, either url field or coordinates
      * field is set, not both.
      */
-    private static class IncomingAttachmentPayload {
+    private final static class IncomingAttachmentPayload {
         private String url = null;
         private Coordinates coordinates = null;
 
-        public IncomingAttachmentPayload() {
+        private IncomingAttachmentPayload() {
         }
 
-        public String getUrl() {
+        String getUrl() {
             return url;
         }
 
-        public Coordinates getCoordinates() {
+        Coordinates getCoordinates() {
             return coordinates;
         }
     }
@@ -107,11 +144,11 @@ public class IncomingAttachmentMessage extends ReceivedMessage {
     /**
      * Class representing a couple of coordinates, latitude and longitude.
      */
-    private static class Coordinates {
+    public final static class Coordinates {
         private double lat;
         @SerializedName("long") private double longitude;
 
-        public Coordinates() {
+        private Coordinates() {
         }
 
         public double getLat() {

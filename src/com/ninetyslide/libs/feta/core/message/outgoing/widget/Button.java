@@ -23,17 +23,20 @@ import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 /**
  * Class representing a Button widget that can be added to multiple templates.
  */
-public class Button implements ValidityChecker {
+public final class Button implements ValidityChecker {
 
     private final static String TYPE_WEB_URL = "web_url";
     private final static String TYPE_POSTBACK = "postback";
     private final static String TYPE_PHONE_NUMBER = "phone_number";
 
-    private transient ButtonType buttonType;
+    private transient ButtonType buttonType = null;
     private String type = null;
     private String title = null;
     private String url = null;
     private String payload = null;
+
+    private Button() {
+    }
 
     public Button(ButtonType buttonType) {
         this.buttonType = buttonType;

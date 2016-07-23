@@ -19,13 +19,13 @@ package com.ninetyslide.libs.feta.core.message.incoming;
 /**
  * Class representing a Delivery Receipt.
  */
-public class DeliveryReceipt extends IncomingMessage {
+public final class DeliveryReceipt extends IncomingMessage {
 
-    private String[] mids;
+    private String[] mids = null;
     private long watermark;
     private int seq;
 
-    public DeliveryReceipt() {
+    private DeliveryReceipt() {
     }
 
     public String[] getMids() {

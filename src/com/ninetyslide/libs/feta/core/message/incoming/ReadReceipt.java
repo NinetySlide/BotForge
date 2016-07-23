@@ -19,12 +19,12 @@ package com.ninetyslide.libs.feta.core.message.incoming;
 /**
  * Class representing a Read Receipt.
  */
-public class ReadReceipt extends IncomingMessage {
+public final class ReadReceipt extends IncomingMessage {
 
     private long watermark;
     private int seq;
 
-    public ReadReceipt() {
+    private ReadReceipt() {
     }
 
     public long getWatermark() {

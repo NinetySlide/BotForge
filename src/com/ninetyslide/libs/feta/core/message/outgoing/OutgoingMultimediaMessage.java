@@ -24,7 +24,7 @@ import com.ninetyslide.libs.feta.exception.ElementsNumberExceededException;
 /**
  * Class representing an outgoing message with multimedia attachments.
  */
-public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickRepliesSetter {
+final class OutgoingMultimediaMessage extends OutgoingMessage implements QuickRepliesSetter {
 
     private final static String TYPE_AUDIO = "audio";
     private final static String TYPE_IMAGE = "image";
@@ -33,6 +33,9 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
 
     private transient OutgoingMessageType messageType;
     private MediaRoot message = null;
+
+    private OutgoingMultimediaMessage() {
+    }
 
     OutgoingMultimediaMessage(OutgoingMessageType messageType) {
         super();
@@ -102,16 +105,25 @@ public class OutgoingMultimediaMessage extends OutgoingMessage implements QuickR
                 message.attachment.payload.url != null;
     }
 
-    private static class MediaRoot extends QuickRepliesCarrier {
+    private final static class MediaRoot extends QuickRepliesCarrier {
         MediaAttachment attachment = null;
+
+        MediaRoot() {
+        }
     }
 
-    private static class MediaAttachment {
+    private final static class MediaAttachment {
         String type = null;
         MediaPayload payload = null;
+
+        MediaAttachment() {
+        }
     }
 
-    private static class MediaPayload {
+    private final static class MediaPayload {
         String url = null;
+
+        MediaPayload() {
+        }
     }
 }

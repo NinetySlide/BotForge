@@ -19,11 +19,11 @@ package com.ninetyslide.libs.feta.core.message.incoming;
 /**
  * Class representing an Optin Message.
  */
-public class Optin extends IncomingMessage {
+public final class Optin extends IncomingMessage {
 
-    private String ref;
+    private String ref = null;
 
-    public Optin() {
+    private Optin() {
     }
 
     public String getRef() {

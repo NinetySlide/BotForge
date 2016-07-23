@@ -19,28 +19,43 @@ package com.ninetyslide.libs.feta.core.message.incoming;
 /**
  * Class representing a Received Text Message.
  */
-public class IncomingTextMessage extends ReceivedMessage {
+public final class IncomingTextMessage extends ReceivedMessage {
 
-    private String text;
-    private QuickReply quickReply;
+    private String text = null;
+    private QuickReply quickReply = null;
 
-    public IncomingTextMessage() {
+    private IncomingTextMessage() {
     }
 
+    /**
+     * Return the type of the message, in this case it is text message.
+     *
+     * @return The type of the message.
+     */
     @Override
     public IncomingMessageType getIncomingMessageType() {
         return IncomingMessageType.TEXT;
     }
 
+    /**
+     * Return the text contained inside the received message.
+     *
+     * @return The text of the message.
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Return the quick reply payload associated with the received text message.
+     *
+     * @return The quick reply for the message.
+     */
     public String getQuickReply() {
         return quickReply.payload;
     }
 
-    private static class QuickReply {
-        String payload;
+    private final static class QuickReply {
+        String payload = null;
     }
 }

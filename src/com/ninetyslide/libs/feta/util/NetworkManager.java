@@ -25,7 +25,10 @@ import java.net.URL;
 /**
  * Class that provides facilities to make low level HTTPS POST request.
  */
-public class NetworkManager {
+public final class NetworkManager {
+
+    private NetworkManager() {
+    }
 
     /**
      * Method used to perform a basic HTTP POST request using the provided URL and the provided body content.

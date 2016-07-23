@@ -25,7 +25,7 @@ import com.ninetyslide.libs.feta.exception.TextLengthExceededException;
 /**
  * Class representing an outgoing text message.
  */
-public class OutgoingTextMessage extends OutgoingMessage implements QuickRepliesSetter {
+final class OutgoingTextMessage extends OutgoingMessage implements QuickRepliesSetter {
 
     private TextRoot message = null;
 
@@ -75,7 +75,10 @@ public class OutgoingTextMessage extends OutgoingMessage implements QuickReplies
                 message.text != null;
     }
 
-    private static class TextRoot extends QuickRepliesCarrier {
+    private final static class TextRoot extends QuickRepliesCarrier {
         String text = null;
+
+        TextRoot() {
+        }
     }
 }

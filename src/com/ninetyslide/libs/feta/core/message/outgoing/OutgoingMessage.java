@@ -32,20 +32,11 @@ public abstract class OutgoingMessage implements ValidityChecker {
     private final static String NOTIFICATION_TYPE_SILENT = "SILENT_PUSH";
     private final static String NOTIFICATION_TYPE_NO_PUSH = "NO_PUSH";
 
-    private OutgoingRecipient recipient;
+    private OutgoingRecipient recipient = null;
     private String notificationType = null;
 
     OutgoingMessage() {
         setNotificationType(NotificationType.REGULAR);
-    }
-
-    /**
-     * Set the recipient for this message.
-     *
-     * @param recipient The recipient for this message.
-     */
-    private void setRecipient(OutgoingRecipient recipient) {
-        this.recipient = recipient;
     }
 
     /**
@@ -76,38 +67,27 @@ public abstract class OutgoingMessage implements ValidityChecker {
      */
     @Override
     public boolean isValid() {
-        return recipient != null;
+        // In future this may change and verify some actual statements
+        return true;
     }
 
     /**
-     * Check whether the type of the message passed as an argument matches with one of the provided types. In case a
-     * match is not found, an UnsupportedOperationException will be thrown.
+     * Set the recipient for this message.
      *
-     * @param messageToCheck The message to check for its type.
-     * @param supportedTypes A list of supported types.
+     * @param recipient The recipient for this message.
      */
-    public static void checkMessageTypeCompatibility(OutgoingMessage messageToCheck, OutgoingMessageType... supportedTypes) {
-        // Extract the type of the message passed as an argument
-        OutgoingMessageType messageType = messageToCheck.getOutgoingMessageType();
-
-        // Check if it matches with one of the supported types
-        if (supportedTypes != null) {
-            for (OutgoingMessageType supportedType : supportedTypes) {
-                if (messageType == supportedType) {
-                    return;
-                }
-            }
-        }
-
-        // Throw an exception if a match is not found
-        throw new UnsupportedOperationException(Constants.MSG_MESSAGE_OPERATION_INVALID);
+    public void setRecipient(OutgoingRecipient recipient) {
+        this.recipient = recipient;
     }
 
     public abstract OutgoingMessageType getOutgoingMessageType();
 
-    public static class OutgoingRecipient {
+    public final static class OutgoingRecipient {
         private String phoneNumber = null;
         private String id = null;
+
+        private OutgoingRecipient() {
+        }
 
         public OutgoingRecipient(String phoneNumber, String id) {
             if (phoneNumber == null ^ id == null) {
@@ -124,7 +104,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
      * instance of the Builder passing the desired Message Type, then use all the exposed methods to compose your
      * message and finally call build() to get the message.
      */
-    public static class Builder {
+    public final static class Builder {
         // TODO: Handle the sending of location message (if possible)
 
         private OutgoingMessageType messageType = null;
@@ -191,7 +171,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
          */
         public Builder setSenderAction(SenderActionsMessage.SenderAction senderAction) {
             // This method is only available for SenderActionMessage
-            checkMessageTypeCompatibility(message, OutgoingMessageType.SENDER_ACTION);
+            checkMessageTypeCompatibility(OutgoingMessageType.SENDER_ACTION);
 
             // Set the Sender Action
             ((SenderActionsMessage) message).setSenderAction(senderAction);
@@ -225,7 +205,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
          */
         public Builder setText(String text, boolean force) throws TextLengthExceededException {
             // This method is only available for OutgoingTextMessage and Button Template Message
-            checkMessageTypeCompatibility(message, OutgoingMessageType.TEXT, OutgoingMessageType.TEMPLATE_BUTTON);
+            checkMessageTypeCompatibility(OutgoingMessageType.TEXT, OutgoingMessageType.TEMPLATE_BUTTON);
 
             switch(this.messageType) {
                 case TEXT:
@@ -250,11 +230,12 @@ public abstract class OutgoingMessage implements ValidityChecker {
          */
         public Builder setMediaUrl(String url) {
             // This method is only available for OutgoingMultimediaMessage
-            checkMessageTypeCompatibility(message,
+            checkMessageTypeCompatibility(
                     OutgoingMessageType.AUDIO,
                     OutgoingMessageType.FILE,
                     OutgoingMessageType.IMAGE,
-                    OutgoingMessageType.VIDEO);
+                    OutgoingMessageType.VIDEO
+            );
 
             // Set the URL for OutgoingMultimediaMessage
             ((OutgoingMultimediaMessage) message).setMediaUrl(url);
@@ -287,7 +268,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
          */
         public Builder addButton(Button button, boolean force) throws ElementsNumberExceededException {
             // This method is only available for Button Template message
-            checkMessageTypeCompatibility(message, OutgoingMessageType.TEMPLATE_BUTTON);
+            checkMessageTypeCompatibility(OutgoingMessageType.TEMPLATE_BUTTON);
 
             // Add a Button to the template
             ((OutgoingTemplateMessage) message).addButton(button, force);
@@ -320,7 +301,7 @@ public abstract class OutgoingMessage implements ValidityChecker {
          */
         public Builder addBubble(Bubble bubble, boolean force) throws ElementsNumberExceededException {
             // This method is only available for Generic Template Message
-            checkMessageTypeCompatibility(message, OutgoingMessageType.TEMPLATE_GENERIC);
+            checkMessageTypeCompatibility(OutgoingMessageType.TEMPLATE_GENERIC);
 
             // Add a Bubble to the template
             ((OutgoingTemplateMessage) message).addBubble(bubble, force);
@@ -337,19 +318,6 @@ public abstract class OutgoingMessage implements ValidityChecker {
         public Builder setNotificationType(NotificationType type) {
             // Set the notification type
             message.setNotificationType(type);
-
-            return this;
-        }
-
-        /**
-         * Set the recipient for this message.
-         *
-         * @param recipient The recipient for this message.
-         * @return The builder instance used to invoke this method.
-         */
-        public Builder setRecipient(OutgoingRecipient recipient) {
-            // Set the recipient for this message
-            message.setRecipient(recipient);
 
             return this;
         }
@@ -380,19 +348,40 @@ public abstract class OutgoingMessage implements ValidityChecker {
          */
         public Builder addQuickReply(QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
             // This method is only available for OutgoingTextMessage, OutgoingMultimediaMessage and OutgoingTemplateMessage
-            checkMessageTypeCompatibility(message,
+            checkMessageTypeCompatibility(
                     OutgoingMessageType.TEXT,
                     OutgoingMessageType.IMAGE,
                     OutgoingMessageType.AUDIO,
                     OutgoingMessageType.VIDEO,
                     OutgoingMessageType.FILE,
                     OutgoingMessageType.TEMPLATE_BUTTON,
-                    OutgoingMessageType.TEMPLATE_GENERIC);
+                    OutgoingMessageType.TEMPLATE_GENERIC
+            );
 
             // Add the quickReply
             ((QuickRepliesSetter) message).addQuickReply(quickReply, force);
 
             return this;
+        }
+
+        /**
+         * Check whether the type of the message being build matches with one of the provided types. In case a match
+         * is not found, an UnsupportedOperationException will be thrown.
+         *
+         * @param supportedTypes A list of supported types.
+         */
+        private void checkMessageTypeCompatibility(OutgoingMessageType... supportedTypes) {
+            // Check if it matches with one of the supported types
+            if (supportedTypes != null) {
+                for (OutgoingMessageType supportedType : supportedTypes) {
+                    if (messageType == supportedType) {
+                        return;
+                    }
+                }
+            }
+
+            // Throw an exception if a match is not found
+            throw new UnsupportedOperationException(Constants.MSG_MESSAGE_OPERATION_INVALID);
         }
 
     }
@@ -401,12 +390,15 @@ public abstract class OutgoingMessage implements ValidityChecker {
      * Class representing a quick reply. An array of quick replies can be added to every text, multimedia and
      * template message.
      */
-    public static class QuickReply implements ValidityChecker {
+    public final static class QuickReply implements ValidityChecker {
         private final static String QUICK_REPLY_CONTENT_TYPE = "text";
 
         private String contentType = QUICK_REPLY_CONTENT_TYPE;
         private String title = null;
         private String payload = null;
+
+        private QuickReply() {
+        }
 
         public QuickReply(String title, String payload) {
             this.title = title;
