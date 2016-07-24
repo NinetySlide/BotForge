@@ -16,9 +16,10 @@
 
 package com.ninetyslide.libs.feta.adapter;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ninetyslide.libs.feta.common.Constants;
-import com.ninetyslide.libs.feta.core.BotContext;
 import com.ninetyslide.libs.feta.core.message.outgoing.OutgoingMessage;
 import com.ninetyslide.libs.feta.core.message.outgoing.response.SendMessageError;
 import com.ninetyslide.libs.feta.core.message.outgoing.response.SendMessageResponse;

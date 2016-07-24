@@ -34,7 +34,11 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import static com.ninetyslide.libs.feta.common.Constants.*;
-
+// TODO: Setup unit tests
+// TODO: Write README
+// TODO: Publish on Maven Central
+// TODO: Load on GitHub
+// TODO: Load JavaDoc on javadoc.io
 /**
  * Main class that handles the Bot. This class is an HttpServlet that receives GET and POST HTTP calls, extract the
  * messages and delivers them to a series of callbacks, each one of them for a specific event.
