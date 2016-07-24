@@ -169,6 +169,7 @@ public abstract class FbBot extends HttpServlet {
         if (context.isCallbacksValidationActive() &&
                 !SignatureVerifier.verifySignature(jsonStr, signatureHeader, context.getAppSecretKey())) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
         }
 
         // Parse the JSON String
