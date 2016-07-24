@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/BotFactory_jar</output-path>
     <root id="archive" name="BotFactory.jar">
       <element id="module-output" name="BotFactory" />
-      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.7/gson-2.7.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
