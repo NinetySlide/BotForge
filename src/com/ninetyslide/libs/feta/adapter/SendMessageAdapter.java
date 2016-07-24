@@ -42,14 +42,14 @@ public final class SendMessageAdapter {
     /**
      * Method used to send a message from a certain bot.
      *
-     * @param context The bot context to use for message send.
+     * @param pageAccessToken The Page Access Token to use for message sending.
      * @param message The message to send.
      * @param recipient The recipient for the message.
      * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong.
      */
-    public static SendMessageResponse sendMessage(BotContext context, OutgoingMessage message, OutgoingMessage.OutgoingRecipient recipient) {
+    public static SendMessageResponse sendMessage(String pageAccessToken, OutgoingMessage message, OutgoingMessage.OutgoingRecipient recipient) {
         // Check that all the parameters are ok
-        if (context == null) {
+        if (pageAccessToken == null) {
             throw new IllegalArgumentException(Constants.MSG_CONTEXT_INVALID);
         }
         if (message == null) {
@@ -64,7 +64,7 @@ public final class SendMessageAdapter {
 
         // Perform the request
         String response = NetworkManager.performPostRequest(
-                SEND_MESSAGE_BASE_URL + context.getPageAccessToken(),
+                SEND_MESSAGE_BASE_URL + pageAccessToken,
                 gson.toJson(message)
         );
 
@@ -93,13 +93,13 @@ public final class SendMessageAdapter {
     /**
      * Message used to send a message from a certain bot in bulk to a number of recipients.
      *
-     * @param context The bot context to use for message send.
+     * @param pageAccessToken The Page Access Token to use for message sending.
      * @param message The message to send.
      * @param recipients The recipients for the message.
      * @return The array of responses, one for each recipient. Please note that the response in the n-th position is
      * related to the recipient in the n-th position.
      */
-    public static SendMessageResponse[] sendMessage(BotContext context, OutgoingMessage message, OutgoingMessage.OutgoingRecipient[] recipients) {
+    public static SendMessageResponse[] sendMessage(String pageAccessToken, OutgoingMessage message, OutgoingMessage.OutgoingRecipient[] recipients) {
         // Check that all the parameters are ok
         if (recipients == null) {
             throw new IllegalArgumentException(Constants.MSG_RECIPIENT_INVALID);
@@ -110,7 +110,7 @@ public final class SendMessageAdapter {
 
         // Perform the requests, one for each recipient
         for (int i = 0; i < recipients.length; i++) {
-            responses[i] = sendMessage(context, message, recipients[i]);
+            responses[i] = sendMessage(pageAccessToken, message, recipients[i]);
         }
 
         // Return the responses array

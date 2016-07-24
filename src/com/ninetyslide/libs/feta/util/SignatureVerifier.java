@@ -25,9 +25,12 @@ import java.util.Formatter;
 /**
  * Class holding static methods related to the verification of the signature in the callbacks.
  */
-public class SignatureVerifier {
+public final class SignatureVerifier {
 
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+
+    private SignatureVerifier() {
+    }
 
     /**
      * Verify the HMAC-SHA1 signature of the received payload.

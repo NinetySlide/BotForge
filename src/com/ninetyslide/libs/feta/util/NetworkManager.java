@@ -27,17 +27,43 @@ import java.net.URL;
  */
 public final class NetworkManager {
 
+    private final static String METHOD_GET = "GET";
+    private final static String METHOD_POST = "POST";
+
     private NetworkManager() {
     }
 
     /**
-     * Method used to perform a basic HTTP POST request using the provided URL and the provided body content.
+     * Method used to perform a basic HTTPS POST request using the provided URL and the provided body content.
      *
      * @param urlStr The URL to use to make the POST request.
      * @param requestBodyStr The String that will be used as the request body.
      * @return The response returned by the server, or null if an error occurred.
      */
     public static String performPostRequest(String urlStr, String requestBodyStr) {
+        return performHttpsRequest(METHOD_POST, urlStr, requestBodyStr);
+    }
+
+    /**
+     * Method used to perform a basic HTTPs GET request using the provided URL.
+     *
+     * @param urlStr The URL to use to make the GET request.
+     * @return The response returned by the server, or null if an error occurred.
+     */
+    public static String performGetRequest(String urlStr) {
+        return performHttpsRequest(METHOD_GET, urlStr, null);
+    }
+
+    /**
+     * Main method used to perform a generic HTTPS request (POST or GET) using the provided URL and the provided body
+     * content (if applicable).
+     *
+     * @param method The HTTP method used to perform the request (either POST or GET).
+     * @param urlStr The URL to use to make the GET request.
+     * @param requestBodyStr The String that will be used as the request body, in case of POST request.
+     * @return The response returned by the server, or null if an error occurred.
+     */
+    private static String performHttpsRequest(String method, String urlStr, String requestBodyStr) {
         HttpsURLConnection connection = null;
 
         try {
@@ -46,16 +72,24 @@ public final class NetworkManager {
 
             // Create a new connection and set the headers
             connection = (HttpsURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", Constants.HTTP_CONTENT_TYPE_JSON);
-            connection.setRequestProperty("Content-Length", Integer.toString(requestBodyStr.getBytes().length));
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
 
-            // Send the request
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(requestBodyStr);
-            wr.close();
+            // Different behaviours for POST and GET methods
+            if (method.equals(METHOD_POST)) {
+                connection.setRequestMethod(METHOD_POST);
+                connection.setRequestProperty("Content-Type", Constants.HTTP_CONTENT_TYPE_JSON);
+                connection.setRequestProperty("Content-Length", Integer.toString(requestBodyStr.getBytes().length));
+                connection.setUseCaches(false);
+                connection.setDoOutput(true);
+
+                // Send POST data
+                DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+                wr.writeBytes(requestBodyStr);
+                wr.close();
+            } else {
+                connection.setRequestMethod(METHOD_GET);
+                connection.setUseCaches(false);
+                connection.setDoOutput(true);
+            }
 
             // Parse the response
             InputStream is = connection.getInputStream();

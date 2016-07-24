@@ -16,9 +16,77 @@
 
 package com.ninetyslide.libs.feta.adapter;
 
+import com.google.gson.Gson;
+import com.ninetyslide.libs.feta.util.GsonManager;
+import com.ninetyslide.libs.feta.util.NetworkManager;
+
 /**
  * Class that provides facilities to access User Profile API.
  */
-public class UserProfileApiAdapter {
-    // TODO: Add implementation
+public final class UserProfileApiAdapter {
+
+    private final static String USER_PROFILE_API_BASE_URL = "https://graph.facebook.com/v2.6/";
+    private final static String USER_PROFILE_REQ_PARAMS = "?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=";
+
+    private static Gson gson = GsonManager.getGsonInstance();
+
+    private UserProfileApiAdapter() {
+    }
+
+    /**
+     * Method used to retrieve the User Profile of a certain user, using the User ID associated with that user.
+     *
+     * @param pageAccessToken The Page Access Token to use for profile retrieval.
+     * @param userId The User ID of the desired user.
+     * @return The User Profile for the desired user.
+     */
+    public static UserProfile getUserProfile(String pageAccessToken, String userId) {
+        String response = NetworkManager.performGetRequest(
+                USER_PROFILE_API_BASE_URL +
+                        userId +
+                        USER_PROFILE_REQ_PARAMS +
+                        pageAccessToken
+        );
+        return gson.fromJson(response, UserProfile.class);
+    }
+
+    /**
+     * Class representing a User Profile.
+     */
+    public final static class UserProfile {
+
+        private UserProfile() {
+        }
+
+        private String firstName = null;
+        private String lastName = null;
+        private String profilePic = null;
+        private String locale = null;
+        private int timezone = 0;
+        private String gender = null;
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getProfilePic() {
+            return profilePic;
+        }
+
+        public String getLocale() {
+            return locale;
+        }
+
+        public int getTimezone() {
+            return timezone;
+        }
+
+        public String getGender() {
+            return gender;
+        }
+    }
 }

@@ -19,6 +19,12 @@ package com.ninetyslide.libs.feta.adapter;
 /**
  * Class that provides facilities to access Thread Settings API.
  */
-public class ThreadSettingsAdapter {
+public final class ThreadSettingsAdapter {
+
+    private final static String THREAD_SETTINGS_BASE_URL = "https://graph.facebook.com/v2.6/me/thread_settings?access_token=";
+
+    private ThreadSettingsAdapter() {
+    }
+
     // TODO: Add implementation
 }
