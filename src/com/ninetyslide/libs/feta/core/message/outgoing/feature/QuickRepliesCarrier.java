@@ -35,6 +35,7 @@ public abstract class QuickRepliesCarrier implements ValidityChecker {
      * you know what you are doing, you can set the parameter force to true so that the limit will not be enforced.
      *
      * @param quickReply The quick reply to add to the list.
+     * @param force Whether the Quick Replies limit must be enforced.
      */
     public void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
         if (quickReply != null) {

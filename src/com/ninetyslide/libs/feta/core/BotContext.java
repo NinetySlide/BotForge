@@ -31,10 +31,11 @@ public final class BotContext {
     private String verifyToken = null;
     private String webhookUrl = null;
     private boolean validateCallbacks = true;
+    private boolean debug = false;
 
     /**
      * Build a new Bot Context setting all the passed values as fields of the class. Please note that callback
-     * validation is enabled by default.
+     * validation is enabled by default and debug is disabled by default.
      *
      * @param pageId The Page ID.
      * @param pageAccessToken The Page Access Token for the Bot.
@@ -43,7 +44,23 @@ public final class BotContext {
      * @param webhookUrl The URL of the webhook.
      */
     public BotContext(String pageId, String pageAccessToken, String appSecretKey, String verifyToken, String webhookUrl) {
-        this(pageId, pageAccessToken, appSecretKey, verifyToken, webhookUrl, true);
+        this(pageId, pageAccessToken, appSecretKey, verifyToken, webhookUrl, true, false);
+    }
+
+    /**
+     * Build a new Bot Context setting all the passed values as fields of the class. Please note that debug is disabled
+     * by default.
+     *
+     * @param pageId The Page ID.
+     * @param pageAccessToken The Page Access Token for the Bot.
+     * @param appSecretKey The bot's App Secret Key.
+     * @param verifyToken The Verify Token used to authenticate the webhook.
+     * @param webhookUrl The URL of the webhook.
+     * @param validateCallbacks Whether the callbacks to the webhook must be validated. This should be always set to
+     *                          true (the default value) unless you have an extremely valid reason not to do so.
+     */
+    public BotContext(String pageId, String pageAccessToken, String appSecretKey, String verifyToken, String webhookUrl, boolean validateCallbacks) {
+        this(pageId, pageAccessToken, appSecretKey, verifyToken, webhookUrl, validateCallbacks, false);
     }
 
     /**
@@ -56,8 +73,10 @@ public final class BotContext {
      * @param webhookUrl The URL of the webhook.
      * @param validateCallbacks Whether the callbacks to the webhook must be validated. This should be always set to
      *                          true (the default value) unless you have an extremely valid reason not to do so.
+     * @param debug Whether the debug mode must be enabled. When it is enabled, all the received message data will be
+     *              logged.
      */
-    public BotContext(String pageId, String pageAccessToken, String appSecretKey, String verifyToken, String webhookUrl, boolean validateCallbacks) {
+    public BotContext(String pageId, String pageAccessToken, String appSecretKey, String verifyToken, String webhookUrl, boolean validateCallbacks, boolean debug) {
 
         if (pageId == null || "".equals(pageId)) {
             throw new BotInitParameterMissingException(MSG_PARAM_MISSING_PAGE_ID);
@@ -91,6 +110,8 @@ public final class BotContext {
 
         this.validateCallbacks = validateCallbacks;
 
+        this.debug = debug;
+
     }
 
     public String getPageId() {
@@ -117,4 +138,7 @@ public final class BotContext {
         return validateCallbacks;
     }
 
+    public boolean isDebugEnabled() {
+        return debug;
+    }
 }

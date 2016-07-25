@@ -45,25 +45,28 @@ public final class IncomingAttachmentMessage extends ReceivedMessage {
     }
 
     /**
+     * Retrieve the attachments of this message.
      *
-     * @return
+     * @return An array of attachments related to this message.
      */
     public IncomingAttachment[] getAttachments() {
         return attachments;
     }
 
     /**
+     * Retrieve the attachment specified by the index passed as an argument.
      *
-     * @param pos
-     * @return
+     * @param pos The index of the attachment.
+     * @return The desired attachment of this message.
      */
     public IncomingAttachment getAttachment(int pos) {
         return attachments[pos];
     }
 
     /**
+     * Get the number of the attachments for this message.
      *
-     * @return
+     * @return The number of attachments for this message.
      */
     public int getAttachmentsNumber() {
         return attachments.length;

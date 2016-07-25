@@ -42,6 +42,7 @@ public final class Bubble implements ValidityChecker {
      * Set the title for the Bubble. Same as setTitle(title, false).
      *
      * @param title The title to add to the Bubble.
+     * @return The instance of the bubble used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded.
      */
     public Bubble setTitle(String title) throws TextLengthExceededException {

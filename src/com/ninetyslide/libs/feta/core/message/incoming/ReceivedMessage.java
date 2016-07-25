@@ -26,6 +26,7 @@ public abstract class ReceivedMessage extends IncomingMessage {
     private boolean isEcho = false;
     private String appId = null;
     private String metadata = null;
+    private long stickerId;
 
     ReceivedMessage() {
     }
@@ -48,6 +49,10 @@ public abstract class ReceivedMessage extends IncomingMessage {
 
     public String getMetadata() {
         return metadata;
+    }
+
+    public long getStickerId() {
+        return stickerId;
     }
 
     public abstract IncomingMessageType getIncomingMessageType();

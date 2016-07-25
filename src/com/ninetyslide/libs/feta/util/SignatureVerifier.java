@@ -28,6 +28,7 @@ import java.util.Formatter;
 public final class SignatureVerifier {
 
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+    private static final int SIGNATURE_PREFIX_LENGTH = 5;
 
     private SignatureVerifier() {
     }
@@ -43,6 +44,7 @@ public final class SignatureVerifier {
     public static boolean verifySignature(String payload, String signature, String appSecretKey) {
         SecretKeySpec signingKey = new SecretKeySpec(appSecretKey.getBytes(), HMAC_SHA1_ALGORITHM);
         Mac mac = null;
+        String signatureValue = signature.substring(SIGNATURE_PREFIX_LENGTH);
 
         try {
             mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
@@ -51,7 +53,7 @@ public final class SignatureVerifier {
             return false;
         }
 
-        return signature.equals(toHexString(mac.doFinal(payload.getBytes())));
+        return signatureValue.equals(toHexString(mac.doFinal(payload.getBytes())));
     }
 
     /**

@@ -32,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.ninetyslide.libs.feta.common.Constants.*;
 // TODO: Setup unit tests
@@ -53,6 +54,8 @@ import static com.ninetyslide.libs.feta.common.Constants.*;
  * or to use some sort of task queue.
  */
 public abstract class FbBot extends HttpServlet {
+
+    private static final Logger log = Logger.getLogger(FbBot.class.getName());
 
     private Gson gson = null;
     private JsonParser parser = null;
@@ -112,12 +115,22 @@ public abstract class FbBot extends HttpServlet {
             return;
         }
 
+        // Log the request data if debug is enabled
+        if (context.isDebugEnabled()) {
+            log.info(
+                    "URL: " + webhookUrl + "\n" +
+                    "Mode: " + mode + "\n" +
+                    "Verify Token: " + verifyToken + "\n" +
+                    "Challenge: " + challenge + "\n"
+            );
+        }
+
         // Check whether the mode is right and the token match
         if (WEBHOOK_VALIDATION_MODE_SUBSCRIBE.equals(mode) &&
                 context.getVerifyToken().equals(verifyToken) &&
                 challenge != null) {
 
-            // Set the HTTP Headres
+            // Set the HTTP Headers
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType(HTTP_CONTENT_TYPE_TEXT);
             resp.setCharacterEncoding(HTTP_CHAR_ENCODING);
@@ -146,7 +159,6 @@ public abstract class FbBot extends HttpServlet {
     @Override
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
-        // TODO: Handle the reception of the like button
         // TODO: Handle reception and send of uploaded media
         // Get the URL of the request
         String webhookUrl = req.getRequestURL().toString();
@@ -168,6 +180,14 @@ public abstract class FbBot extends HttpServlet {
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
+        }
+
+        // If debug is enabled, print the JSON and the signature header
+        if (context.isDebugEnabled()) {
+            log.info(
+                    "Signature Header: " + signatureHeader + "\n" +
+                    "Raw JSON: " + jsonStr + "\n"
+            );
         }
 
         // Verify the signature using HMAC-SHA1 and send back an error if verification fails
