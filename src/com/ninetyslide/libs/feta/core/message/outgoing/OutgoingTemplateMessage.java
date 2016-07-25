@@ -48,7 +48,7 @@ final class OutgoingTemplateMessage extends OutgoingMessage implements QuickRepl
         // Initialize the template message based on the template type
         Template payload = null;
 
-        switch (this.messageType) {
+        switch (messageType) {
             case TEMPLATE_GENERIC:
                 payload = new GenericTemplate();
                 break;

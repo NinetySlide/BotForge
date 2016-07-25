@@ -44,8 +44,8 @@ public final class Bubble implements ValidityChecker {
      * @param title The title to add to the Bubble.
      * @throws TextLengthExceededException When the character limit is exceeded.
      */
-    public void setTitle(String title) throws TextLengthExceededException {
-        setTitle(title, false);
+    public Bubble setTitle(String title) throws TextLengthExceededException {
+        return setTitle(title, false);
     }
 
     /**
@@ -55,9 +55,10 @@ public final class Bubble implements ValidityChecker {
      *
      * @param title The title to add to the Bubble.
      * @param force Whether the character limit must be enforced.
+     * @return The instance of the bubble used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded and the force parameter is set to false.
      */
-    public void setTitle(String title, boolean force) throws TextLengthExceededException {
+    public Bubble setTitle(String title, boolean force) throws TextLengthExceededException {
         if (title != null) {
             // Title has 80 characters limit
             if (!force && title.length() > Constants.LIMIT_BUBBLE_TITLE) {
@@ -65,16 +66,19 @@ public final class Bubble implements ValidityChecker {
             }
             this.title = title;
         }
+
+        return this;
     }
 
     /**
      * Set the subtitle for the Bubble. Same as setSubtitle(subtitle, false).
      *
      * @param subtitle The subtitle to add to the Bubble.
+     * @return The instance of the bubble used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded.
      */
-    public void setSubtitle(String subtitle) throws TextLengthExceededException {
-        setSubtitle(subtitle, false);
+    public Bubble setSubtitle(String subtitle) throws TextLengthExceededException {
+        return setSubtitle(subtitle, false);
     }
 
     /**
@@ -84,9 +88,10 @@ public final class Bubble implements ValidityChecker {
      *
      * @param subtitle The subtitle to add to the Bubble.
      * @param force Whether the character limit must be enforced.
+     * @return The instance of the bubble used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded and the force parameter is set to false.
      */
-    public void setSubtitle(String subtitle, boolean force) throws TextLengthExceededException {
+    public Bubble setSubtitle(String subtitle, boolean force) throws TextLengthExceededException {
         if (subtitle != null) {
             // Subtitle has 80 characters limit
             if (!force && subtitle.length() > Constants.LIMIT_BUBBLE_SUBTITLE) {
@@ -94,34 +99,41 @@ public final class Bubble implements ValidityChecker {
             }
             this.subtitle = subtitle;
         }
+
+        return this;
     }
 
     /**
      * Assign an image URL to the Bubble.
      *
      * @param imageUrl The image URL to assign to the Bubble.
+     * @return The instance of the bubble used to invoke this method.
      */
-    public void setImageUrl(String imageUrl) {
+    public Bubble setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        return this;
     }
 
     /**
      * Assign an item URL to the Bubble.
      *
      * @param itemUrl The item URL to assign to the Bubble.
+     * @return The instance of the bubble used to invoke this method.
      */
-    public void setItemUrl(String itemUrl) {
+    public Bubble setItemUrl(String itemUrl) {
         this.itemUrl = itemUrl;
+        return this;
     }
 
     /**
      * Add a Button to the Bubble. Same as addButton(button, false).
      *
      * @param button The button to add to the bubble.
+     * @return The instance of the bubble used to invoke this method.
      * @throws ElementsNumberExceededException When the number of buttons is exceeded.
      */
-    public void addButton(Button button) throws ElementsNumberExceededException {
-        addButton(button, false);
+    public Bubble addButton(Button button) throws ElementsNumberExceededException {
+        return addButton(button, false);
     }
 
     /**
@@ -131,10 +143,11 @@ public final class Bubble implements ValidityChecker {
      *
      * @param button The button to add to the bubble.
      * @param force Whether the buttons limit must be enforced.
+     * @return The instance of the bubble used to invoke this method.
      * @throws ElementsNumberExceededException When the number of buttons is exceeded and the force parameter is set to
      * false.
      */
-    public void addButton(Button button, boolean force) throws ElementsNumberExceededException {
+    public Bubble addButton(Button button, boolean force) throws ElementsNumberExceededException {
         if (button != null) {
             // Create the List only if needed
             if (this.buttons == null) {
@@ -149,6 +162,8 @@ public final class Bubble implements ValidityChecker {
             // Add the button
             this.buttons.add(button);
         }
+
+        return this;
     }
 
     /**

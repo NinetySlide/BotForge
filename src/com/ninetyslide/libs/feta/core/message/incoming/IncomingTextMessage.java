@@ -55,6 +55,15 @@ public final class IncomingTextMessage extends ReceivedMessage {
         return quickReply.payload;
     }
 
+    /**
+     * States whether the message carries a Quick Reply Payload.
+     *
+     * @return True if the message has a Quick Reply Payload, false otherwise.
+     */
+    public boolean hasQuickReply() {
+        return quickReply != null;
+    }
+
     private final static class QuickReply {
         String payload = null;
     }

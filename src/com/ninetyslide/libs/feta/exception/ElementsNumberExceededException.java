@@ -16,12 +16,11 @@
 
 package com.ninetyslide.libs.feta.exception;
 
-import com.ninetyslide.libs.feta.common.Constants;
-
 /**
- * Class for the exception thrown when the maximum allowed number of quick replies for a message is exceeded.
+ * Class for the exception thrown when the maximum allowed number of quick replies for a message is exceeded. This is
+ * an unchecked exception.
  */
-public class ElementsNumberExceededException extends Exception {
+public class ElementsNumberExceededException extends RuntimeException {
     public ElementsNumberExceededException(String message) {
         super(message);
     }

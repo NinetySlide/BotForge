@@ -46,8 +46,12 @@ public final class MessageConverter {
             case TEXT:
                 // Retrieve text from message
                 String text = ((IncomingTextMessage) receivedMessage)
-                        .getText()
-                        .substring(0, Constants.LIMIT_TEXT_LENGTH);
+                        .getText();
+
+                // Make sure text does not exceed the length limit
+                if (text.length() > Constants.LIMIT_TEXT_LENGTH) {
+                    text = text.substring(0, Constants.LIMIT_TEXT_LENGTH);
+                }
 
                 // Build and return the OutgoingMessage
                 try {

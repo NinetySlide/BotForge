@@ -61,10 +61,11 @@ public final class Button implements ValidityChecker {
      * Set the title for the button. Same as setTitle(title, false).
      *
      * @param title The title to set to the button.
+     * @return The instance of the button used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded.
      */
-    public void setTitle(String title) throws TextLengthExceededException {
-        setTitle(title, false);
+    public Button setTitle(String title) throws TextLengthExceededException {
+        return setTitle(title, false);
     }
 
     /**
@@ -74,10 +75,11 @@ public final class Button implements ValidityChecker {
      *
      * @param title The title to set to the button.
      * @param force Whether the character limit must be enforced.
+     * @return The instance of the button used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded and the force parameter is set to
      * false.
      */
-    public void setTitle(String title, boolean force) throws TextLengthExceededException {
+    public Button setTitle(String title, boolean force) throws TextLengthExceededException {
         if (title != null) {
             // Title has 20 character limit
             if (!force && title.length() > Constants.LIMIT_TITLE_LENGTH) {
@@ -87,28 +89,34 @@ public final class Button implements ValidityChecker {
             // Set the title
             this.title = title;
         }
+
+        return this;
     }
 
     /**
      * Set the URL that will be opened when the button is pressed.
      *
      * @param url The URL to assign to the button.
+     * @return The instance of the button used to invoke this method.
      */
-    public void setUrl(String url) {
+    public Button setUrl(String url) {
         if (buttonType != ButtonType.WEB_URL) {
             throw new UnsupportedOperationException(Constants.MSG_BUTTON_OPERATION_NOT_SUPPORTED);
         }
         this.url = url;
+
+        return this;
     }
 
     /**
      * Set the payload for the button. Same as setPayload(payload, false).
      *
      * @param payload The payload to attach to the button.
+     * @return The instance of the button used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded.
      */
-    public void setPayload(String payload) throws TextLengthExceededException {
-        setPayload(payload, false);
+    public Button setPayload(String payload) throws TextLengthExceededException {
+        return setPayload(payload, false);
     }
 
     /**
@@ -118,10 +126,11 @@ public final class Button implements ValidityChecker {
      *
      * @param payload The payload to attach to the button.
      * @param force Whether the character limit must be enforced.
+     * @return The instance of the button used to invoke this method.
      * @throws TextLengthExceededException When the character limit is exceeded and the force parameter is set to
      * false.
      */
-    public void setPayload(String payload, boolean force) throws TextLengthExceededException {
+    public Button setPayload(String payload, boolean force) throws TextLengthExceededException {
         if (buttonType != ButtonType.PHONE_NUMBER && buttonType != ButtonType.POSTBACK) {
             throw new UnsupportedOperationException(Constants.MSG_BUTTON_OPERATION_NOT_SUPPORTED);
         }
@@ -135,6 +144,8 @@ public final class Button implements ValidityChecker {
             // Set the payload
             this.payload = payload;
         }
+
+        return this;
     }
 
     /**

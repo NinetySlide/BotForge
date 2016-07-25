@@ -147,6 +147,7 @@ public abstract class FbBot extends HttpServlet {
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
         // TODO: Handle the reception of the like button
+        // TODO: Handle reception and send of uploaded media
         // Get the URL of the request
         String webhookUrl = req.getRequestURL().toString();
 
@@ -206,7 +207,7 @@ public abstract class FbBot extends HttpServlet {
                 if ((content = message.getAsJsonObject(JSON_CALLBACK_TYPE_NAME_MESSAGE)) != null) {
 
                     // It's a message received, parse it correctly based on the sub type
-                    if (content.getAsJsonObject(JSON_CALLBACK_SUB_TYPE_NAME_TEXT) != null) {
+                    if (content.get(JSON_CALLBACK_SUB_TYPE_NAME_TEXT) != null) {
                         incomingMessage = gson.fromJson(content, IncomingTextMessage.class);
                     } else if (content.getAsJsonArray(JSON_CALLBACK_SUB_TYPE_NAME_ATTACHMENTS) != null) {
                         incomingMessage = gson.fromJson(content, IncomingAttachmentMessage.class);
@@ -216,7 +217,7 @@ public abstract class FbBot extends HttpServlet {
                     }
 
                     // Set Sender ID, Recipient ID and Timestamp
-                    setMessageHeaders(rawMessage, incomingMessage);
+                    setMessageHeaders(message, incomingMessage);
 
                     // Deliver the message to the right callback based on the type
                     ReceivedMessage receivedMessage = (ReceivedMessage) incomingMessage;
@@ -232,7 +233,7 @@ public abstract class FbBot extends HttpServlet {
                     incomingMessage = gson.fromJson(content, Postback.class);
 
                     // Set Sender ID, Recipient ID and Timestamp
-                    setMessageHeaders(rawMessage, incomingMessage);
+                    setMessageHeaders(message, incomingMessage);
 
                     // Deliver the message to the postback callback
                     onPostbackReceived(context, (Postback) incomingMessage);
@@ -243,7 +244,7 @@ public abstract class FbBot extends HttpServlet {
                     incomingMessage = gson.fromJson(content, Optin.class);
 
                     // Set Sender ID, Recipient ID and Timestamp
-                    setMessageHeaders(rawMessage, incomingMessage);
+                    setMessageHeaders(message, incomingMessage);
 
                     // Deliver the message to the authentication callback
                     onAuthenticationReceived(context, (Optin) incomingMessage);
@@ -254,7 +255,7 @@ public abstract class FbBot extends HttpServlet {
                     incomingMessage = gson.fromJson(content, AccountLinking.class);
 
                     // Set Sender ID, Recipient ID and Timestamp
-                    setMessageHeaders(rawMessage, incomingMessage);
+                    setMessageHeaders(message, incomingMessage);
 
                     // Deliver the message to the account linking callback
                     onAccountLinkingReceived(context, (AccountLinking) incomingMessage);
@@ -265,7 +266,7 @@ public abstract class FbBot extends HttpServlet {
                     incomingMessage = gson.fromJson(content, DeliveryReceipt.class);
 
                     // Set Sender ID, Recipient ID and Timestamp
-                    setMessageHeaders(rawMessage, incomingMessage);
+                    setMessageHeaders(message, incomingMessage);
 
                     // Deliver the message to the message delivery callback
                     onMessageDelivered(context, (DeliveryReceipt) incomingMessage);
@@ -276,7 +277,7 @@ public abstract class FbBot extends HttpServlet {
                     incomingMessage = gson.fromJson(content, ReadReceipt.class);
 
                     // Set Sender ID, Recipient ID and Timestamp
-                    setMessageHeaders(rawMessage, incomingMessage);
+                    setMessageHeaders(message, incomingMessage);
 
                     // Deliver the message to the message read callback
                     onMessageRead(context, (ReadReceipt) incomingMessage);

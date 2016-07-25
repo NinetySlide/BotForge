@@ -18,8 +18,8 @@ package com.ninetyslide.libs.feta.util;
 
 import com.ninetyslide.libs.feta.common.Constants;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
@@ -64,14 +64,14 @@ public final class NetworkManager {
      * @return The response returned by the server, or null if an error occurred.
      */
     private static String performHttpsRequest(String method, String urlStr, String requestBodyStr) {
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
 
         try {
             // Create a new URL
             URL url = new URL(urlStr);
 
             // Create a new connection and set the headers
-            connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
 
             // Different behaviours for POST and GET methods
             if (method.equals(METHOD_POST)) {

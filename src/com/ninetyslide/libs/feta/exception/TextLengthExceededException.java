@@ -16,12 +16,10 @@
 
 package com.ninetyslide.libs.feta.exception;
 
-import com.ninetyslide.libs.feta.common.Constants;
-
 /**
- * Class for the exception thrown when the allowed text length in a message is exceeded.
+ * Class for the exception thrown when the allowed text length in a message is exceeded. This is an unchecked exception.
  */
-public class TextLengthExceededException extends Exception {
+public class TextLengthExceededException extends RuntimeException {
     public TextLengthExceededException(String message) {
         super(message);
     }

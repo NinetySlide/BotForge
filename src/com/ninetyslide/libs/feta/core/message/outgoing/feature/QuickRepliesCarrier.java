@@ -38,12 +38,12 @@ public abstract class QuickRepliesCarrier implements ValidityChecker {
      */
     public void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
         if (quickReply != null) {
-            if (!force && quickReplies.size() > Constants.LIMIT_QUICK_REPLIES) {
-                throw new ElementsNumberExceededException(Constants.MSG_QUICK_REPLIES_NUMBER_EXCEEDED);
-            }
-
             if (quickReplies == null) {
                 quickReplies = new ArrayList<>();
+            }
+
+            if (!force && quickReplies.size() > Constants.LIMIT_QUICK_REPLIES) {
+                throw new ElementsNumberExceededException(Constants.MSG_QUICK_REPLIES_NUMBER_EXCEEDED);
             }
 
             quickReplies.add(quickReply);
