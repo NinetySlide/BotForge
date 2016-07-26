@@ -2,7 +2,7 @@
   <artifact type="jar" name="BotFactory:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/BotFactory_jar</output-path>
     <root id="archive" name="BotFactory.jar">
-      <element id="module-output" name="BotFactory" />
+      <element id="module-output" name="BotForge" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.7/gson-2.7.jar" path-in-jar="/" />
     </root>
   </artifact>
