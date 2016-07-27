@@ -2,7 +2,7 @@ BotForge
 
 disclaimer for beta
 
-overview
+overview (with basic code samples?)
 
 botforge internals
 - architecture and bot lifecycle
@@ -17,6 +17,7 @@ using botforge
 - other functionalities
 -- user profile
 -- thread settings
+- a more complex code sample
 
 known issues and missing
 

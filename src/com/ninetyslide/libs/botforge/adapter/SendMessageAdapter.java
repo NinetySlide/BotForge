@@ -118,9 +118,24 @@ public final class SendMessageAdapter {
         return responses;
     }
 
+    /* TODO: Add these methods and the corresponding multi-recipients versions
+    public static SendMessageResponse sendTextMessage(String pageAccessToken, String text, String recipientId)
+    public static SendMessageResponse[] sendTextMessage(String pageAccessToken, String text, String[] recipientIds)
+    public static SendMessageResponse sendAudioMessage(String pageAccessToken, String audioUrl, String recipientId)
+    public static SendMessageResponse[] sendAudioMessage(String pageAccessToken, String audioUrl, String[] recipientIds)
+    public static SendMessageResponse sendImageMessage(String pageAccessToken, String imageUrl, String recipientId)
+    public static SendMessageResponse[] sendImageMessage(String pageAccessToken, String imageUrl, String[] recipientIds)
+    public static SendMessageResponse sendVideoMessage(String pageAccessToken, String videoUrl, String recipientId)
+    public static SendMessageResponse[] sendVideoMessage(String pageAccessToken, String videoUrl, String[] recipientIds)
+    public static SendMessageResponse sendFileMessage(String pageAccessToken, String fileUrl, String recipientId)
+    public static SendMessageResponse[] sendFileMessage(String pageAccessToken, String fileUrl, String[] recipientIds)
+    public static SendMessageResponse sendAction(String pageAccessToken, SenderAction action, String recipientId)
+    public static SendMessageResponse[] sendAction(String pageAccessToken, SenderAction action, String[] recipientIds)
+     */
+
     /**
      * Create and return an error in case of a network issue.
-     *
+     * TODO: Move this inside the SendMessageError class and make constructor private together with static variables
      * @return An error representing a network error.
      */
     private static SendMessageError generateNetworkError() {

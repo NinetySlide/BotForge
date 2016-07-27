@@ -24,23 +24,15 @@ public final class SendMessageSuccess implements SendMessageResponse {
     private String recipientId = null;
     private String messageId = null;
 
-    public SendMessageSuccess() {
+    private SendMessageSuccess() {
     }
 
     public String getRecipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(String recipientId) {
-        this.recipientId = recipientId;
-    }
-
     public String getMessageId() {
         return messageId;
-    }
-
-    public void setMessageId(String messageId) {
-        this.messageId = messageId;
     }
 
     @Override
