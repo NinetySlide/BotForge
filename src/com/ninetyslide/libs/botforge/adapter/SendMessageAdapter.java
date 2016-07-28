@@ -41,12 +41,13 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * Method used to send a message from a certain bot.
+     * Send a message from a specific bot.
      *
      * @param pageAccessToken The Page Access Token to use for message sending.
      * @param message The message to send.
      * @param recipient The recipient for the message.
-     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong.
+     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong. Use the 
+     * hasError() method on the returned object to determine the type of object to cast.
      */
     public static SendMessageResponse sendMessage(String pageAccessToken, OutgoingMessage message, OutgoingMessage.OutgoingRecipient recipient) {
         // Check that all the parameters are ok
@@ -92,13 +93,15 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * Message used to send a message from a certain bot in bulk to a number of recipients.
+     * Send a message from a specific bot in bulk to a number of recipients.
      *
      * @param pageAccessToken The Page Access Token to use for message sending.
      * @param message The message to send.
      * @param recipients The recipients for the message.
-     * @return The array of responses, one for each recipient. Please note that the response in the n-th position is
-     * related to the recipient in the n-th position.
+     * @return The array of responses, one for each recipient. Each response can be a SendMessageSuccess instance or a 
+     * SendMessageError instance, if something went wrong. Use the hasError() method on the returned object to 
+     * determine the type of object to cast. Please note that the response in the n-th position is related to the 
+     * recipient in the n-th position.
      */
     public static SendMessageResponse[] sendMessage(String pageAccessToken, OutgoingMessage message, OutgoingMessage.OutgoingRecipient[] recipients) {
         // Check that all the parameters are ok
@@ -118,14 +121,15 @@ public final class SendMessageAdapter {
         return responses;
     }
 
-    /* TODO: Add these methods and the corresponding multi-recipients versions */
-
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param text
-     * @param recipientId
-     * @return
+     * Send a basic text message to a specific recipient using its ID (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient and pass them as arguments to the sendMessage() method.
+     * 
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param text The content of the message.
+     * @param recipientId The ID of the recipient of the message.
+     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong. Use the 
+     * hasError() method on the returned object to determine the type of object to cast.
      */
     public static SendMessageResponse sendTextMessage(String pageAccessToken, String text, String recipientId) {
         // Create the message
@@ -138,11 +142,17 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param text
-     * @param recipientIds
-     * @return
+     * Send a basic text message to multiple recipients using their IDs (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient array and pass them as arguments to the sendMessage() 
+     * method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param text The content of the message.
+     * @param recipientIds The IDs of the recipients of the message.
+     * @return The array of responses, one for each recipient. Each response can be a SendMessageSuccess instance or a 
+     * SendMessageError instance, if something went wrong. Use the hasError() method on the returned object to 
+     * determine the type of object to cast. Please note that the response in the n-th position is related to the 
+     * recipient in the n-th position.
      */
     public static SendMessageResponse[] sendTextMessage(String pageAccessToken, String text, String[] recipientIds) {
         // Create the message
@@ -155,11 +165,14 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param audioUrl
-     * @param recipientId
-     * @return
+     * Send a basic audio message to a specific recipient using its ID (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient and pass them as arguments to the sendMessage() method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param audioUrl The URL of the resource attached to the message.
+     * @param recipientId The ID of the recipient of the message.
+     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong. Use the 
+     * hasError() method on the returned object to determine the type of object to cast.
      */
     public static SendMessageResponse sendAudioMessage(String pageAccessToken, String audioUrl, String recipientId) {
         // Create the message
@@ -172,11 +185,17 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param audioUrl
-     * @param recipientIds
-     * @return
+     * Send a basic audio message to multiple recipients using their IDs (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient array and pass them as arguments to the sendMessage() 
+     * method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param audioUrl The URL of the resource attached to the message.
+     * @param recipientIds The IDs of the recipients of the message.
+     * @return The array of responses, one for each recipient. Each response can be a SendMessageSuccess instance or a 
+     * SendMessageError instance, if something went wrong. Use the hasError() method on the returned object to 
+     * determine the type of object to cast. Please note that the response in the n-th position is related to the 
+     * recipient in the n-th position.
      */
     public static SendMessageResponse[] sendAudioMessage(String pageAccessToken, String audioUrl, String[] recipientIds) {
         // Create the message
@@ -189,11 +208,14 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param imageUrl
-     * @param recipientId
-     * @return
+     * Send a basic image message to a specific recipient using its ID (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient and pass them as arguments to the sendMessage() method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param imageUrl The URL of the resource attached to the message.
+     * @param recipientId The ID of the recipient of the message.
+     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong. Use the 
+     * hasError() method on the returned object to determine the type of object to cast.
      */
     public static SendMessageResponse sendImageMessage(String pageAccessToken, String imageUrl, String recipientId) {
         // Create the message
@@ -206,11 +228,17 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param imageUrl
-     * @param recipientIds
-     * @return
+     * Send a basic image message to multiple recipients using their IDs (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient array and pass them as arguments to the sendMessage() 
+     * method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param imageUrl The URL of the resource attached to the message.
+     * @param recipientIds The IDs of the recipients of the message.
+     * @return The array of responses, one for each recipient. Each response can be a SendMessageSuccess instance or a 
+     * SendMessageError instance, if something went wrong. Use the hasError() method on the returned object to 
+     * determine the type of object to cast. Please note that the response in the n-th position is related to the 
+     * recipient in the n-th position.
      */
     public static SendMessageResponse[] sendImageMessage(String pageAccessToken, String imageUrl, String[] recipientIds) {
         // Create the message
@@ -223,11 +251,14 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param videoUrl
-     * @param recipientId
-     * @return
+     * Send a basic video message to a specific recipient using its ID (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient and pass them as arguments to the sendMessage() method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param videoUrl The URL of the resource attached to the message.
+     * @param recipientId The ID of the recipient of the message.
+     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong. Use the 
+     * hasError() method on the returned object to determine the type of object to cast.
      */
     public static SendMessageResponse sendVideoMessage(String pageAccessToken, String videoUrl, String recipientId) {
         // Create the message
@@ -240,11 +271,17 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param videoUrl
-     * @param recipientIds
-     * @return
+     * Send a basic video message to multiple recipients using their IDs (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient array and pass them as arguments to the sendMessage() 
+     * method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param videoUrl The URL of the resource attached to the message.
+     * @param recipientIds The IDs of the recipients of the message.
+     * @return The array of responses, one for each recipient. Each response can be a SendMessageSuccess instance or a 
+     * SendMessageError instance, if something went wrong. Use the hasError() method on the returned object to 
+     * determine the type of object to cast. Please note that the response in the n-th position is related to the 
+     * recipient in the n-th position.
      */
     public static SendMessageResponse[] sendVideoMessage(String pageAccessToken, String videoUrl, String[] recipientIds) {
         // Create the message
@@ -257,11 +294,14 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param fileUrl
-     * @param recipientId
-     * @return
+     * Send a basic file message to a specific recipient using its ID (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient and pass them as arguments to the sendMessage() method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param fileUrl The URL of the resource attached to the message.
+     * @param recipientId The ID of the recipient of the message.
+     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong. Use the 
+     * hasError() method on the returned object to determine the type of object to cast.
      */
     public static SendMessageResponse sendFileMessage(String pageAccessToken, String fileUrl, String recipientId) {
         // Create the message
@@ -274,11 +314,17 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param fileUrl
-     * @param recipientIds
-     * @return
+     * Send a basic file message to multiple recipients using their IDs (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient array and pass them as arguments to the sendMessage() 
+     * method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param fileUrl The URL of the resource attached to the message.
+     * @param recipientIds The IDs of the recipients of the message.
+     * @return The array of responses, one for each recipient. Each response can be a SendMessageSuccess instance or a 
+     * SendMessageError instance, if something went wrong. Use the hasError() method on the returned object to 
+     * determine the type of object to cast. Please note that the response in the n-th position is related to the 
+     * recipient in the n-th position.
      */
     public static SendMessageResponse[] sendFileMessage(String pageAccessToken, String fileUrl, String[] recipientIds) {
         // Create the message
@@ -291,11 +337,14 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param action
-     * @param recipientId
-     * @return
+     * Send a basic action message to a specific recipient using its ID (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient and pass them as arguments to the sendMessage() method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param action The action to send with the message.
+     * @param recipientId The ID of the recipient of the message.
+     * @return A SendMessageSuccess instance or a SendMessageError instance, if something went wrong. Use the 
+     * hasError() method on the returned object to determine the type of object to cast.
      */
     public static SendMessageResponse sendAction(String pageAccessToken, OutgoingMessage.SenderAction action, String recipientId) {
         // Create the message
@@ -308,11 +357,17 @@ public final class SendMessageAdapter {
     }
 
     /**
-     * TODO
-     * @param pageAccessToken
-     * @param action
-     * @param recipientIds
-     * @return
+     * Send a basic action message to multiple recipients using their IDs (not phone number). If you need more options, 
+     * manually create an OutgoingMessage, an OutgoingRecipient array and pass them as arguments to the sendMessage() 
+     * method.
+     *
+     * @param pageAccessToken The Page Access Token to use for message sending.
+     * @param action The action to send with the message.
+     * @param recipientIds The IDs of the recipients of the message.
+     * @return The array of responses, one for each recipient. Each response can be a SendMessageSuccess instance or a 
+     * SendMessageError instance, if something went wrong. Use the hasError() method on the returned object to 
+     * determine the type of object to cast. Please note that the response in the n-th position is related to the 
+     * recipient in the n-th position.
      */
     public static SendMessageResponse[] sendAction(String pageAccessToken, OutgoingMessage.SenderAction action, String[] recipientIds) {
         // Create the message
@@ -327,7 +382,7 @@ public final class SendMessageAdapter {
     /**
      * Create an OutgoingRecipient object starting with a Recipient ID.
      *
-     * @param recipientId The Recipient ID.
+     * @param recipientId The ID of the recipient of the message.
      * @return The resulting OutgoingRecipient.
      */
     private static OutgoingMessage.OutgoingRecipient getOutGoingRecipient(String recipientId) {
@@ -337,7 +392,7 @@ public final class SendMessageAdapter {
     /**
      * Create an array of OutgoingRecipient objects starting with an array of Recipient IDs.
      *
-     * @param recipients The Recipient IDs.
+     * @param recipients  The IDs of the recipients of the message.
      * @return The resulting OutgoingRecipient array.
      */
     private static OutgoingMessage.OutgoingRecipient[] getOutgoingRecipients(String[] recipients) {

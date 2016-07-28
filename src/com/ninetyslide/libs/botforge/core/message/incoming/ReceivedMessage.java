@@ -28,7 +28,7 @@ public abstract class ReceivedMessage extends IncomingMessage {
     private String metadata = null;
     private long stickerId;
 
-    // TODO: Get Link sharing message
+    // TODO: Handle the reception of Link sharing message
     ReceivedMessage() {
     }
 
