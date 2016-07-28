@@ -1,8 +1,10 @@
 BotForge
 
-disclaimer for beta
+WARNING! This software is still in beta. If you want to use it in production do it at your own risk.
 
-overview (with basic code samples?)
+Overview (with basic code samples?)
+
+BotForge is a framework that allows you to easily create Facebook Messenger Bots. It uses basic Java HttpServlets under the hood and has no dependencies other that Gson, so that you can deploy it on your favorite Servlet Container, in the cloud or on premises.
 
 botforge internals
 - architecture and bot lifecycle
