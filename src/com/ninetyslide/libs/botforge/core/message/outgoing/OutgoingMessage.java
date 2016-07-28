@@ -442,4 +442,11 @@ public abstract class OutgoingMessage implements ValidityChecker {
         SILENT,
         NO_PUSH
     }
+
+    public enum SenderAction {
+        MARK_SEEN,
+        TYPING_ON,
+        TYPING_OFF
+    }
+
 }

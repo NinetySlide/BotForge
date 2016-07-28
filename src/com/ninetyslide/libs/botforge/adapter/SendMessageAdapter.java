@@ -87,7 +87,7 @@ public final class SendMessageAdapter {
 
         } else {
             // Return a generated network error if something wrong happened during the network request
-            return generateNetworkError();
+            return SendMessageError.generateNetworkError();
         }
     }
 
@@ -118,33 +118,236 @@ public final class SendMessageAdapter {
         return responses;
     }
 
-    /* TODO: Add these methods and the corresponding multi-recipients versions
-    public static SendMessageResponse sendTextMessage(String pageAccessToken, String text, String recipientId)
-    public static SendMessageResponse[] sendTextMessage(String pageAccessToken, String text, String[] recipientIds)
-    public static SendMessageResponse sendAudioMessage(String pageAccessToken, String audioUrl, String recipientId)
-    public static SendMessageResponse[] sendAudioMessage(String pageAccessToken, String audioUrl, String[] recipientIds)
-    public static SendMessageResponse sendImageMessage(String pageAccessToken, String imageUrl, String recipientId)
-    public static SendMessageResponse[] sendImageMessage(String pageAccessToken, String imageUrl, String[] recipientIds)
-    public static SendMessageResponse sendVideoMessage(String pageAccessToken, String videoUrl, String recipientId)
-    public static SendMessageResponse[] sendVideoMessage(String pageAccessToken, String videoUrl, String[] recipientIds)
-    public static SendMessageResponse sendFileMessage(String pageAccessToken, String fileUrl, String recipientId)
-    public static SendMessageResponse[] sendFileMessage(String pageAccessToken, String fileUrl, String[] recipientIds)
-    public static SendMessageResponse sendAction(String pageAccessToken, SenderAction action, String recipientId)
-    public static SendMessageResponse[] sendAction(String pageAccessToken, SenderAction action, String[] recipientIds)
-     */
+    /* TODO: Add these methods and the corresponding multi-recipients versions */
 
     /**
-     * Create and return an error in case of a network issue.
-     * TODO: Move this inside the SendMessageError class and make constructor private together with static variables
-     * @return An error representing a network error.
+     * TODO
+     * @param pageAccessToken
+     * @param text
+     * @param recipientId
+     * @return
      */
-    private static SendMessageError generateNetworkError() {
-        SendMessageError error = new SendMessageError();
-        error.setCode(SendMessageError.NETWORK_ERROR_CODE);
-        error.setType(SendMessageError.NETWORK_ERROR_TYPE);
-        error.setMessage(SendMessageError.NETWORK_ERROR_MESSAGE);
-        error.setFbtraceId(SendMessageError.NETWORK_ERROR_FBTRACE);
-        return error;
+    public static SendMessageResponse sendTextMessage(String pageAccessToken, String text, String recipientId) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.TEXT)
+                .setText(text)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutGoingRecipient(recipientId));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param text
+     * @param recipientIds
+     * @return
+     */
+    public static SendMessageResponse[] sendTextMessage(String pageAccessToken, String text, String[] recipientIds) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.TEXT)
+                .setText(text)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutgoingRecipients(recipientIds));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param audioUrl
+     * @param recipientId
+     * @return
+     */
+    public static SendMessageResponse sendAudioMessage(String pageAccessToken, String audioUrl, String recipientId) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.AUDIO)
+                .setMediaUrl(audioUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutGoingRecipient(recipientId));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param audioUrl
+     * @param recipientIds
+     * @return
+     */
+    public static SendMessageResponse[] sendAudioMessage(String pageAccessToken, String audioUrl, String[] recipientIds) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.AUDIO)
+                .setMediaUrl(audioUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutgoingRecipients(recipientIds));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param imageUrl
+     * @param recipientId
+     * @return
+     */
+    public static SendMessageResponse sendImageMessage(String pageAccessToken, String imageUrl, String recipientId) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.IMAGE)
+                .setMediaUrl(imageUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutGoingRecipient(recipientId));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param imageUrl
+     * @param recipientIds
+     * @return
+     */
+    public static SendMessageResponse[] sendImageMessage(String pageAccessToken, String imageUrl, String[] recipientIds) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.IMAGE)
+                .setMediaUrl(imageUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutgoingRecipients(recipientIds));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param videoUrl
+     * @param recipientId
+     * @return
+     */
+    public static SendMessageResponse sendVideoMessage(String pageAccessToken, String videoUrl, String recipientId) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.VIDEO)
+                .setMediaUrl(videoUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutGoingRecipient(recipientId));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param videoUrl
+     * @param recipientIds
+     * @return
+     */
+    public static SendMessageResponse[] sendVideoMessage(String pageAccessToken, String videoUrl, String[] recipientIds) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.VIDEO)
+                .setMediaUrl(videoUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutgoingRecipients(recipientIds));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param fileUrl
+     * @param recipientId
+     * @return
+     */
+    public static SendMessageResponse sendFileMessage(String pageAccessToken, String fileUrl, String recipientId) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.FILE)
+                .setMediaUrl(fileUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutGoingRecipient(recipientId));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param fileUrl
+     * @param recipientIds
+     * @return
+     */
+    public static SendMessageResponse[] sendFileMessage(String pageAccessToken, String fileUrl, String[] recipientIds) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.FILE)
+                .setMediaUrl(fileUrl)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutgoingRecipients(recipientIds));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param action
+     * @param recipientId
+     * @return
+     */
+    public static SendMessageResponse sendAction(String pageAccessToken, OutgoingMessage.SenderAction action, String recipientId) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.SENDER_ACTION)
+                .setSenderAction(action)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutGoingRecipient(recipientId));
+    }
+
+    /**
+     * TODO
+     * @param pageAccessToken
+     * @param action
+     * @param recipientIds
+     * @return
+     */
+    public static SendMessageResponse[] sendAction(String pageAccessToken, OutgoingMessage.SenderAction action, String[] recipientIds) {
+        // Create the message
+        OutgoingMessage message = new OutgoingMessage.Builder(OutgoingMessage.OutgoingMessageType.SENDER_ACTION)
+                .setSenderAction(action)
+                .build();
+
+        // Send the message
+        return sendMessage(pageAccessToken, message, getOutgoingRecipients(recipientIds));
+    }
+
+    /**
+     * Create an OutgoingRecipient object starting with a Recipient ID.
+     *
+     * @param recipientId The Recipient ID.
+     * @return The resulting OutgoingRecipient.
+     */
+    private static OutgoingMessage.OutgoingRecipient getOutGoingRecipient(String recipientId) {
+        return new OutgoingMessage.OutgoingRecipient(null, recipientId);
+    }
+
+    /**
+     * Create an array of OutgoingRecipient objects starting with an array of Recipient IDs.
+     *
+     * @param recipients The Recipient IDs.
+     * @return The resulting OutgoingRecipient array.
+     */
+    private static OutgoingMessage.OutgoingRecipient[] getOutgoingRecipients(String[] recipients) {
+        OutgoingMessage.OutgoingRecipient[] outgoingRecipients = new OutgoingMessage.OutgoingRecipient[recipients.length];
+
+        for (int i = 0; i < recipients.length; i++) {
+            outgoingRecipients[i] = new OutgoingMessage.OutgoingRecipient(null, recipients[i]);
+        }
+
+        return outgoingRecipients;
     }
 
 }

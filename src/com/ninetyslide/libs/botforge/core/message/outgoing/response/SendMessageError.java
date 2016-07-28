@@ -31,16 +31,16 @@ public final class SendMessageError implements SendMessageResponse {
 
     // This is not part of the FB specification, it is just there to signal a network error
     public final static int NETWORK_ERROR_CODE = -1;
-    public final static String NETWORK_ERROR_TYPE = "Network Error";
-    public final static String NETWORK_ERROR_MESSAGE = "An error has occurred during the network request.";
-    public final static String NETWORK_ERROR_FBTRACE = "0";
+    private final static String NETWORK_ERROR_TYPE = "Network Error";
+    private final static String NETWORK_ERROR_MESSAGE = "An error has occurred during the network request.";
+    private final static String NETWORK_ERROR_FBTRACE = "0";
 
     private String message = null;
     private String type = null;
     private int code;
     private String fbtraceId = null;
 
-    public SendMessageError() {
+    private SendMessageError() {
     }
 
     public String getMessage() {
@@ -73,6 +73,20 @@ public final class SendMessageError implements SendMessageResponse {
 
     public void setFbtraceId(String fbtraceId) {
         this.fbtraceId = fbtraceId;
+    }
+
+    /**
+     * Create and return an error in case of a network issue.
+     *
+     * @return An error representing a network error.
+     */
+    public static SendMessageError generateNetworkError() {
+        SendMessageError error = new SendMessageError();
+        error.setCode(NETWORK_ERROR_CODE);
+        error.setType(NETWORK_ERROR_TYPE);
+        error.setMessage(NETWORK_ERROR_MESSAGE);
+        error.setFbtraceId(NETWORK_ERROR_FBTRACE);
+        return error;
     }
 
     @Override
