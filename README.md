@@ -40,14 +40,14 @@ public class HelloBot extends FbBot {
 ```
 
 Let's analyze the code above: 
- * On line 1, the `FbBot` class is extended. This class is the abstract class the every bot shall extend.
- * On line 4, the callback for loading bot context objects is overridden. Whenever BotForge needs a bot context and can't find it in the cache, it will invoke the `onContextLoad()` callback so that the right bot context can be created (if needed) and returned.
- * On line 5, a new `BotContext` object is created and returned, using all the relevant information about the bot.
- * On line 15, the callback for message receiving is overridden. Whenever a message is received from a user, BotForge will invoke the `onMessageReceived()` callback passing as arguments the message sent from the user and the bot context object of the bot that received the message.
- * On line 16, the Sender ID is extracted from the received message. This will become the Recipient ID for the new message.
- * On line 17, the Page Access Token is extracted from the bot context passed as an argument. This will be used to send a message to the user. 
- * On line 19, a new basic text message is sent to the user using the Page Access Token, the String representing the text message and the User ID.
- * On line 21, the User Profile API is queried to retrieve the first name of the user.
+ - On line 1, the `FbBot` class is extended. This class is the abstract class the every bot shall extend.
+ - On line 4, the callback for loading bot context objects is overridden. Whenever BotForge needs a bot context and can't find it in the cache, it will invoke the `onContextLoad()` callback so that the right bot context can be created (if needed) and returned.
+ - On line 5, a new `BotContext` object is created and returned, using all the relevant information about the bot.
+ - On line 15, the callback for message receiving is overridden. Whenever a message is received from a user, BotForge will invoke the `onMessageReceived()` callback passing as arguments the message sent from the user and the bot context object of the bot that received the message.
+ - On line 16, the Sender ID is extracted from the received message. This will become the Recipient ID for the new message.
+ - On line 17, the Page Access Token is extracted from the bot context passed as an argument. This will be used to send a message to the user. 
+ - On line 19, a new basic text message is sent to the user using the Page Access Token, the String representing the text message and the User ID.
+ - On line 21, the User Profile API is queried to retrieve the first name of the user.
 
 ## BotForge Internals
 ### Architecture and Bot Lifecycle
