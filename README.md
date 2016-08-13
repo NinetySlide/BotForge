@@ -70,20 +70,71 @@ It's important to notice that all this callbacks have a default implementation t
 You can find the complete list of callbacks by looking at the JavaDocs of the `FbBot` class.
 
 ### Incoming Messages
-ph
+As stated before, each incoming messaging event has a POJO that models it and can hold its content. All of them have `IncomingMessage` as the common superclass. This means that for every messaging event you can access its Sender ID, Recipient ID and Timestamp via getter methods. 
+
+Of course, you can have access to the data of a specific message type using the appropriate getter method for that message. For example, you can use `getPayload()` to get the payload of a `Postback` message, `getAttachment()` to get the attachment of an `IncomingAttachmentMessage`, or `getText()` to get the text of an `IncomingTextMessage`.
+ 
+You can find the complete list of POJOs for incoming messaging events and their getter methods by looking at the JavaDocs of BotForge.
 
 ### Outgoing Messages
-ph
-To send a new message ...
+One of the main feature of a chat bot is, obviously, to send chat messages. The Facebook Messenger Platform supports a certain number of message types which can be further customized adding things like quick replies, notification options, etc. You can find a complete description of all the supported message types and the allowed options by looking at the [official documentation of the Send API](https://developers.facebook.com/docs/messenger-platform/send-api-reference).
 
-### MessageConverter
-ph
+BotForge has a simple and unified interface to create every kind of outgoing message with every kind of possible customization. You can use a builder to create the desired type of message and then use that builder to customize it. When you are done, you will get an instance of `OutgoingMessage` object that is ready to be sent. 
 
-### SendMessageAdapter
-ph
+In order to create a new `OutgoingMessage` you have to create a new instance of `OutgoingMessage.Builder` object, passing the message type to the constructor. You can then use the builder's public methods to customize your message. When you are done, just invoke the `build()` method to get yout message. Please note that if you try to customize you message in ways that are not supported by the message type, an exception will be thrown.
 
-### UserProfileAdapter
-ph
+Here is an example for creating a template message with quick replies.
+
+```java
+Bubble bubble = new Bubble().setTitle("Example Bubble").setImageUrl("http://example.com/bubble.jpg");
+
+OutgoingMessage.QuickReply quickReply1 = new OutgoingMessage.QuickReply("Action 1", "act1");
+OutgoingMessage.QuickReply quickReply2 = new OutgoingMessage.QuickReply("Action 2", "act2");
+   
+OutgoingMessage.Builder builder = new OutgoingMessage.Builder(OutgoingMessageType.TEMPLATE_GENERIC);
+    
+OutgoingMessage message = builder.addBubble(bubble)
+    .addQuickReply(quickReply1)
+    .addQuickReply(quickReply2)
+    .build();
+```
+
+You can find the complete list of option for the builder by looking at the JavaDocs of the `OutgoingMessage.Builder` class.  
+
+### Send Message Adapter
+Once you have the OutgoingMessage, you can send it using the `sendMessage()` static method of the `SendMessageAdapter` class.
+
+In order to use that method, you will need two things other that the message you have just created: the Page Access Token for your bot and an instance of `OutgoingMessage.OutgoingRecipient` object.
+
+The Page Access Token can be extracted from the `BotContext` object of your bot. As a reminder, this object is passed as an argument of every webhook-related callback.
+ 
+The recipient object can be created using the appropriate constructor. Please note that you can use a User ID or a telephone number in the constructor, but not both. If you are willing to use telephone numbers as recipient, make sure you are allowed by Facebook to do so, otherwise you will get an error in response to the message sending. 
+
+The `sendMessage()` method will perform a synchronous HTTP request to the Facebook servers, will deliver the message and will return the response of the Facebook servers in the form of a `SendMessageResponse` object. You can inspect this object to check for errors or to get the response-related information.
+
+You can send the same `OutgoingMessage` to multiple recipients by using the overloaded version of the `sendMessage()` method that will accept an array of `OutgoingMessage.OutgoingRecipient` objects as the third parameter. You will get an array of `SendMessageResponse` objects that will match the order of the recipients in the array. 
+
+Please note that this method will perform a synchronous HTTP request to the Facebook servers for each recipient. So if you have constraints about the execution time of your code in your environment it's better to call this method in a different thread (or in a task queue) or, at least, limit the number of recipient to a minimum.
+
+If you just want to send basic messages, the `SendMessageAdapter` offers a collection of methods that will let you do so without having to create the message with a builder. There is one of these methods for each message type. For example, to send a basic text message all you need is this code:
+```
+SendMessageAdapter.sendTextMessage(
+    PAGE_ACCESS_TOKEN,
+    "Hi, this is a sample message",
+    "RECIPIENT_ID"
+);
+```
+Every one of these methods has an overloaded version that will allow you to send the message to multiple recipients. Please note that this way you can only send messages using User IDs.
+
+### Message Converter
+BotForge offers a facility to convert a message received from a user into an `OutgoingMessage`. This can be useful in case you want to forward messages you receive.
+
+To do so, just call the `getOutgoingMessage()` static method of the `MessageConverter` class, passing as an argument the instance of the message you received via the `onMessageReceived()` callback.
+
+### User Profile API Adapter
+BotForge also offers an adapter to query the Facebook's User Profile API. 
+
+If you want to retrieve information about a user, all you need to do is invoking the `getUserProfile()` static method of the `UserProfileApiAdapter` class, passing the User ID as an argument. This method will perform a synchronous HTTP request to the Facebook servers in order to retrieve the desired user profile. This profile will be returned in the form of a `UserProfile` object. You can access user's information via the getter methods of that object.
 
 ### Bot Contexts and BotContextManager
 ph
@@ -93,7 +144,9 @@ When the servlet is first instantiated the initial configuration is performed ..
 ph
 
 ### Signature
-ph
+Unless you specify to do otherwise in the `BotContext` object of your bot, BotForge will check the signature of every message received from the Facebook servers. This is done by using the App Secret Key contained in the context.
+
+If the verification fails, an error will be returned as the response of the HTTP request and the message will not be processed.
 
 ## Using BotForge
 
