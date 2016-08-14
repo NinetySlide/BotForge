@@ -6,7 +6,7 @@
 
 **BotForge** is a light framework that allows you to easily create Facebook Messenger Bots. It uses basic Java HTTP Servlets under the hood and has no dependencies other than Gson, so that you can deploy it on your favorite Servlet Container, either in the cloud or on-premises.
 
-BotForge takes care of handling the interaction with the Facebook API and saves you writing a lot of boilerplate code. It exposes a simple event based API for message reception, automatically handles basic functionalities (e.g. webhook validation and signature verification) and provides facilities to manage the received messages, the sending of new messages and the querying of the User Profile API. It also has out-of-the-box the ability to impersonate multiple bots with the same code (more on this later).
+BotForge takes care of handling the low level interaction with the Facebook API and saves you writing a lot of boilerplate code. It automatically handles basic functionalities (e.g. webhook validation and signature verification), exposes a simple event based API for message reception and provides facilities to manage the received messages, the sending of new messages and the querying of the User Profile API. It also has out-of-the-box the ability to impersonate multiple bots with the same code (more on this later).
 
 Creating a HelloBot that greets users by calling them with their name is as simple as writing a few lines of code:
 
@@ -40,14 +40,23 @@ public class HelloBot extends FbBot {
 ```
 
 Let's analyze the code above: 
+
 * On line 1, the `FbBot` class is extended. This class is the abstract class the every bot shall extend.
+
 * On line 4, the callback for loading bot context objects is overridden. Whenever BotForge needs a bot context and can't find it in the cache, it will invoke the `onContextLoad()` callback so that the right bot context can be created (if needed) and returned.
+
 * On line 5, a new `BotContext` object is created and returned, using all the relevant information about the bot.
+
 * On line 15, the callback for message receiving is overridden. Whenever a message is received from a user, BotForge will invoke the `onMessageReceived()` callback passing as arguments the message sent from the user and the bot context object of the bot that received the message.
+
 * On line 16, the Sender ID is extracted from the received message. This will become the Recipient ID for the new message.
-* On line 17, the Page Access Token is extracted from the bot context passed as an argument. This will be used to send a message to the user. 
+
+* On line 17, the Page Access Token is extracted from the bot context passed as an argument. This will be used to send a message to the user.
+ 
 * On line 19, a new basic text message is sent to the user using the Page Access Token, the String representing the text message and the User ID.
+
 * On line 21, the User Profile API is queried to retrieve the first name of the user.
+
 
 ## BotForge Internals
 In BotForge the `FbBot` class is the superclass that shall be extended by every bot's main class (the one that will handle the incoming messages). The `FbBot` class, in turn, extends the `HttpServlet` class. So you have to configure the deployment descriptor of your app (most likely the web.xml file) to use the bot's main class as the servlet for the URL you have chosen as your bot's webhook.
@@ -55,9 +64,9 @@ In BotForge the `FbBot` class is the superclass that shall be extended by every 
 ### Webhook handling
 The `doPost()` method of the `FbBot` class will receive all the messages that the Facebook servers will send to the webhook of your bot. These messages are in the form of HTTP POST requests, carrying data in JSON format.
  
-A request can carry user's messages or other message-related events, such as postbacks, delivery receipts, read receipts, etc. 
+A request can carry user's messages or other message-related events, such as postbacks, delivery receipts, read receipts, etc. Moreover, each request can contain a batch of messages. Facebook can do this to optimize resource usage (e.g. in case of heavy load). 
 
-Moreover, each request can batch together multiple messages to optimize resource usage (e.g. in case of heavy load). BotForge can handle all these events seamlessly.
+BotForge can handle all these events seamlessly.
   
 Whenever a message is received from the Facebook servers, BotForge will first try to load the context of the bot that is receiving the message (more on this later) based on the URL used by the Facebook servers. After that, BotForge will go through all the messages of the batch and for each one of them will determine its type, create the right POJO with the content extracted from the message and, finally, will invoke the right callback passing the bot context and the newly created POJO.
   
@@ -137,14 +146,37 @@ BotForge also offers an adapter to query the Facebook's User Profile API.
 If you want to retrieve information about a user, all you need to do is invoking the `getUserProfile()` static method of the `UserProfileApiAdapter` class, passing the User ID as an argument. This method will perform a synchronous HTTP request to the Facebook servers in order to retrieve the desired user profile. This profile will be returned in the form of a `UserProfile` object. You can access user's information via the getter methods of that object.
 
 ### Bot Contexts and BotContextManager
-ph
-When the servlet is first instantiated the initial configuration is performed ... 
+Bot contexts are a core component of BotForge. A context defines a bot and contains all the information about a specific bot that is needed for that bot to work (e.g. Webhook URL, Page Access Token, App Secret Key, etc.), together with some configuration parameters (e.g. whether or not debug and signature verification are enabled, etc.).
+
+Contexts are used in BotForge to abstract the concept of a bot and to simplify the management of bot-related configuration, allowing the rest of the framework to operate by extracting information from a common data source. 
+
+Incidentally this method, together with the RESTful nature of the Messenger Platform, also offers the opportunity to treat the bots as "virtual bots", allowing the same code to act like different bots at the same time. This happens because, for every request received by the Facebook servers, the right bot context is picked and passed to the appropriate callback. The webhook URL, used by the Facebook servers to perform the request, acts like an identifier for the contexts allowing the framework to pick the right one every time.
+ 
+Moreover, since the contexts are handled using the `BotContextManager`, you can dynamically add, remove or update contexts at runtime. You can do this by using the instance of the manager that is available as a field in the `FbBot` class and invoking the right methods. 
+
+#### Managing the contexts
+
+All the bot contexts must be manually created by the developer programmatically. This is easily done by using the constructor of the `BotContext` class.
+
+In the most basic scenario in which you only need to create one bot (probably the most common scenario), you will only need one `BotContext` object.
+ 
+No matter if you have one context or multiple contexts, you will need to load them in the framework at a certain point. BotForge gives you two ways to do this: you can either bulk load contexts at servlet initialization time, or lazy load them individually whenever they are needed.
+
+When the servlet is first instantiated the `botInit()` method is invoked by BotForge and it is expected to return an instance of `List<BotContext>`. You are not forced to override this method, but you can do it if you want to perform some initialization and bulk load the bot contexts. Any `BotContext` that you will return in this method will be loaded inside the `BotContextManager`. If you just want to perform initialization but you don't want any contexts loaded at this time, it's fine to return null.
+
+If you want to lazy load the contexts only when they are needed, you can use the `onContextLoad()` method. BotForge will invoke this method only when the needed context is not found inside the cache of the `BotContextManager`. Please note that this method is declared abstract, so you are forced to implement it. However, if you plan to load the contexts elsewhere, just return null in your implementation.
+
+The `onContextLoad()` method has two string arguments, `pageId` and `webhookUrl`, and it is supposed to return a bot context. The framework can pass one argument or the other, but not both at the same time. Your implementation is supposed to work no matter what parameter is passed. You have to use the provided parameter as an identifier to retrieve or create the bot context before returning it. Of course, if you only need one bot, you can just create or retrieve its context without caring about the parameters. Please note that this method will be invoked only once for every bot context during the servlet lifetime, since the `BotContextManager` will provide a cached value the next time the same context is needed. So, if you need to update a context at runtime, please do so by accessing the `BotContextManager` directly.
+  
+For further information on `BotContext` or `BotContextManager` objects, please refer to their JavaDocs.
 
 ### Webhook Validation
-ph
+Facebook requires the bot to correctly handle challenge requests performed to validate the webhook of your bot. These requests are just HTTP GET requests performed by the Facebook servers to the webhook URL you have chosen for your bot.
+ 
+BotForge will take care of handling these requests for you automatically, without you writing a single line of code. You just need to insert the right Verify Token in the bot context when you instantiate it.
 
 ### Signature
-Unless you specify to do otherwise in the `BotContext` object of your bot, BotForge will check the signature of every message received from the Facebook servers. This is done by using the App Secret Key contained in the context.
+Unless you specify otherwise in the `BotContext` object of your bot, BotForge will check the signature of every message received from the Facebook servers. This is done by using the App Secret Key contained in the context.
 
 If the verification fails, an error will be returned as the response of the HTTP request and the message will not be processed.
 
