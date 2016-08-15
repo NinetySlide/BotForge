@@ -213,11 +213,48 @@ At this point, you need to populate the `HelloBot` class. The first thing you ne
  
 If you want to perform one time initializations or bulk load some bot contexts, you will need to override the `botInit()` method. This method is expected to return a list of `BotContext` objects, but if you don't have any contexts to load here, it is ok to return null.
 
+Please refer to the section of this readme covering bot contexts for further details.
+
 ### Receiving Messages
 For the bot to be of any use, you will probably want to override one of the messaging event callbacks. You can start with the `onMessageReceived()` callback, so you will be able to receive messages from users.
 
+Based on the subscription fields that you checked in your webhook preferences, you will probably want to override other callbacks. For example, if you have chosen to receive postbacks and message read receipts, you have to override the `onPostbackReceived()` and `onMessageRead()` callbacks.
+
+So, at this point, your code will look something like this:
+
+```
+@Override
+protected void onMessageReceived(BotContext context, ReceivedMessage message) {
+    /*****************************/
+    /* Your implementation here! */
+    /*****************************/
+}
+
+@Override
+protected void onPostbackReceived(BotContext context, Postback message) {
+    /*****************************/
+    /* Your implementation here! */
+    /*****************************/
+}
+
+@Override
+protected void onMessageRead(BotContext context, ReadReceipt message) {
+    /*****************************/
+    /* Your implementation here! */
+    /*****************************/
+}
+```
+
+As you can notice, the first argument of each callback is always the bot context of the bot that received the message. The second argument, instead, is a POJO representing the message received by the bot. Each callback has a specific POJO mapping the received message. You can access all the parameter of every message by using getter methods provided by BotForge for that specific POJO.
+
+Please look at the Facebook's [Webhook Reference](https://developers.facebook.com/docs/messenger-platform/webhook-reference) and at the JavaDocs of BotForge for further details.
+
 ### Sending Messages
-ph
+BotForge offers two easy methods to create and send messages to the users. You can either use helper methods to quickly create and send basic messages or instantiate a builder and use it to create a message with each possible option.
+
+If you choose the latter option, you will end up with an instance of `OutgoingMessage` object. At this point you have to use the `SendMessageAdapter` to actually send the message to the user.
+ 
+Please refer to the sections of this readme covering outgoing messages and send message adapter for further details.
 
 ### More Complex Code Samples
 >***Coming Soon!***
