@@ -182,13 +182,18 @@ If the verification fails, an error will be returned as the response of the HTTP
 
 ## Using BotForge
 
-Link to FB Messenger platform getting started guide 
+Before you start coding your bot, make sure you are familiar with the preliminary setup needed for your bot to work by looking at the Facebook Messenger Platform's [Getting Started guide](https://developers.facebook.com/docs/messenger-platform/quickstart). You will need some of this information to create the context of your bot. You will also need to decide which messaging event callbacks you are going to override based on the subscription fields you are willing to check in your webhook preferences. 
 
-### Including the library in your project (asap maven/gradle and javadocs) 
-ph
+### Including the library in your project
+The first step to work with BotForge is to include the library in your project. To do so, download the latest version of the jar from [here](https://github.com/NinetySlide/BotForge/releases), copy it into the library folder of your project and add it as a library. This process will be different based on the IDE you are currently using.
+
+>***Support for including BotForge via Maven and Gradle is coming soon!***
 
 ### Servlet Configuration
-ph
+Once you decide what the URL of your webhook will be and which class in your project is going to process the data received by your webhook from the Facebook servers, you need to configure the deployment descriptor (most likely the `web.xml` file) to let your class receive the data.
+
+For example, if the class is named `HelloBot` and the relative URL of your webhook is `/webhook`, your deployment descriptor will look something like this:
+
 ```xml
 <web-app>
     <servlet>
@@ -204,19 +209,14 @@ ph
 ```
 
 ### Initial Code Setup
-ph
+At this point, you need to populate the `HelloBot` class. The first thing you need to do is to implement the `onContextLoad()` method. In your implementation you are going to create and return a `BotContext` instance with the configuration information related to your bot.
+ 
+If you want to perform one time initializations or bulk load some bot contexts, you will need to override the `botInit()` method. This method is expected to return a list of `BotContext` objects, but if you don't have any contexts to load here, it is ok to return null.
 
 ### Receiving Messages
-ph
+For the bot to be of any use, you will probably want to override one of the messaging event callbacks. You can start with the `onMessageReceived()` callback, so you will be able to receive messages from users.
 
 ### Sending Messages
-ph
-
-### Other Features
-#### User Profile API
-ph
-
-#### Thread Settings
 ph
 
 ### More Complex Code Samples
@@ -224,7 +224,8 @@ ph
 
 ## Known Issues and Missing Features
 BotForge supports v1.1 of Messenger Platform with some exceptions. Those exceptions are:
+
 * Ph
 
 ## Authors, Contacts and Contributions
-ph
+As the licence reads, this is free software released by NinetySlide under the Apache License Version 2.0. The author (Marcello Morena) will continuously work to improve this framework, but external contributions are more than welcome. If you want to contribute, start by looking at the TODO file included in the project to know what the priorities are. You can then fork the project on GitHub and make a pull request with your modifications.
