@@ -185,7 +185,9 @@ If the verification fails, an error will be returned as the response of the HTTP
 Before you start coding your bot, make sure you are familiar with the preliminary setup needed for your bot to work by looking at the Facebook Messenger Platform's [Getting Started guide](https://developers.facebook.com/docs/messenger-platform/quickstart). You will need some of this information to create the context of your bot. You will also need to decide which messaging event callbacks you are going to override based on the subscription fields you are willing to check in your webhook preferences. 
 
 ### Including the library in your project
-The first step to work with BotForge is to include the library in your project. To do so, download the latest version of the jar from [here](https://github.com/NinetySlide/BotForge/releases), copy it into the library folder of your project and add it as a library. This process will be different based on the IDE you are currently using.
+The first step to work with BotForge is to include the library in your project. To do so, download the latest version of the jar from [the release section on GitHub](https://github.com/NinetySlide/BotForge/releases), copy it into the library folder of your project and add it as a library. This process will be different based on the IDE you are currently using.
+
+Remember that BotForge requires Gson as a dependency. In the release section you can find two jars: one contains just BotForge, while the other also has Gson included in the package. If you already have Gson as a dependency of your project or you want to keep Gson separated from BotForge, pick the former. Otherwise you can safely pick the latter.
 
 >***Support for including BotForge via Maven and Gradle is coming soon!***
 
