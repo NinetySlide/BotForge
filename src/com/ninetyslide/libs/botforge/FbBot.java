@@ -156,7 +156,7 @@ public abstract class FbBot extends HttpServlet {
     @Override
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
-        // TODO: Handle reception and sending of uploaded media
+        // TODO: Add support for uploaded file in incoming and outgoing Attachment Messages
         // Get the URL of the request
         String webhookUrl = req.getRequestURL().toString();
 

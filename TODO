@@ -4,6 +4,7 @@ Please, note that all this TODOs are already inside the code, but are also liste
 
 TODOs:
 - Setup the Unit Tests [Yeah, I know... :( ]
-- Implement Thread Settings Adapter
-- Add support for sending and receiving media with file upload and not only with URL
-- Investigate the possibility to send a message containing a location and add support to it
+- Implement Thread Settings Adapter.
+- Add support for sending and receiving uploaded files in attachment messages.
+- Add support for receiving link sharing messages.
+- Investigate the possibility to send a message containing a location and add support to it.
