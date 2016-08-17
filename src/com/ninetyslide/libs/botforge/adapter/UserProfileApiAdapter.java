@@ -17,13 +17,19 @@
 package com.ninetyslide.libs.botforge.adapter;
 
 import com.google.gson.Gson;
+import com.ninetyslide.libs.botforge.FbBot;
+import com.ninetyslide.libs.botforge.core.BotContext;
 import com.ninetyslide.libs.botforge.util.GsonManager;
 import com.ninetyslide.libs.botforge.util.NetworkManager;
+
+import java.util.logging.Logger;
 
 /**
  * Class that provides facilities to access User Profile API.
  */
 public final class UserProfileApiAdapter {
+
+    private static final Logger log = Logger.getLogger(FbBot.class.getName());
 
     private final static String USER_PROFILE_API_BASE_URL = "https://graph.facebook.com/v2.6/";
     private final static String USER_PROFILE_REQ_PARAMS = "?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=";
@@ -36,17 +42,23 @@ public final class UserProfileApiAdapter {
     /**
      * Method used to retrieve the User Profile of a certain user, using the User ID associated with that user.
      *
-     * @param pageAccessToken The Page Access Token to use for profile retrieval.
+     * @param context The context of the bot to use for profile retrieval.
      * @param userId The User ID of the desired user.
      * @return The User Profile for the desired user.
      */
-    public static UserProfile getUserProfile(String pageAccessToken, String userId) {
+    public static UserProfile getUserProfile(BotContext context, String userId) {
         String response = NetworkManager.performGetRequest(
                 USER_PROFILE_API_BASE_URL +
                         userId +
                         USER_PROFILE_REQ_PARAMS +
-                        pageAccessToken
+                        context.getPageAccessToken()
         );
+
+        // Log the request data if debug is enabled
+        if (context.isDebugEnabled()) {
+            log.info("JSON Raw Message: " + response);
+        }
+
         return gson.fromJson(response, UserProfile.class);
     }
 
