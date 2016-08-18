@@ -59,9 +59,11 @@ Let's analyze the code above:
 
 
 ## BotForge Internals
+
 In BotForge the `FbBot` class is the superclass that shall be extended by every bot's main class (the one that will handle the incoming messages). The `FbBot` class, in turn, extends the `HttpServlet` class. So you have to configure the deployment descriptor of your app (most likely the web.xml file) to use the bot's main class as the servlet for the URL you have chosen as your bot's webhook.
 
 ### Webhook handling
+
 The `doPost()` method of the `FbBot` class will receive all the messages that the Facebook servers will send to the webhook of your bot. These messages are in the form of HTTP POST requests, carrying data in JSON format.
  
 A request can carry user's messages or other message-related events, such as postbacks, delivery receipts, read receipts, etc. Moreover, each request can contain a batch of messages. Facebook can do this to optimize resource usage (e.g. in case of heavy load). 
@@ -79,6 +81,7 @@ It's important to notice that all this callbacks have a default implementation t
 You can find the complete list of callbacks by looking at the JavaDocs of the `FbBot` class.
 
 ### Incoming Messages
+
 As stated before, each incoming messaging event has a POJO that models it and can hold its content. All of them have `IncomingMessage` as the common superclass. This means that for every messaging event you can access its Sender ID, Recipient ID and Timestamp via getter methods. 
 
 Of course, you can have access to the data of a specific message type using the appropriate getter methods for that message. For example, you can use `getPayload()` to get the payload of a `Postback` message, `getAttachment()` to get the attachment of an `IncomingAttachmentMessage`, or `getText()` to get the text of an `IncomingTextMessage`.
@@ -86,6 +89,7 @@ Of course, you can have access to the data of a specific message type using the 
 You can find the complete list of POJOs for incoming messaging events and their getter methods by looking at the JavaDocs of BotForge.
 
 ### Outgoing Messages
+
 One of the main feature of a chat bot is, obviously, to send chat messages. The Facebook Messenger Platform supports a certain number of message types which can be further customized adding things like quick replies, notification options, etc. You can find a complete description of all the supported message types and the allowed options by looking at the [official documentation of the Send API](https://developers.facebook.com/docs/messenger-platform/send-api-reference).
 
 BotForge has a simple and unified interface to create every kind of outgoing message with every kind of possible customization. You can use a builder to create the desired type of message and then use that builder to customize it. When you are done, you will get an instance of `OutgoingMessage` object that is ready to be sent. 
@@ -111,6 +115,7 @@ OutgoingMessage message = builder.addBubble(bubble)
 You can find the complete list of option for the builder by looking at the JavaDocs of the `OutgoingMessage.Builder` class.  
 
 ### Send Message Adapter
+
 Once you have the OutgoingMessage, you can send it using the `sendMessage()` static method of the `SendMessageAdapter` class.
 
 In order to use that method, you will need two things other than the message you have just created: the Page Access Token for your bot and an instance of `OutgoingMessage.OutgoingRecipient` object.
@@ -136,16 +141,19 @@ SendMessageAdapter.sendTextMessage(
 Every one of these methods has an overloaded version that will allow you to send the message to multiple recipients. Please note that this way you can only send messages using User IDs.
 
 ### Message Converter
+
 BotForge offers a facility to convert a message received from a user into an `OutgoingMessage`. This can be useful in case you want to forward messages you receive.
 
 To do so, just call the `getOutgoingMessage()` static method of the `MessageConverter` class, passing as an argument the instance of the message you received via the `onMessageReceived()` callback.
 
 ### User Profile API Adapter
+
 BotForge also offers an adapter to query the Facebook's User Profile API. 
 
 If you want to retrieve information about a user, all you need to do is invoking the `getUserProfile()` static method of the `UserProfileApiAdapter` class, passing the User ID as an argument. This method will perform a synchronous HTTP request to the Facebook servers in order to retrieve the desired user profile. This profile will be returned in the form of a `UserProfile` object. You can access user's information via the getter methods of that object.
 
 ### Bot Contexts and BotContextManager
+
 Bot contexts are a core component of BotForge. A context defines a bot and contains all the information about a specific bot that is needed for that bot to work (e.g. Webhook URL, Page Access Token, App Secret Key, etc.), together with some configuration parameters (e.g. whether or not debug and signature verification are enabled, etc.).
 
 Contexts are used in BotForge to abstract the concept of a bot and to simplify the management of bot-related configuration, allowing the rest of the framework to operate atomically for every messaging event by extracting information from a common data source. 
@@ -171,11 +179,13 @@ The `onContextLoad()` method has two string arguments, `pageId` and `webhookUrl`
 For further information on `BotContext` or `BotContextManager` objects, please refer to their JavaDocs.
 
 ### Webhook Validation
+
 Facebook requires the bot to correctly handle challenge requests performed to validate the webhook of your bot. These requests are just HTTP GET requests performed by the Facebook servers to the webhook URL you have chosen for your bot.
  
 BotForge will take care of handling these requests for you automatically, without you writing a single line of code. You just need to insert the right Verify Token in the bot context when you instantiate it.
 
 ### Signature
+
 Unless you specify otherwise in the `BotContext` object of your bot, BotForge will check the signature of every message received from the Facebook servers. This is done by using the App Secret Key contained in the context.
 
 If the verification fails, an error will be returned as the response of the HTTP request and the message will not be processed.
@@ -185,6 +195,7 @@ If the verification fails, an error will be returned as the response of the HTTP
 Before you start coding your bot, make sure you are familiar with the preliminary setup needed for your bot to work by looking at the Facebook Messenger Platform's [Getting Started guide](https://developers.facebook.com/docs/messenger-platform/quickstart). You will need some of this information to create the context of your bot. You will also need to decide which messaging event callbacks you are going to override based on the subscription fields you are willing to check in your webhook preferences. 
 
 ### Including the library in your project
+
 The first step to work with BotForge is to include the library in your project. To do so, download the latest version of the jar from [the release section on GitHub](https://github.com/NinetySlide/BotForge/releases), copy it into the library folder of your project and add it as a library. This process will be different based on the IDE you are currently using.
 
 Remember that BotForge requires Gson as a dependency. In the release section you can find two jars: one contains just BotForge, while the other also has Gson included in the package. If you already have Gson as a dependency of your project or you want to keep Gson separated from BotForge, pick the former. Otherwise you can safely pick the latter.
@@ -192,6 +203,7 @@ Remember that BotForge requires Gson as a dependency. In the release section you
 >***Support for including BotForge via Maven and Gradle is coming soon!***
 
 ### Servlet Configuration
+
 Once you decide what the URL of your webhook will be and which class in your project is going to process the data received by your webhook from the Facebook servers, you need to configure the deployment descriptor (most likely the `web.xml` file) to let your class receive the data.
 
 For example, if the class is named `HelloBot` and the relative URL of your webhook is `/webhook`, your deployment descriptor will look something like this:
@@ -211,6 +223,7 @@ For example, if the class is named `HelloBot` and the relative URL of your webho
 ```
 
 ### Initial Code Setup
+
 At this point, you need to populate the `HelloBot` class. The first thing you need to do is to implement the `onContextLoad()` method. In your implementation you are going to create and return a `BotContext` instance with the configuration information related to your bot.
  
 If you want to perform one time initializations or bulk load some bot contexts, you will need to override the `botInit()` method. This method is expected to return a list of `BotContext` objects, but if you don't have any contexts to load here, it is ok to return null.
@@ -218,6 +231,7 @@ If you want to perform one time initializations or bulk load some bot contexts, 
 Please refer to the section of this readme covering bot contexts for further details.
 
 ### Receiving Messages
+
 For the bot to be of any use, you will probably want to override one of the messaging event callbacks. You can start with the `onMessageReceived()` callback, so you will be able to receive messages from users.
 
 Based on the subscription fields that you checked in your webhook preferences, you will probably want to override other callbacks. For example, if you have chosen to receive postbacks and message read receipts, you have to override the `onPostbackReceived()` and `onMessageRead()` callbacks.
@@ -252,6 +266,7 @@ As you can notice, the first argument of each callback is always the bot context
 Please look at the Facebook's [Webhook Reference](https://developers.facebook.com/docs/messenger-platform/webhook-reference) and at the JavaDocs of BotForge for further details.
 
 ### Sending Messages
+
 BotForge offers two easy methods to create and send messages to the users. You can either use helper methods to quickly create and send basic messages or instantiate a builder and use it to create a message with each possible option.
 
 If you choose the latter option, you will end up with an instance of `OutgoingMessage` object. At this point you have to use the `sendMessage()` static method of the `SendMessageAdapter` class to actually send the message to the user.
@@ -259,9 +274,13 @@ If you choose the latter option, you will end up with an instance of `OutgoingMe
 Please refer to the sections of this readme covering Outgoing Messages and Send Message Adapter for further details.
 
 ### More Complex Code Samples
->***Coming Soon!***
+
+A showcase implementation named MultiBot made using the BotForge is available as OpenSource under the Apache 2.0 license. You can find it [here](https://github.com/NinetySlide/MultiBot).
+
+Other implementations/code samples are coming soon.
 
 ## Known Issues and Missing Features
+
 BotForge supports v1.1 of Messenger Platform with some exceptions. Those exceptions are:
 
 * Airline related templates.
@@ -275,4 +294,5 @@ BotForge supports v1.1 of Messenger Platform with some exceptions. Those excepti
 * Thread Settings management via an adapter.
 
 ## Authors, Contributions and Contacts
+
 As the licence reads, this is free software released by NinetySlide under the Apache License Version 2.0. The author (Marcello Morena) will continuously work to improve this framework, but external contributions are more than welcome. If you want to contribute, start by looking at the TODO file included in the project to know what the priorities are. You can then fork the project on GitHub and create a pull request with your modifications. For everything else you can just mail us at opensource[at]ninetyslide[dot]com.
