@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BotForgeWithGson:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BotForgeWithGson_jar</output-path>
+    <root id="archive" name="botforge.jar">
+      <element id="module-output" name="BotForge" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.7/gson-2.7.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

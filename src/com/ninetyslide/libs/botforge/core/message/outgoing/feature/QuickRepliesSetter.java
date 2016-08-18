@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package com.ninetyslide.libs.feta.common;
+package com.ninetyslide.libs.botforge.core.message.outgoing.feature;
+
+import com.ninetyslide.libs.botforge.core.message.outgoing.widget.QuickReply;
+import com.ninetyslide.libs.botforge.exception.ElementsNumberExceededException;
 
 /**
- * TODO: Create a proper header for this file.
+ * Interface used to expose the method to add a Quick Reply to a message.
  */
-public class Constants {
+public interface QuickRepliesSetter {
+    void addQuickReply(QuickReply quickReply, boolean force) throws ElementsNumberExceededException;
 }
