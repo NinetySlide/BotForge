@@ -16,12 +16,12 @@
 
 package com.ninetyslide.libs.botforge.core.message.outgoing.feature;
 
-import com.ninetyslide.libs.botforge.core.message.outgoing.OutgoingMessage;
+import com.ninetyslide.libs.botforge.core.message.outgoing.widget.QuickReply;
 import com.ninetyslide.libs.botforge.exception.ElementsNumberExceededException;
 
 /**
  * Interface used to expose the method to add a Quick Reply to a message.
  */
 public interface QuickRepliesSetter {
-    void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws ElementsNumberExceededException;
+    void addQuickReply(QuickReply quickReply, boolean force) throws ElementsNumberExceededException;
 }

@@ -17,7 +17,7 @@
 package com.ninetyslide.libs.botforge.core.message.outgoing.feature;
 
 import com.ninetyslide.libs.botforge.common.Constants;
-import com.ninetyslide.libs.botforge.core.message.outgoing.OutgoingMessage;
+import com.ninetyslide.libs.botforge.core.message.outgoing.widget.QuickReply;
 import com.ninetyslide.libs.botforge.exception.ElementsNumberExceededException;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
  * Class that provides the basic infrastructure to add quick replies support to a normal message.
  */
 public abstract class QuickRepliesCarrier implements ValidityChecker {
-    private List<OutgoingMessage.QuickReply> quickReplies = null;
+    private List<QuickReply> quickReplies = null;
 
     /**
      * Add a new quick reply to the list of quick replies. Please note that at the time of this version, the maximum
@@ -37,7 +37,7 @@ public abstract class QuickRepliesCarrier implements ValidityChecker {
      * @param quickReply The quick reply to add to the list.
      * @param force Whether the Quick Replies limit must be enforced.
      */
-    public void addQuickReply(OutgoingMessage.QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
+    public void addQuickReply(QuickReply quickReply, boolean force) throws ElementsNumberExceededException {
         if (quickReply != null) {
             if (quickReplies == null) {
                 quickReplies = new ArrayList<>();
@@ -59,7 +59,7 @@ public abstract class QuickRepliesCarrier implements ValidityChecker {
     @Override
     public boolean isValid() {
         if (quickReplies != null) {
-            for (OutgoingMessage.QuickReply quickReply : quickReplies) {
+            for (QuickReply quickReply : quickReplies) {
                 if (!quickReply.isValid()) {
                     return false;
                 }

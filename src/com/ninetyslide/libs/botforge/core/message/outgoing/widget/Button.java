@@ -137,7 +137,7 @@ public final class Button implements ValidityChecker {
 
         if (payload != null) {
             // Payload has 1000 character limit
-            if (!force && payload.length() > Constants.LIMIT_PAYLOAD) {
+            if (!force && payload.length() > Constants.LIMIT_PAYLOAD_LENGTH) {
                 throw new TextLengthExceededException(Constants.MSG_PAYLOAD_LENGTH_EXCEEDED);
             }
 

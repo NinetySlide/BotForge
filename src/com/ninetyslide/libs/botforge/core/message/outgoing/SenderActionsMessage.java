@@ -70,4 +70,10 @@ final class SenderActionsMessage extends OutgoingMessage {
                 senderAction != null;
     }
 
+    public enum SenderAction {
+        MARK_SEEN,
+        TYPING_ON,
+        TYPING_OFF
+    }
+
 }

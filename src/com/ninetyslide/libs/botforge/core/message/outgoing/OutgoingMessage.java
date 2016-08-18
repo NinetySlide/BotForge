@@ -21,6 +21,7 @@ import com.ninetyslide.libs.botforge.core.message.outgoing.feature.QuickRepliesS
 import com.ninetyslide.libs.botforge.core.message.outgoing.feature.ValidityChecker;
 import com.ninetyslide.libs.botforge.core.message.outgoing.widget.Bubble;
 import com.ninetyslide.libs.botforge.core.message.outgoing.widget.Button;
+import com.ninetyslide.libs.botforge.core.message.outgoing.widget.QuickReply;
 import com.ninetyslide.libs.botforge.exception.ElementsNumberExceededException;
 import com.ninetyslide.libs.botforge.exception.TextLengthExceededException;
 
@@ -387,45 +388,6 @@ public abstract class OutgoingMessage implements ValidityChecker {
 
     }
 
-    /**
-     * Class representing a quick reply. An array of quick replies can be added to every text, multimedia and
-     * template message.
-     */
-    public final static class QuickReply implements ValidityChecker {
-        private final static String QUICK_REPLY_CONTENT_TYPE = "text";
-
-        private String contentType = QUICK_REPLY_CONTENT_TYPE;
-        private String title = null;
-        private String payload = null;
-
-        private QuickReply() {
-        }
-
-        public QuickReply(String title, String payload) {
-            this.title = title;
-            this.payload = payload;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public void setPayload(String payload) {
-            this.payload = payload;
-        }
-
-        /**
-         * Check whether the message is valid.
-         *
-         * @return True if the message is valid, false otherwise.
-         */
-        @Override
-        public boolean isValid() {
-            return title != null &&
-                    payload != null;
-        }
-    }
-
     public enum OutgoingMessageType {
         SENDER_ACTION,
         TEXT,
@@ -441,12 +403,6 @@ public abstract class OutgoingMessage implements ValidityChecker {
         REGULAR,
         SILENT,
         NO_PUSH
-    }
-
-    public enum SenderAction {
-        MARK_SEEN,
-        TYPING_ON,
-        TYPING_OFF
     }
 
 }

@@ -86,7 +86,7 @@ public final class Constants {
     public final static int LIMIT_QUICK_REPLIES = 10;
     public final static int LIMIT_BUTTONS = 3;
     public final static int LIMIT_BUBBLES = 10;
-    public final static int LIMIT_PAYLOAD = 1000;
+    public final static int LIMIT_PAYLOAD_LENGTH = 1000;
     public final static int LIMIT_TITLE_LENGTH = 20;
     public final static int LIMIT_BUBBLE_TITLE = 80;
     public final static int LIMIT_BUBBLE_SUBTITLE = 80;

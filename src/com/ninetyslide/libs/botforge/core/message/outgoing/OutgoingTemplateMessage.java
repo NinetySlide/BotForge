@@ -21,6 +21,7 @@ import com.ninetyslide.libs.botforge.core.message.outgoing.feature.QuickRepliesC
 import com.ninetyslide.libs.botforge.core.message.outgoing.feature.QuickRepliesSetter;
 import com.ninetyslide.libs.botforge.core.message.outgoing.widget.Bubble;
 import com.ninetyslide.libs.botforge.core.message.outgoing.widget.Button;
+import com.ninetyslide.libs.botforge.core.message.outgoing.widget.QuickReply;
 import com.ninetyslide.libs.botforge.exception.ElementsNumberExceededException;
 import com.ninetyslide.libs.botforge.exception.TextLengthExceededException;
 

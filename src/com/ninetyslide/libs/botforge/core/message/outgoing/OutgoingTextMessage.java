@@ -19,6 +19,7 @@ package com.ninetyslide.libs.botforge.core.message.outgoing;
 import com.ninetyslide.libs.botforge.common.Constants;
 import com.ninetyslide.libs.botforge.core.message.outgoing.feature.QuickRepliesCarrier;
 import com.ninetyslide.libs.botforge.core.message.outgoing.feature.QuickRepliesSetter;
+import com.ninetyslide.libs.botforge.core.message.outgoing.widget.QuickReply;
 import com.ninetyslide.libs.botforge.exception.ElementsNumberExceededException;
 import com.ninetyslide.libs.botforge.exception.TextLengthExceededException;
 
