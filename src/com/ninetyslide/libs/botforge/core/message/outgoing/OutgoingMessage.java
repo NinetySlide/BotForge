@@ -405,4 +405,10 @@ public abstract class OutgoingMessage implements ValidityChecker {
         NO_PUSH
     }
 
+    public enum SenderAction {
+        MARK_SEEN,
+        TYPING_ON,
+        TYPING_OFF
+    }
+
 }
