@@ -1,4 +1,9 @@
 Changelog
 
+Version 0.2-beta2
+- Changed Readme to reflect the latest API
+- Fixed the wrong field type in UserProfile class
+- When receiving a message, acknowledge to Facebook servers with HTTP OK before invoking the callbacks
+
 Version 0.1-beta1
-First version
+- First version
