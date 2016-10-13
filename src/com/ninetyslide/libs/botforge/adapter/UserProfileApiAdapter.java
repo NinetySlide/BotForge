@@ -74,7 +74,7 @@ public final class UserProfileApiAdapter {
         private String lastName = null;
         private String profilePic = null;
         private String locale = null;
-        private int timezone = 0;
+        private double timezone = 0.0;
         private String gender = null;
 
         public String getFirstName() {
@@ -93,7 +93,7 @@ public final class UserProfileApiAdapter {
             return locale;
         }
 
-        public int getTimezone() {
+        public double getTimezone() {
             return timezone;
         }
 

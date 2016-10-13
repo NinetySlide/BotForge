@@ -206,6 +206,14 @@ public abstract class FbBot extends HttpServlet {
             return;
         }
 
+        // If there were no errors, answer with HTTP Code 200 to Facebook server as soon as possible
+        try {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.flushBuffer();
+        } catch (IOException e) {
+            return;
+        }
+
         for (JsonElement rawEntry : entries) {
 
             JsonObject entry = rawEntry.getAsJsonObject();
@@ -229,8 +237,8 @@ public abstract class FbBot extends HttpServlet {
                     } else if (content.getAsJsonArray(JSON_CALLBACK_SUB_TYPE_NAME_ATTACHMENTS) != null) {
                         incomingMessage = gson.fromJson(content, IncomingAttachmentMessage.class);
                     } else {
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        return;
+                        // Can't send an error to the server anymore, try to process as much as you can of the message
+                        continue;
                     }
 
                     // Set Sender ID, Recipient ID and Timestamp
@@ -302,9 +310,6 @@ public abstract class FbBot extends HttpServlet {
                 }
             }
         }
-
-        // Answer with HTTP Code 200 if there were no errors during the message processing
-        resp.setStatus(HttpServletResponse.SC_OK);
 
     }
 

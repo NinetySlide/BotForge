@@ -27,11 +27,10 @@ public class HelloBot extends FbBot {
     @Override
     protected void onMessageReceived(BotContext context, ReceivedMessage message) {
         String userId = message.getSenderId();
-        String pageAccessToken = context.getPageAccessToken();
         
         SendMessageAdapter.sendTextMessage(
-                pageAccessToken,
-                "Hello " + UserProfileApiAdapter.getUserProfile(pageAccessToken, userId).getFirstName() + "!",
+                context,
+                "Hello " + UserProfileApiAdapter.getUserProfile(context, userId).getFirstName() + "!",
                 userId
         );
     }
@@ -51,9 +50,7 @@ Let's analyze the code above:
 
 * On line 16, the Sender ID is extracted from the received message. This will become the Recipient ID for the new message.
 
-* On line 17, the Page Access Token is extracted from the bot context passed as an argument. This will be used to send a message to the user.
- 
-* On line 19, a new basic text message is sent to the user using the Page Access Token, the String representing the text message and the User ID.
+* On line 19, a new basic text message is sent to the user using the Bot Context, the String representing the text message and the User ID.
 
 * On line 21, the User Profile API is queried to retrieve the first name of the user.
 
@@ -101,12 +98,11 @@ Here is an example for creating a template message with quick replies.
 ```java
 Bubble bubble = new Bubble().setTitle("Example Bubble").setImageUrl("http://example.com/bubble.jpg");
 
-OutgoingMessage.QuickReply quickReply1 = new OutgoingMessage.QuickReply("Action 1", "act1");
-OutgoingMessage.QuickReply quickReply2 = new OutgoingMessage.QuickReply("Action 2", "act2");
+QuickReply quickReply1 = new QuickReply().setTitle("Action 1").setPayload("act1");
+QuickReply quickReply2 = new QuickReply().setTitle("Action 2").setPayload("act2");
    
-OutgoingMessage.Builder builder = new OutgoingMessage.Builder(OutgoingMessageType.TEMPLATE_GENERIC);
-    
-OutgoingMessage message = builder.addBubble(bubble)
+OutgoingMessagemessage = new OutgoingMessage.Builder(OutgoingMessageType.TEMPLATE_GENERIC)
+    .addBubble(bubble)
     .addQuickReply(quickReply1)
     .addQuickReply(quickReply2)
     .build();
@@ -118,9 +114,9 @@ You can find the complete list of option for the builder by looking at the JavaD
 
 Once you have the OutgoingMessage, you can send it using the `sendMessage()` static method of the `SendMessageAdapter` class.
 
-In order to use that method, you will need two things other than the message you have just created: the Page Access Token for your bot and an instance of `OutgoingMessage.OutgoingRecipient` object.
+In order to use that method, you will need two things other than the message you have just created: the context of your bot and an instance of `OutgoingMessage.OutgoingRecipient` object.
 
-The Page Access Token can be extracted from the `BotContext` object of your bot. As a reminder, this object is passed as an argument to every webhook-related callback.
+The context is just an instance of the `BotContext` object of your bot. As a reminder, this object is passed as an argument to every webhook-related callback.
  
 The recipient object can be created using the appropriate constructor. Please note that you can use a User ID or a telephone number in the constructor, but not both. If you are willing to use telephone numbers as recipient, make sure you are allowed by Facebook to do so, otherwise you will get an error in response to the message sending. 
 
@@ -128,12 +124,12 @@ The `sendMessage()` method will perform a synchronous HTTP request to the Facebo
 
 You can send the same `OutgoingMessage` to multiple recipients by using the overloaded version of the `sendMessage()` method that will accept an array of `OutgoingMessage.OutgoingRecipient` objects as the third parameter. You will get an array of `SendMessageResponse` objects that will match the order of the recipients in the array. 
 
-Please note that this method will perform a synchronous HTTP request to the Facebook servers for each recipient. So if you have constraints about the execution time of your code in your environment it's better to call this method in a different thread (or in a task queue) or, at least, limit the number of recipient to a minimum.
+Please note that this method will perform a synchronous HTTP request to the Facebook servers for each recipient. So if you have constraints about the execution time of your code in your environment it is better to call this method in a different thread (or in a task queue) or, at least, limit the number of recipient to a minimum.
 
 If you just want to send basic messages, the `SendMessageAdapter` offers a collection of methods that will let you do so without having to create the message with a builder. There is one of these methods for each message type. For example, to send a basic text message all you need is this code:
 ```
 SendMessageAdapter.sendTextMessage(
-    PAGE_ACCESS_TOKEN,
+    BOT_CONTEXT,
     "Hi, this is a sample message",
     "RECIPIENT_ID"
 );
@@ -150,7 +146,7 @@ To do so, just call the `getOutgoingMessage()` static method of the `MessageConv
 
 BotForge also offers an adapter to query the Facebook's User Profile API. 
 
-If you want to retrieve information about a user, all you need to do is invoking the `getUserProfile()` static method of the `UserProfileApiAdapter` class, passing the User ID as an argument. This method will perform a synchronous HTTP request to the Facebook servers in order to retrieve the desired user profile. This profile will be returned in the form of a `UserProfile` object. You can access user's information via the getter methods of that object.
+If you want to retrieve information about a user, all you need to do is invoking the `getUserProfile()` static method of the `UserProfileApiAdapter` class, passing the Bot Context and the User ID as arguments. This method will perform a synchronous HTTP request to the Facebook servers in order to retrieve the desired user profile. This profile will be returned in the form of a `UserProfile` object. You can access user's information via the getter methods of that object.
 
 ### Bot Contexts and BotContextManager
 
